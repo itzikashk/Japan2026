@@ -373,6 +373,55 @@ footer b{color:var(--on-navy)}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
 .reveal.in{opacity:1;transform:translateY(0)}
 
+/* ---------- family files ---------- */
+.day-files{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.day-files-head{font-size:.85rem;font-weight:700;color:var(--ink-2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.file-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.file-card{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:9px;box-shadow:var(--shadow-sm)}
+.file-thumb{flex:0 0 auto;width:52px;height:52px;border-radius:10px;overflow:hidden;background:var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.file-thumb-img{width:100%;height:100%;object-fit:cover}
+.file-thumb-icon{font-size:1.4rem}
+.file-info{flex:1;min-width:0;cursor:pointer}
+.file-name{font-size:.86rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-meta{font-size:.72rem;color:var(--ink-3);margin:2px 0 5px}
+.file-cat-select{font-size:.72rem;border:1px solid var(--line);border-radius:99px;padding:3px 8px;background:var(--surface-2);color:var(--ink-2);max-width:100%;font-family:inherit}
+.file-actions{flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
+.icon-mini{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;padding:0}
+.upload-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 18px;border-radius:99px;background:var(--navy);color:#fff;font-weight:700;font-size:.85rem;cursor:pointer}
+.file-input-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.upload-status{font-size:.78rem;margin-top:8px;min-height:1.2em;font-weight:600}
+.upload-status.busy{color:var(--ink-2)}
+.upload-status.ok{color:var(--green)}
+.upload-status.err{color:var(--accent-ink)}
+
+.modal-overlay{position:fixed;inset:0;z-index:70;background:rgba(15,16,21,.72);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.2s ease}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-box{background:var(--surface);border-radius:var(--r-lg);max-width:520px;width:100%;max-height:88vh;overflow:auto;box-shadow:var(--shadow-lg)}
+.modal-box-sm{padding:24px;text-align:center;max-width:340px}
+.modal-box-sm p{font-size:.95rem;font-weight:600;margin:0}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);font-weight:700;font-size:.9rem}
+.modal-body{padding:12px}
+.preview-img{width:100%;border-radius:12px;display:block}
+.preview-pdf{width:100%;height:60vh;border:0;border-radius:12px}
+.modal-foot{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
+.modal-actions{display:flex;gap:10px;justify-content:center;margin-top:18px}
+
+.files-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.files-toolbar input, .files-toolbar select{flex:1;min-width:120px;padding:11px 12px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface);font-family:inherit;font-size:.85rem;color:var(--ink)}
+.files-empty{color:var(--ink-3);font-size:.88rem;text-align:center;padding:24px 10px}
+.today-banner{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%);border-radius:var(--r-lg);padding:18px;margin-bottom:22px;color:var(--on-navy)}
+.today-banner-head{font-weight:800;margin-bottom:10px}
+.today-banner-empty{color:var(--on-navy-2);font-size:.85rem;margin:0}
+.today-banner .file-card{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14)}
+.today-banner .file-name{color:#fff}
+.today-banner .file-meta{color:var(--on-navy-2)}
+.important-row{margin-bottom:22px}
+.important-row-head{font-weight:700;font-size:.9rem;margin-bottom:10px;color:var(--accent-ink)}
+.gallery-block{margin-top:34px}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gallery-item{aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;background:var(--surface-2);border:0;padding:0}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
+
 /* ---------- dark mode ---------- */
 @media (prefers-color-scheme:dark){
   :root{
@@ -422,6 +471,20 @@ footer b{color:var(--on-navy)}
       <button id="searchClose" aria-label="סגירה">✕</button>
     </div>
     <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="previewOverlay">
+  <div class="modal-box" id="previewBox"></div>
+</div>
+
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal-box modal-box-sm">
+    <p id="confirmText"></p>
+    <div class="modal-actions">
+      <button class="btn-mini" id="confirmCancel">ביטול</button>
+      <button class="btn-mini" id="confirmOk" style="background:var(--accent);border-color:var(--accent);color:#fff">מחיקה</button>
+    </div>
   </div>
 </div>
 
@@ -636,17 +699,31 @@ footer b{color:var(--on-navy)}
       <div class="section-head reveal">
         <div class="eyebrow">קבצים משפחתיים</div>
         <h2>Japan 2026 — כל הקבצים במקום אחד</h2>
+        <p>כרטיסים, שוברים, מסמכים ותמונות מכל הטיול — מעלים דרך היום הרלוונטי בתוכנית, ומוצאים כאן לפי יום, קטגוריה או חיפוש חופשי.</p>
       </div>
-      <div class="files-card reveal">
-        <div class="folder-row"><span class="n">01</span><span>יומן טיול והזמנות <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Itinerary and Bookings</span></span></div>
-        <div class="folder-row"><span class="n">02</span><span>אוכל ומקומות <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Food and Places</span></span></div>
-        <div class="folder-row"><span class="n">03</span><span>תמונות וסרטונים <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Photos and Videos</span></span></div>
-        <div class="folder-row"><span class="n">04</span><span>קבלות ורכישות <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Receipts and Purchases</span></span></div>
-        <div class="folder-row"><span class="n">05</span><span>הערות וזכרונות <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Notes and Memories</span></span></div>
-        <div class="files-cta">
-          <span class="btn-disabled">📁 תיקיית Drive משפחתית — בקרוב</span>
-          <span class="files-hint">הקישור לתיקייה הפרטית יתווסף כאן בהמשך. מסמכי טיול פרטיים לא יפורסמו באתר.</span>
+
+      <div id="todayFilesBanner" class="today-banner" hidden></div>
+
+      <div id="importantFilesRow" class="important-row" hidden>
+        <div class="important-row-head">⭐ מסמכים חשובים</div>
+        <div class="file-grid" id="importantFilesList"></div>
+      </div>
+
+      <div class="files-toolbar">
+        <input type="text" id="filesSearchInput" placeholder="🔍 חיפוש בקבצים...">
+        <select id="filesDayFilter"><option value="">כל הימים</option></select>
+        <select id="filesCategoryFilter"><option value="">כל הקטגוריות</option></select>
+      </div>
+
+      <div class="file-grid" id="globalFilesList"></div>
+      <div class="files-empty" id="filesEmptyMsg" hidden>עדיין לא הועלו קבצים. אפשר להעלות דרך "קבצים ליום הזה" בכל יום בתוכנית.</div>
+
+      <div class="gallery-block" id="galleryBlock" hidden>
+        <div class="section-head reveal">
+          <div class="eyebrow">גלריה</div>
+          <h2>תמונות מהטיול</h2>
         </div>
+        <div class="gallery-grid" id="photoGallery"></div>
       </div>
     </div>
   </section>
@@ -667,7 +744,7 @@ footer b{color:var(--on-navy)}
 <footer>
   <div class="wrap">
     <div><b>יפן 2026</b> — Isaac · Anat · Alon</div>
-    <div>אתר פרטי למשפחה. לא מיועד להפצה ציבורית.</div>
+    <div>אתר פרטי למשפחה, מוגן בסיסמה. לא מיועד להפצה ציבורית. <a href="#" id="logoutLink" style="color:inherit;text-decoration:underline">התנתקות</a></div>
   </div>
 </footer>
 
@@ -1051,6 +1128,7 @@ function searchUrl(q){ return "https://www.google.com/search?q="+encodeURICompon
       tl.appendChild(item);
     });
     body.appendChild(tl);
+    body.appendChild(buildDayFilesBlock(d.day));
     bodyOuter.appendChild(body);
     card.appendChild(bodyOuter);
     container.appendChild(card);
@@ -1358,6 +1436,361 @@ document.getElementById("manualRateInput").addEventListener("input", function(e)
   }
   refreshRate();
 })();
+
+/* ===================== family files ===================== */
+var CATEGORIES = ["כרטיסים","מלון","תחבורה","מסעדה","מפה","קבלה","תמונה","מסמך","אחר"];
+var CATEGORY_ICON = {"כרטיסים":"🎫","מלון":"🏨","תחבורה":"🚆","מסעדה":"🍽️","מפה":"🗺️","קבלה":"🧾","תמונה":"🖼️","מסמך":"📄","אחר":"📎"};
+var FILES_STATE = { all: [] };
+var filesFilter = { q:"", day:"", category:"" };
+var pendingDeleteFile = null;
+
+function esc(s){
+  return String(s==null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function fmtBytes(n){
+  if(n === null || n === undefined || isNaN(n)) return "";
+  if(n < 1024) return n+" B";
+  if(n < 1024*1024) return (n/1024).toFixed(0)+" KB";
+  return (n/(1024*1024)).toFixed(1)+" MB";
+}
+function filesForDay(day){
+  return FILES_STATE.all.filter(function(f){ return Number(f.tripDay) === Number(day); });
+}
+
+function buildDayFilesBlock(dayNum){
+  var wrap = el("div","day-files");
+  wrap.innerHTML =
+    '<div class="day-files-head">📎 קבצים ליום הזה</div>'+
+    '<div class="file-grid" id="day-files-list-'+dayNum+'"></div>'+
+    '<label class="upload-btn">＋ העלאת קובץ'+
+      '<input type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf" data-day="'+dayNum+'" class="file-input-hidden">'+
+    '</label>'+
+    '<div class="upload-status" id="upload-status-'+dayNum+'"></div>';
+  return wrap;
+}
+
+function renderFileCard(f){
+  var card = el("div","file-card");
+  card.dataset.id = f.id;
+  var isImage = f.mimeType && f.mimeType.indexOf("image/") === 0;
+  var thumb = isImage
+    ? '<img class="file-thumb-img" src="'+f.storageURL+'" alt="" loading="lazy">'
+    : '<div class="file-thumb-icon">📄</div>';
+  var typeLabel = f.mimeType === "application/pdf" ? "PDF" : (isImage ? "תמונה" : "קובץ");
+  var dayLabel = f.tripDay ? (" · יום "+f.tripDay) : "";
+  var catOptions = CATEGORIES.map(function(c){
+    return '<option value="'+c+'"'+(c===f.category ? " selected" : "")+'>'+CATEGORY_ICON[c]+" "+c+"</option>";
+  }).join("");
+  card.innerHTML =
+    '<div class="file-thumb" data-action="preview">'+thumb+'</div>'+
+    '<div class="file-info" data-action="preview">'+
+      '<div class="file-name">'+(f.important ? '<span class="file-star">⭐</span> ' : "")+esc(f.displayName)+'</div>'+
+      '<div class="file-meta">'+typeLabel+' · '+fmtBytes(f.fileSize)+dayLabel+'</div>'+
+      '<select class="file-cat-select" data-action="category">'+catOptions+'</select>'+
+    '</div>'+
+    '<div class="file-actions">'+
+      '<button class="icon-mini" data-action="star" title="חשוב" aria-label="סמן כחשוב">'+(f.important ? "⭐" : "☆")+'</button>'+
+      '<button class="icon-mini" data-action="rename" title="שינוי שם" aria-label="שינוי שם">✏️</button>'+
+      '<button class="icon-mini" data-action="delete" title="מחיקה" aria-label="מחיקה">🗑️</button>'+
+    '</div>';
+  return card;
+}
+
+function renderAllFileSections(){
+  DAYS.forEach(function(d){
+    var container = document.getElementById("day-files-list-"+d.day);
+    if(!container) return;
+    container.innerHTML = "";
+    filesForDay(d.day).forEach(function(f){ container.appendChild(renderFileCard(f)); });
+  });
+  renderTodayBanner();
+  renderGlobalFiles();
+}
+
+function renderTodayBanner(){
+  var banner = document.getElementById("todayFilesBanner");
+  if(!banner) return;
+  var todayISO = new Date().toISOString().slice(0,10);
+  var day = DAYS.find(function(d){ return d.dateISO === todayISO; });
+  if(!day){ banner.hidden = true; return; }
+  var files = filesForDay(day.day);
+  banner.hidden = false;
+  banner.innerHTML =
+    '<div class="today-banner-head">📍 היום — יום '+day.day+' · '+day.city+'</div>'+
+    (files.length ? '<div class="file-grid" id="todayFilesList"></div>' : '<p class="today-banner-empty">עדיין אין קבצים ליום הזה.</p>');
+  if(files.length){
+    var list = document.getElementById("todayFilesList");
+    files.forEach(function(f){ list.appendChild(renderFileCard(f)); });
+  }
+}
+
+function renderGlobalFiles(){
+  var list = FILES_STATE.all.slice();
+  if(filesFilter.day) list = list.filter(function(f){ return String(f.tripDay) === filesFilter.day; });
+  if(filesFilter.category) list = list.filter(function(f){ return f.category === filesFilter.category; });
+  if(filesFilter.q){
+    var needle = filesFilter.q.trim().toLowerCase();
+    list = list.filter(function(f){
+      return (f.displayName||"").toLowerCase().indexOf(needle) !== -1 ||
+             (f.originalFilename||"").toLowerCase().indexOf(needle) !== -1 ||
+             (f.description||"").toLowerCase().indexOf(needle) !== -1;
+    });
+  }
+  var container = document.getElementById("globalFilesList");
+  container.innerHTML = "";
+  list.forEach(function(f){ container.appendChild(renderFileCard(f)); });
+  var emptyMsg = document.getElementById("filesEmptyMsg");
+  if(emptyMsg){
+    emptyMsg.hidden = list.length > 0;
+    if(list.length === 0){
+      emptyMsg.textContent = FILES_STATE.all.length === 0
+        ? 'עדיין לא הועלו קבצים. אפשר להעלות דרך "קבצים ליום הזה" בכל יום בתוכנית.'
+        : "אין קבצים שתואמים את הסינון הנוכחי.";
+    }
+  }
+
+  var important = FILES_STATE.all.filter(function(f){ return f.important; });
+  var impRow = document.getElementById("importantFilesRow");
+  var impList = document.getElementById("importantFilesList");
+  if(impRow && impList){
+    impList.innerHTML = "";
+    important.forEach(function(f){ impList.appendChild(renderFileCard(f)); });
+    impRow.hidden = important.length === 0;
+  }
+
+  var photos = FILES_STATE.all.filter(function(f){ return f.category === "תמונה" && f.mimeType && f.mimeType.indexOf("image/") === 0; });
+  var galleryBlock = document.getElementById("galleryBlock");
+  var gallery = document.getElementById("photoGallery");
+  if(galleryBlock && gallery){
+    gallery.innerHTML = "";
+    photos.forEach(function(f){
+      var btn = document.createElement("button");
+      btn.className = "gallery-item";
+      btn.innerHTML = '<img src="'+f.storageURL+'" alt="" loading="lazy">';
+      btn.addEventListener("click", function(){ openPreview(f); });
+      gallery.appendChild(btn);
+    });
+    galleryBlock.hidden = photos.length === 0;
+  }
+}
+
+function loadAllFiles(){
+  return fetch("/api/files").then(function(r){
+    if(!r.ok) throw new Error("failed");
+    return r.json();
+  }).then(function(data){
+    FILES_STATE.all = data.files || [];
+    renderAllFileSections();
+  }).catch(function(){
+    renderAllFileSections();
+  });
+}
+
+/* ---- modals: preview + confirm ---- */
+function openPreview(file){
+  var box = document.getElementById("previewBox");
+  var isImage = file.mimeType && file.mimeType.indexOf("image/") === 0;
+  var content = isImage
+    ? '<img class="preview-img" src="'+file.storageURL+'" alt="">'
+    : '<iframe class="preview-pdf" src="'+file.storageURL+'"></iframe>';
+  box.innerHTML =
+    '<div class="modal-head"><span>'+esc(file.displayName)+'</span><button class="icon-mini" id="previewClose" aria-label="סגירה">✕</button></div>'+
+    '<div class="modal-body">'+content+'</div>'+
+    '<div class="modal-foot">'+
+      '<a class="btn-mini solid" href="'+file.storageURL+'" target="_blank" rel="noopener">⬇️ הורדה</a>'+
+      '<button class="btn-mini" id="previewBack">חזרה ליום</button>'+
+    '</div>';
+  document.getElementById("previewOverlay").classList.add("open");
+  document.getElementById("previewClose").addEventListener("click", closePreview);
+  document.getElementById("previewBack").addEventListener("click", closePreview);
+}
+function closePreview(){
+  document.getElementById("previewOverlay").classList.remove("open");
+  document.getElementById("previewBox").innerHTML = "";
+}
+
+function confirmDelete(file){
+  pendingDeleteFile = file;
+  document.getElementById("confirmText").textContent = 'למחוק את הקובץ "'+file.displayName+'"?';
+  document.getElementById("confirmOverlay").classList.add("open");
+}
+function closeConfirm(){
+  document.getElementById("confirmOverlay").classList.remove("open");
+  pendingDeleteFile = null;
+}
+
+/* ---- actions ---- */
+function toggleImportant(file){
+  var newVal = !file.important;
+  fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, important:newVal})})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(){ file.important = newVal; renderAllFileSections(); })
+    .catch(function(){ alert("העדכון נכשל. נסו שוב."); });
+}
+function renameFile(file){
+  var name = prompt("שם חדש לקובץ:", file.displayName);
+  if(name === null) return;
+  name = name.trim();
+  if(!name) return;
+  fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, displayName:name})})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(){ file.displayName = name; renderAllFileSections(); })
+    .catch(function(){ alert("שינוי השם נכשל. נסו שוב."); });
+}
+function updateFileCategory(file, newCat){
+  fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, category:newCat})})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(){ file.category = newCat; renderAllFileSections(); })
+    .catch(function(){ alert("עדכון הקטגוריה נכשל. נסו שוב."); });
+}
+
+document.addEventListener("click", function(e){
+  var card = e.target.closest && e.target.closest(".file-card");
+  if(card){
+    var file = FILES_STATE.all.find(function(f){ return f.id === card.dataset.id; });
+    if(file){
+      var actionEl = e.target.closest("[data-action]");
+      var action = actionEl && actionEl.dataset.action;
+      if(action === "preview") openPreview(file);
+      else if(action === "star") toggleImportant(file);
+      else if(action === "rename") renameFile(file);
+      else if(action === "delete") confirmDelete(file);
+    }
+  }
+  if(e.target.id === "previewOverlay") closePreview();
+  if(e.target.id === "confirmOverlay") closeConfirm();
+});
+document.addEventListener("change", function(e){
+  if(e.target.matches && e.target.matches(".file-cat-select")){
+    var card = e.target.closest(".file-card");
+    var file = FILES_STATE.all.find(function(f){ return f.id === card.dataset.id; });
+    if(file) updateFileCategory(file, e.target.value);
+  }
+  if(e.target.matches && e.target.matches(".file-input-hidden")){
+    handleFileSelected(e.target);
+  }
+});
+document.getElementById("confirmCancel").addEventListener("click", closeConfirm);
+document.getElementById("confirmOk").addEventListener("click", function(){
+  if(!pendingDeleteFile) return;
+  var id = pendingDeleteFile.id;
+  fetch("/api/files?id="+encodeURIComponent(id), {method:"DELETE"})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(){
+      FILES_STATE.all = FILES_STATE.all.filter(function(f){ return f.id !== id; });
+      renderAllFileSections();
+    })
+    .catch(function(){ alert("מחיקת הקובץ נכשלה. נסו שוב."); })
+    .finally(function(){ closeConfirm(); });
+});
+
+var logoutLink = document.getElementById("logoutLink");
+if(logoutLink){
+  logoutLink.addEventListener("click", function(e){
+    e.preventDefault();
+    fetch("/api/auth", {method:"DELETE"}).then(function(){ window.location.href = "/login.html"; });
+  });
+}
+
+/* ---- filters ---- */
+(function initFileFilters(){
+  var daySel = document.getElementById("filesDayFilter");
+  DAYS.forEach(function(d){
+    var opt = document.createElement("option");
+    opt.value = String(d.day);
+    opt.textContent = "יום "+d.day+" · "+d.dateHe;
+    daySel.appendChild(opt);
+  });
+  var catSel = document.getElementById("filesCategoryFilter");
+  CATEGORIES.forEach(function(c){
+    var opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = CATEGORY_ICON[c]+" "+c;
+    catSel.appendChild(opt);
+  });
+  document.getElementById("filesSearchInput").addEventListener("input", function(e){ filesFilter.q = e.target.value; renderGlobalFiles(); });
+  daySel.addEventListener("change", function(e){ filesFilter.day = e.target.value; renderGlobalFiles(); });
+  catSel.addEventListener("change", function(e){ filesFilter.category = e.target.value; renderGlobalFiles(); });
+})();
+
+/* ---- upload ---- */
+function handleFileSelected(inputEl){
+  var day = inputEl.dataset.day;
+  var file = inputEl.files && inputEl.files[0];
+  inputEl.value = "";
+  if(!file) return;
+  var statusEl = document.getElementById("upload-status-"+day);
+  function setStatus(text, cls){ if(statusEl){ statusEl.textContent = text; statusEl.className = "upload-status"+(cls?" "+cls:""); } }
+  setStatus("מעלה…", "busy");
+
+  prepareFileForUpload(file).then(function(prepared){
+    return uploadFileXhr(prepared, day, function(pct){ setStatus("מעלה… "+pct+"%", "busy"); });
+  }).then(function(record){
+    FILES_STATE.all.unshift(record);
+    renderAllFileSections();
+    setStatus("✓ הועלה בהצלחה", "ok");
+    setTimeout(function(){ setStatus(""); }, 2500);
+  }).catch(function(err){
+    setStatus((err && err.message) || "ההעלאה נכשלה", "err");
+  });
+}
+
+function prepareFileForUpload(file){
+  var compressible = file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/webp";
+  if(!compressible || file.size < 1.2*1024*1024) return Promise.resolve(file);
+  return compressImage(file).catch(function(){ return file; });
+}
+
+function compressImage(file){
+  return new Promise(function(resolve, reject){
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var maxDim = 1920;
+      var w = img.naturalWidth, h = img.naturalHeight;
+      var scale = Math.min(1, maxDim / Math.max(w, h));
+      var cw = Math.max(1, Math.round(w*scale)), ch = Math.max(1, Math.round(h*scale));
+      var canvas = document.createElement("canvas");
+      canvas.width = cw; canvas.height = ch;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, cw, ch);
+      canvas.toBlob(function(blob){
+        if(!blob){ reject(new Error("compress failed")); return; }
+        resolve(new File([blob], file.name.replace(/\.\w+$/, ".jpg"), {type:"image/jpeg"}));
+      }, "image/jpeg", 0.82);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error("decode failed")); };
+    img.src = url;
+  });
+}
+
+function uploadFileXhr(file, day, onProgress){
+  return new Promise(function(resolve, reject){
+    var fd = new FormData();
+    fd.append("file", file, file.name);
+    fd.append("tripDay", day);
+    fd.append("displayName", file.name.replace(/\.\w+$/, ""));
+    fd.append("category", file.type === "application/pdf" ? "מסמך" : "אחר");
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/upload");
+    xhr.upload.addEventListener("progress", function(e){
+      if(e.lengthComputable && onProgress) onProgress(Math.round(e.loaded/e.total*100));
+    });
+    xhr.onload = function(){
+      var data = null;
+      try{ data = JSON.parse(xhr.responseText); }catch(e){}
+      if(xhr.status >= 200 && xhr.status < 300 && data && data.file){ resolve(data.file); }
+      else { reject(new Error((data && data.error) || "ההעלאה נכשלה")); }
+    };
+    xhr.onerror = function(){ reject(new Error("בעיית רשת. נסו שוב.")); };
+    xhr.send(fd);
+  });
+}
+
+loadAllFiles();
 
 /* ===================== scroll reveal ===================== */
 (function(){
