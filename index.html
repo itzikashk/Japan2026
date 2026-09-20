@@ -322,6 +322,10 @@ section{padding:52px 0}
 .acc-body ul{margin:0 0 8px;padding-inline-start:20px;font-size:.87rem;color:var(--ink-2);line-height:1.75}
 .acc-body ul li a{color:var(--accent-ink);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(143,33,56,.35)}
 .acc-body ul li b{color:var(--ink)}
+.hotel-card .acc-head{align-items:flex-start;padding-top:15px;padding-bottom:15px}
+.hotel-card .acc-head .ico{margin-top:1px}
+.hotel-card .acc-head .badge{margin-top:2px}
+.hotel-meta{display:block;font-size:.72rem;color:var(--ink-3);font-weight:700;margin-bottom:2px}
 
 .check-list{display:flex;flex-direction:column;gap:2px}
 .check-item{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line-soft);cursor:pointer}
@@ -391,6 +395,7 @@ footer b{color:var(--on-navy)}
     <div class="brand"><span class="dot"></span> Japan 2026</div>
     <nav class="primary">
       <a href="#top">ראשי</a>
+      <a href="#hotels">מלונות</a>
       <a href="#itinerary">תוכנית יומית</a>
       <a href="#food">אוכל</a>
       <a href="#currency">כסף</a>
@@ -424,6 +429,7 @@ footer b{color:var(--on-navy)}
   <div class="wrap">
     <a href="#top">ראשי <span class="ico">🎌</span></a>
     <a href="#route">מסלול</a>
+    <a href="#hotels">מלונות <span class="ico">🏨</span></a>
     <a href="#itinerary">תוכנית יומית <span class="ico">📅</span></a>
     <a href="#food">אוכל, שתייה וקינוחים <span class="ico">🍜</span></a>
     <a href="#currency">כסף והמרת מטבע <span class="ico">💴</span></a>
@@ -467,6 +473,17 @@ footer b{color:var(--on-navy)}
         <p>חמישה אזורים, קצב נוח, בלי למהר בין ערים.</p>
       </div>
       <div class="route-scroll" id="routeScroll"></div>
+    </div>
+  </section>
+
+  <section id="hotels">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">איפה ישנים</div>
+        <h2>המלונות שלנו</h2>
+        <p>כל ארבעת האזורים מאושרים וסגורים.</p>
+      </div>
+      <div id="hotelsContainer"></div>
     </div>
   </section>
 
@@ -672,6 +689,7 @@ var DAYS = [
    items:[
      {time:"בוקר", badges:["must"], title:"Asakusa & Senso-ji", desc:"מקדש Senso-ji ורחוב הקניות Nakamise.", transport:"Minatomirai ← יוקוהמה ← טוקיו / Asakusa"},
      {time:"צהריים", badges:["must"], title:"Ginza", desc:"טיול ברובע הקניות והאדריכלות.", transport:"Asakusa ← Ginza: קו מטרו Ginza"},
+     {time:"צהריים מאוחר", badges:["optional"], title:"UNIQLO Ginza", desc:"יוניקלו גינזה — עצירה קצרה להתרשמות מהחנות היפנית הגדולה. לא מתוכנן מסע קניות. כ-20–30 דקות.", transport:"הליכה באזור Ginza"},
      {time:"אחה״צ", badges:["must"], title:"Odaiba · DiverCity · Gundam", desc:"פסל Gundam בגודל מלא ב-DiverCity.", transport:"Ginza/Shimbashi ← Daiba: Yurikamome"}
    ]},
   {day:3, dateISO:"2026-10-16", weekday:"שישי", dateHe:"16 באוקטובר", city:"Tokyo",
@@ -691,10 +709,12 @@ var DAYS = [
    ]},
   {day:5, dateISO:"2026-10-18", weekday:"ראשון", dateHe:"18 באוקטובר", city:"Hakone",
    title:"מעבר להאקונה", subtitle:"Transfer to Hakone",
-   note:"היום שולחים את המזוודות הגדולות (Takkyubin) ישירות מהמלון ביוקוהמה למלון בקיוטו. להאקונה יוצאים עם תיק לילה קטן בלבד — ראו רשימת ציוד למטה.",
+   note:"היום שולחים את המזוודות הגדולות (Takkyubin) ישירות מהמלון ביוקוהמה למלון בקיוטו. להאקונה יוצאים עם תיק לילה קטן בלבד — ראו רשימת ציוד למטה. Snoopy Museum בדרך הוא אופציה נחמדה אם יש אנרגיה וזמן — לא חובה, וטרם הוזמנו כרטיסים. אם עושים את סנופי, לא מתכננים את ה-Sky Pool של יוקוהמה באותו בוקר.",
    items:[
-     {time:"בוקר", badges:["must"], title:"שילוח מזוודות · Takkyubin", desc:"שולחים את המזוודות הגדולות ישירות למלון בקיוטו. לוקחים רק תיק לילה קטן.", transport:"מלון יוקוהמה ← מלון קיוטו"},
-     {time:"אחה״צ", badges:["must"], title:"יוקוהמה ← Hakone / Gora", desc:"נסיעה לכיוון Hakone-Yumoto ומשם ל-Gora.", transport:"רכבת JR ← Odawara ← Hakone Tozan Railway ← Gora"},
+     {time:"09:15", badges:["must"], title:"יציאה מהמלון + שילוח מזוודות · Takkyubin", desc:"ארוחת בוקר וצ׳ק-אאוט. שולחים את המזוודות הגדולות ישירות למלון בקיוטו — לוקחים רק תיק לילה קטן.", transport:"מלון יוקוהמה ← מלון קיוטו (שילוח) / יוקוהמה ← Minami-machida"},
+     {time:"10:30", badges:["optional","notbooked"], title:"Snoopy Museum Tokyo", desc:"עצירה אופציונלית ב-Minami-machida Grandberry Park — Snoopy Museum ו-Brown's Store, ואולי הצצה קצרה בפארק. כ-1.5–2 שעות. תלוי באנרגיה ובזמן — טרם הוזמנו כרטיסים.", transport:"יוקוהמה ← Minami-machida Grandberry Park", official:"https://snoopymuseum.tokyo/"},
+     {time:"12:30", badges:["optional"], title:"ארוחת צהריים קלה", desc:"ארוחה קלה באזור Grandberry Park לפני ההמשך להאקונה — רק אם עושים את סנופי.", transport:""},
+     {time:"13:15–13:30", badges:["must"], title:"המשך ל-Hakone / Gora", desc:"נסיעה לכיוון Hakone-Yumoto ומשם ל-Gora. הגעה משוערת כ-15:30–16:30, בהתאם לחיבורים ולעצירת סנופי.", transport:"Minami-machida ← Odawara ← Hakone Tozan Railway ← Gora"},
      {time:"ערב", badges:["must"], title:"Laforet Hakone Gora Yunosumika", desc:"צ׳ק-אין, אונסן וארוחת ערב.", transport:"Gora ← שאטל מלון / גישה מקומית"}
    ]},
   {day:6, dateISO:"2026-10-19", weekday:"שני", dateHe:"19 באוקטובר", city:"Hakone → Kyoto",
@@ -738,7 +758,8 @@ var DAYS = [
   {day:11, dateISO:"2026-10-24", weekday:"שבת", dateHe:"24 באוקטובר", city:"Osaka",
    title:"קיוטו → אוסקה · גיימינג וניאון", subtitle:"Kyoto → Osaka · Gaming & Neon",
    items:[
-     {time:"בוקר", badges:["must","notbooked"], title:"צ׳ק-אאוט ורכבת לאוסקה", desc:"מלון באזור Namba/Dotonbori — עדיין לבחירה.", transport:"Kyoto ← Osaka/Namba: כ-30–60 דק׳ בהתאם לרכבת"},
+     {time:"בוקר", badges:["must"], title:"צ׳ק-אאוט ורכבת לאוסקה", desc:"נסיעה לאוסקה, לכיוון The Peak Namba West.", transport:"Kyoto ← Osaka/Namba: כ-30–60 דק׳ בהתאם לרכבת"},
+     {time:"אחה״צ", badges:["must","booked"], title:"The Peak Namba West — צ׳ק-אין", desc:"דירת נופש עד 4 אורחים — 2 מיטות זוגיות, כ-32 מ״ר, שירותים ומקלחת פרטיים, Wi-Fi. צ׳ק-אין החל מ-15:00.", transport:"אזור Namba"},
      {time:"אחה״צ", badges:["must"], title:"Den Den Town", desc:"אלקטרוניקה, אנימה, גיימינג ורטרו.", transport:"Namba ← Nipponbashi: הליכה/מטרו"},
      {time:"ערב", badges:["must"], title:"Dotonbori", desc:"אורות ניאון, תעלה ואווירת אוסקה.", transport:"הליכה"}
    ]},
@@ -756,7 +777,7 @@ var DAYS = [
    title:"אוסקה → נמל תעופה קנסאי → ישראל", subtitle:"Osaka → Kansai International Airport → Israel",
    note:"מומלץ להשאיר מרווח ביטחון נוח לטיסה בינלאומית בשדה קנסאי. ברגע ששעת הטיסה תאושר, לוח הזמנים של היום — כולל שעת היציאה המומלצת מהמלון — יתעדכן בהתאם.",
    items:[
-     {time:"בוקר", badges:["must"], title:"ארוחת בוקר וצ׳ק-אאוט", desc:"איסוף כל המזוודות והציוד.", transport:""},
+     {time:"בוקר", badges:["must"], title:"The Peak Namba West — צ׳ק-אאוט", desc:"צ׳ק-אאוט עד השעה 11:00. איסוף כל המזוודות והציוד.", transport:""},
      {time:"בוקר/צהריים", badges:["must","notbooked"], title:"נסיעה לנמל התעופה קנסאי (KIX)", desc:"שעת היציאה מהמלון תיקבע לפי שעת הטיסה בפועל, ברגע שתאושר.", transport:"Namba ← KIX: Nankai Rapi:t או JR Kansai Airport Line / Haruka"},
      {time:"טרם נקבע", badges:["notbooked"], title:"טיסה מיפן לישראל", desc:"שעת הטיסה טרם נמסרה. ברגע שתתקבל, פרטי היום יתעדכנו כאן.", transport:""},
      {time:"אופציונלי", badges:["optional"], title:"קניות אחרונות בנמבה", desc:"רק אם שעת הטיסה בפועל תאפשר זאת.", transport:""}
@@ -770,6 +791,25 @@ var ROUTE = [
   {name:"Nara", days:"יום 10", desc:"טיול יום — איילים ופארק נארה."},
   {name:"Osaka", days:"ימים 11–13", desc:"ניאון, קאיוקאן וטיסה הביתה."}
 ];
+
+var HOTELS = [
+  {region:"Yokohama / Tokyo", dates:"14–18 באוקטובר · 4 לילות", name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", status:"booked",
+   details:["חדר אחד לשלושה מבוגרים.", "Sky Pool בבוקר לפני היציאה — רק אם לא עושים את Snoopy Museum באותו יום (ראו יום 5)."]},
+  {region:"Hakone", dates:"18–19 באוקטובר · לילה אחד", name:"Laforet Hakone Gora Yunosumika", status:"booked",
+   details:["חדר יפני-מערבי לשלושה.", "אונסן וארוחת ערב בבית המלון."]},
+  {region:"Kyoto", dates:"19–24 באוקטובר · 5 לילות", name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", status:"booked",
+   details:["שני חדרי טווין — ההורים ואלון בנפרד."]},
+  {region:"Osaka", dates:"24–26 באוקטובר · 2 לילות", name:"The Peak Namba West", status:"paid",
+   details:[
+     "כתובת: 5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka City, Osaka Prefecture 556-0012, Japan",
+     "צ׳ק-אין: 24 באוקטובר, החל מ-15:00 · צ׳ק-אאוט: 26 באוקטובר, עד 11:00",
+     "דירת נופש עד 4 אורחים — 2 מיטות זוגיות, כ-32 מ״ר",
+     "שירותים ומקלחת פרטיים, Wi-Fi. ללא ארוחות.",
+     "עלות ששולמה: A$322.84 — מאושר ושולם במלואו",
+     "ביטול חינם עד 23:59 בשעון המלון המקומי ב-17 באוקטובר 2026. לאחר מכן — ללא החזר."
+   ]}
+];
+var HOTEL_STATUS_LABEL = {booked:"✓ הוזמן", paid:"✓ הוזמן ושולם"};
 
 var LEGEND_CLASS = {must:"must", optional:"optional", booked:"booked", notbooked:"notbooked", flexible:"flexible", weather:"weather"};
 var LEGEND_LABEL = {must:"★ חובה", optional:"○ אופציונלי", booked:"✓ הוזמן", notbooked:"! טרם הוזמן", flexible:"↔ גמיש", weather:"☀ תלוי במזג האוויר"};
@@ -907,6 +947,36 @@ setInterval(updateCountdown, 60000);
       '<div class="idx">'+r.days+'</div><h3>'+r.name+'</h3><p>'+r.desc+'</p>');
     wrap.appendChild(chip);
     if(i < ROUTE.length-1){ wrap.appendChild(el("div","route-arrow","→")); }
+  });
+})();
+
+/* ===================== hotels ===================== */
+(function(){
+  var container = document.getElementById("hotelsContainer");
+  HOTELS.forEach(function(h, hi){
+    var card = el("div","acc-card hotel-card");
+    card.id = "hotel-"+hi;
+    var head = el("button","acc-head","");
+    head.innerHTML =
+      '<span class="ico">🏨</span>'+
+      '<span class="ti"><span class="hotel-meta">'+h.region+' · '+h.dates+'</span><br>'+h.name+'</span>'+
+      '<span class="badge booked">'+HOTEL_STATUS_LABEL[h.status]+'</span>'+
+      '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+    card.appendChild(head);
+    var bodyOuter = el("div","acc-body-outer");
+    var body = el("div","acc-body");
+    var ul = document.createElement("ul");
+    h.details.forEach(function(d){ var l=document.createElement("li"); l.textContent=d; ul.appendChild(l); });
+    body.appendChild(ul);
+    body.appendChild((function(){
+      var actions = el("div","tl-actions");
+      actions.innerHTML = '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(h.name+" "+h.region+" Japan")+'">📍 פתיחה במפות</a>';
+      return actions;
+    })());
+    bodyOuter.appendChild(body);
+    card.appendChild(bodyOuter);
+    container.appendChild(card);
+    makeExpandable(card, head, bodyOuter, false);
   });
 })();
 
@@ -1073,6 +1143,9 @@ renderAccordionList("foodContainer", FOOD, "food");
 function normalizeSearch(s){ return s.toLowerCase().replace(/[׳'’`]/g, ""); }
 function buildSearchIndex(){
   var idx = [];
+  HOTELS.forEach(function(h, hi){
+    idx.push({icon:"🏨", label:h.name, ctx:h.region+" · "+h.dates, cardId:"hotel-"+hi, targetId:"hotel-"+hi, text:normalizeSearch(h.name+" "+h.region+" "+h.details.join(" "))});
+  });
   DAYS.forEach(function(d){
     idx.push({icon:"📅", label:d.title, ctx:"יום "+d.day+" · "+d.weekday+" "+d.dateHe, cardId:"day-"+d.day, targetId:"day-"+d.day, text:normalizeSearch(d.title+" "+d.subtitle+" "+d.city)});
     d.items.forEach(function(it, idx2){
