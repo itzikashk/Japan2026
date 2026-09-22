@@ -422,6 +422,45 @@ footer b{color:var(--on-navy)}
 .gallery-item{aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;background:var(--surface-2);border:0;padding:0}
 .gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
 
+/* ---------- costs / budget ---------- */
+.cost-summary-card{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%);border-radius:var(--r-lg);padding:24px 22px;color:var(--on-navy);box-shadow:var(--shadow-lg)}
+.cost-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.cost-stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-md);padding:14px}
+.cost-stat-label{font-size:.74rem;color:var(--on-navy-2);font-weight:700;margin-bottom:4px}
+.cost-stat-val{font-family:var(--mono);font-size:1.3rem;font-weight:600;color:#fff;direction:ltr;text-align:right;unicode-bidi:isolate}
+.cost-per-person{font-size:.82rem;color:var(--on-navy-2);margin-bottom:6px;line-height:1.6}
+.cost-rate-note{font-size:.74rem;color:var(--on-navy-2);opacity:.85}
+
+.cost-breakdown{display:flex;flex-direction:column;gap:14px;margin-bottom:8px}
+.cost-bar-row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:13px 15px;box-shadow:var(--shadow-sm)}
+.cost-bar-head{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:700;margin-bottom:8px}
+.cost-bar-amt{font-family:var(--mono);font-weight:600;color:var(--ink-2);font-size:.8rem;direction:ltr}
+.cost-bar-track{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.cost-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+
+.cost-row .file-name{white-space:normal}
+.cost-row-amount{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.cost-row-amount .num{font-weight:700;font-size:.9rem;color:var(--ink)}
+.cost-aud-equiv{font-size:.76rem;color:var(--ink-3)}
+.cost-add-btn{display:flex;align-items:center;justify-content:center;width:100%;margin-top:6px}
+
+.expense-form label{display:block;font-size:.8rem;font-weight:700;color:var(--ink-2);margin-bottom:14px}
+.expense-form input,.expense-form select,.expense-form textarea{
+  width:100%;margin-top:6px;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
+  font-family:inherit;font-size:.92rem;background:var(--surface);color:var(--ink)
+}
+.expense-form textarea{resize:vertical}
+.expense-form-row{display:flex;gap:10px}
+.expense-form-row label{flex:1}
+
+.day-cost-total{margin-top:14px}
+.day-cost-btn{
+  width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:var(--r-md);
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-family:inherit;font-weight:700;
+  font-size:.84rem;cursor:pointer
+}
+.day-cost-arrow{color:var(--ink-3);font-weight:400}
+
 /* ---------- dark mode ---------- */
 @media (prefers-color-scheme:dark){
   :root{
@@ -448,6 +487,7 @@ footer b{color:var(--on-navy)}
       <a href="#itinerary">תוכנית יומית</a>
       <a href="#food">אוכל</a>
       <a href="#currency">כסף</a>
+      <a href="#costs">עלויות</a>
       <a href="#packing">ציוד</a>
       <a href="#tips">טיפים</a>
       <a href="#files">קבצים</a>
@@ -488,6 +528,65 @@ footer b{color:var(--on-navy)}
   </div>
 </div>
 
+<div class="modal-overlay" id="expenseFormOverlay">
+  <div class="modal-box" id="expenseFormBox">
+    <div class="modal-head"><span id="expenseFormTitle">הוספת הוצאה</span><button class="icon-mini" id="expenseFormClose" aria-label="סגירה">✕</button></div>
+    <div class="modal-body">
+      <form id="expenseForm" class="expense-form">
+        <input type="hidden" id="expenseId">
+        <label>תיאור
+          <input type="text" id="expDescription" required placeholder="למשל: ארוחת ערב, שינקנסן...">
+        </label>
+        <div class="expense-form-row">
+          <label>סכום
+            <input type="number" id="expAmount" step="0.01" min="0.01" required inputmode="decimal">
+          </label>
+          <label>מטבע
+            <select id="expCurrency"><option value="AUD">AUD</option><option value="JPY">JPY</option></select>
+          </label>
+        </div>
+        <label>קטגוריה
+          <select id="expCategory"></select>
+        </label>
+        <div class="expense-form-row">
+          <label>תאריך
+            <input type="date" id="expDate">
+          </label>
+          <label>יום בטיול (אופציונלי)
+            <select id="expTripDay"><option value="">—</option></select>
+          </label>
+        </div>
+        <div class="expense-form-row">
+          <label>סטטוס
+            <select id="expStatus">
+              <option value="planned">מתוכנן</option>
+              <option value="unpaid">טרם שולם</option>
+              <option value="paid">שולם</option>
+            </select>
+          </label>
+          <label>שולם ע״י
+            <select id="expPaidBy">
+              <option value="Family">משפחה / משותף</option>
+              <option value="Isaac">Isaac</option>
+              <option value="Anat">Anat</option>
+              <option value="Alon">Alon</option>
+              <option value="Other">אחר</option>
+            </select>
+          </label>
+        </div>
+        <label>הערות (אופציונלי)
+          <textarea id="expNotes" rows="2"></textarea>
+        </label>
+        <label>צרף קבלה (אופציונלי)
+          <input type="file" id="expReceiptInput" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf">
+        </label>
+        <div class="upload-status" id="expReceiptStatus"></div>
+        <button type="submit" class="upload-btn" style="width:100%;justify-content:center;margin-top:6px" id="expenseSaveBtn">שמירה</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="mobile-nav" id="mobileNav">
   <div class="wrap">
     <a href="#top">ראשי <span class="ico">🎌</span></a>
@@ -496,6 +595,7 @@ footer b{color:var(--on-navy)}
     <a href="#itinerary">תוכנית יומית <span class="ico">📅</span></a>
     <a href="#food">אוכל, שתייה וקינוחים <span class="ico">🍜</span></a>
     <a href="#currency">כסף והמרת מטבע <span class="ico">💴</span></a>
+    <a href="#costs">עלויות ותקציב <span class="ico">📊</span></a>
     <a href="#packing">רשימות ציוד <span class="ico">🎒</span></a>
     <a href="#tips">טיפים חשובים <span class="ico">💡</span></a>
     <a href="#phrases">ביטויים ביפנית <span class="ico">🗣️</span></a>
@@ -728,6 +828,53 @@ footer b{color:var(--on-navy)}
     </div>
   </section>
 
+  <section id="costs">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">עלויות ותקציב</div>
+        <h2>איפה אנחנו עומדים כלכלית</h2>
+        <p>עלויות מאושרות משולבות עם הוצאות שמוסיפים תוך כדי — סכומים ב-JPY מומרים ל-AUD לפי השער החי.</p>
+      </div>
+
+      <div class="cost-summary-card reveal">
+        <div class="cost-summary-grid">
+          <div class="cost-stat"><div class="cost-stat-label">עלות כוללת</div><div class="cost-stat-val" id="costTotalVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label">שולם</div><div class="cost-stat-val" id="costPaidVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label">נותר לתשלום</div><div class="cost-stat-val" id="costRemainingVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label">מתוכנן</div><div class="cost-stat-val" id="costPlannedVal">—</div></div>
+        </div>
+        <div class="cost-per-person" id="costPerPerson"></div>
+        <div class="cost-rate-note" id="costRateNote">טוענים שער המרה עדכני…</div>
+      </div>
+
+      <div class="section-head reveal" style="margin-top:32px">
+        <div class="eyebrow">לפי קטגוריה</div>
+        <h2>התפלגות הוצאות</h2>
+      </div>
+      <div class="cost-breakdown" id="costBreakdown"></div>
+
+      <div class="section-head reveal" style="margin-top:32px">
+        <div class="eyebrow">כל ההוצאות</div>
+        <h2>רשימה מלאה</h2>
+      </div>
+      <div class="files-toolbar">
+        <input type="text" id="costSearchInput" placeholder="🔍 חיפוש בהוצאות...">
+        <select id="costCategoryFilter"><option value="">כל הקטגוריות</option></select>
+        <select id="costStatusFilter">
+          <option value="">כל הסטטוסים</option>
+          <option value="paid">שולם</option>
+          <option value="unpaid">טרם שולם</option>
+          <option value="planned">מתוכנן</option>
+        </select>
+        <select id="costDayFilter"><option value="">כל הימים</option></select>
+      </div>
+      <div class="cost-list file-grid" id="costList"></div>
+      <div class="files-empty" id="costEmptyMsg" hidden></div>
+
+      <button class="upload-btn cost-add-btn" id="addExpenseBtn">＋ הוספת הוצאה</button>
+    </div>
+  </section>
+
   <section id="spontaneous">
     <div class="wrap">
       <div class="section-head reveal">
@@ -756,10 +903,13 @@ footer b{color:var(--on-navy)}
 
 var DAYS = [
   {day:1, dateISO:"2026-10-14", weekday:"רביעי", dateHe:"14 באוקטובר", city:"Yokohama",
-   title:"הגעה ונחיתה רכה", subtitle:"Arrival & Soft Landing",
+   title:"טיסה והגעה ליפן", subtitle:"Flight & Arrival",
+   note:"הנחיתה בהאנדה רק ב-20:10 בערב — היום נשאר יום נסיעה בלבד, בלי סיורים. אחרי המלון פשוט נחים.",
    items:[
-     {time:"אחה״צ", badges:["must"], title:"Mitsui Garden Hotel Yokohama Minatomirai Premier", desc:"הגעה, מעבר למלון וצ׳ק-אין.", transport:"שדה התעופה ← יוקוהמה / Minatomirai"},
-     {time:"ערב", badges:["optional"], title:"Minato Mirai Waterfront", desc:"הליכה קלה לאורך קו המים וארוחת ערב רגועה.", transport:"מלון ← הטיילת: הליכה"}
+     {time:"12:15", badges:["must","booked"], title:"טיסה Sydney → Tokyo Haneda", desc:"Qantas QF059. כרטיס הונפק. נחיתה משוערת 20:10 (שעון מקומי).", transport:"Sydney (SYD) → Tokyo Haneda (HND)"},
+     {time:"20:10", badges:["must"], title:"נחיתה בהאנדה, ביקורת גבולות ומזוודות", desc:"ביקורת דרכונים, איסוף מזוודות ויציאה משדה התעופה.", transport:"Tokyo Haneda (HND)"},
+     {time:"ערב", badges:["must"], title:"מעבר ליוקוהמה", desc:"נסיעה מהאנדה לאזור Minatomirai.", transport:"Haneda ← יוקוהמה / Minatomirai"},
+     {time:"ערב מאוחר", badges:["must"], title:"Mitsui Garden Hotel Yokohama Minatomirai Premier", desc:"צ׳ק-אין ושינה. מינימרקט קרוב אם צריך משהו קטן — לא מתוכנן שום סיור הערב.", transport:""}
    ]},
   {day:2, dateISO:"2026-10-15", weekday:"חמישי", dateHe:"15 באוקטובר", city:"Tokyo",
    title:"טוקיו הקלאסית · גינזה · אודייבה", subtitle:"Classic Tokyo · Ginza · Odaiba",
@@ -851,13 +1001,15 @@ var DAYS = [
      {time:"ערב", badges:["flexible"], title:"ארוחת פרידה באוסקה", desc:"ערב אחרון נעים באוסקה, בלי מרוץ בין אטרקציות.", transport:""}
    ]},
   {day:13, dateISO:"2026-10-26", weekday:"שני", dateHe:"26 באוקטובר", city:"Osaka",
-   title:"אוסקה → נמל תעופה קנסאי → ישראל", subtitle:"Osaka → Kansai International Airport → Israel",
-   note:"מומלץ להשאיר מרווח ביטחון נוח לטיסה בינלאומית בשדה קנסאי. ברגע ששעת הטיסה תאושר, לוח הזמנים של היום — כולל שעת היציאה המומלצת מהמלון — יתעדכן בהתאם.",
+   title:"יום אחרון באוסקה → דובאי → תל אביב", subtitle:"Osaka → Kansai → Dubai → Tel Aviv",
+   note:"הטיסה מאוסקה יוצאת רק ב-23:10, אז 26 באוקטובר נשאר יום שימושי לגמרי באוסקה — בלי להוסיף אטרקציה גדולה נוספת אוטומטית. הטיסה חוזרת דרך דובאי, עם נחיתה בתל אביב בבוקר ה-27 באוקטובר.",
    items:[
-     {time:"בוקר", badges:["must"], title:"The Peak Namba West — צ׳ק-אאוט", desc:"צ׳ק-אאוט עד השעה 11:00. איסוף כל המזוודות והציוד.", transport:""},
-     {time:"בוקר/צהריים", badges:["must","notbooked"], title:"נסיעה לנמל התעופה קנסאי (KIX)", desc:"שעת היציאה מהמלון תיקבע לפי שעת הטיסה בפועל, ברגע שתאושר.", transport:"Namba ← KIX: Nankai Rapi:t או JR Kansai Airport Line / Haruka"},
-     {time:"טרם נקבע", badges:["notbooked"], title:"טיסה מיפן לישראל", desc:"שעת הטיסה טרם נמסרה. ברגע שתתקבל, פרטי היום יתעדכנו כאן.", transport:""},
-     {time:"אופציונלי", badges:["optional"], title:"קניות אחרונות בנמבה", desc:"רק אם שעת הטיסה בפועל תאפשר זאת.", transport:""}
+     {time:"בוקר", badges:["must"], title:"The Peak Namba West — צ׳ק-אאוט", desc:"צ׳ק-אאוט עד השעה 11:00. איסוף כל המזוודות והציוד, ואפשר להשאיר מזוודות בעמדת אחסון מתאימה להמשך היום.", transport:""},
+     {time:"לפנה״צ / אחה״צ", badges:["optional"], title:"יום אחרון נינוח באוסקה", desc:"קניות אחרונות, ארוחת צהריים וזמן פנוי — בלי אטרקציה גדולה נוספת.", transport:""},
+     {time:"אחה״צ מאוחר", badges:["must"], title:"איסוף מזוודות והמשך לשדה התעופה", desc:"איסוף הציוד המאוחסן והמשך לכיוון קנסאי.", transport:""},
+     {time:"אחה״צ/ערב", badges:["must","notbooked"], title:"נסיעה לנמל התעופה קנסאי (KIX)", desc:"שעת היציאה המומלצת מאוסקה תחושב בהמשך לפי אמצעי ההגעה לשדה שייבחר — לא קובעים כרגע הזמנת רכבת ספציפית.", transport:"Namba ← KIX: Nankai Rapi:t או JR Kansai Airport Line / Haruka"},
+     {time:"23:10", badges:["must","booked"], title:"טיסה Osaka Kansai → Dubai", desc:"Emirates EK317. נחיתה בדובאי 05:25 ב-27 באוקטובר (שעון מקומי).", transport:"Osaka Kansai (KIX) → Dubai (DXB)"},
+     {time:"27/10 · 07:15", badges:["must","booked"], title:"טיסת המשך Dubai → Tel Aviv", desc:"EK2369, מופעלת בפועל כ-FZ1549. נחיתה בתל אביב 09:10.", transport:"Dubai (DXB) → Tel Aviv (TLV)"}
    ]}
 ];
 
@@ -1128,6 +1280,7 @@ function searchUrl(q){ return "https://www.google.com/search?q="+encodeURICompon
       tl.appendChild(item);
     });
     body.appendChild(tl);
+    body.appendChild(buildDayCostTotal(d.day));
     body.appendChild(buildDayFilesBlock(d.day));
     bodyOuter.appendChild(body);
     card.appendChild(bodyOuter);
@@ -1351,6 +1504,7 @@ function applyRate(rate, source, updatedDate){
     document.getElementById("rateUpdated").textContent = "שער ידני לצורך הערכה בלבד — לא שער אמיתי בזמן אמת.";
   }
   recompute("jpy");
+  if(typeof renderAllCostSections === "function") renderAllCostSections();
 }
 
 function fetchFrankfurter(){
@@ -1442,7 +1596,7 @@ var CATEGORIES = ["כרטיסים","מלון","תחבורה","מסעדה","מפ�
 var CATEGORY_ICON = {"כרטיסים":"🎫","מלון":"🏨","תחבורה":"🚆","מסעדה":"🍽️","מפה":"🗺️","קבלה":"🧾","תמונה":"🖼️","מסמך":"📄","אחר":"📎"};
 var FILES_STATE = { all: [] };
 var filesFilter = { q:"", day:"", category:"" };
-var pendingDeleteFile = null;
+var pendingDelete = null; // {type:"file"|"expense", id, label}
 
 function esc(s){
   return String(s==null ? "" : s).replace(/[&<>"']/g, function(c){
@@ -1611,14 +1765,17 @@ function closePreview(){
   document.getElementById("previewBox").innerHTML = "";
 }
 
-function confirmDelete(file){
-  pendingDeleteFile = file;
-  document.getElementById("confirmText").textContent = 'למחוק את הקובץ "'+file.displayName+'"?';
+function confirmDeleteGeneric(type, id, label){
+  pendingDelete = {type:type, id:id};
+  document.getElementById("confirmText").textContent = 'למחוק את "'+label+'"?';
   document.getElementById("confirmOverlay").classList.add("open");
+}
+function confirmDelete(file){
+  confirmDeleteGeneric("file", file.id, file.displayName);
 }
 function closeConfirm(){
   document.getElementById("confirmOverlay").classList.remove("open");
-  pendingDeleteFile = null;
+  pendingDelete = null;
 }
 
 /* ---- actions ---- */
@@ -1647,7 +1804,7 @@ function updateFileCategory(file, newCat){
 }
 
 document.addEventListener("click", function(e){
-  var card = e.target.closest && e.target.closest(".file-card");
+  var card = e.target.closest && e.target.closest(".file-card:not(.cost-row)");
   if(card){
     var file = FILES_STATE.all.find(function(f){ return f.id === card.dataset.id; });
     if(file){
@@ -1659,6 +1816,28 @@ document.addEventListener("click", function(e){
       else if(action === "delete") confirmDelete(file);
     }
   }
+  var costRow = e.target.closest && e.target.closest(".cost-row");
+  if(costRow){
+    var expense = allExpenses().find(function(x){ return x.id === costRow.dataset.id; });
+    if(expense && !expense.confirmed){
+      var costActionEl = e.target.closest("[data-action]");
+      var costAction = costActionEl && costActionEl.dataset.action;
+      if(costAction === "edit") openExpenseForm(expense);
+      else if(costAction === "duplicate") duplicateExpense(expense);
+      else if(costAction === "delete") confirmDeleteGeneric("expense", expense.id, expense.description);
+    }
+  }
+  var dayCostBtn = e.target.closest && e.target.closest(".day-cost-btn");
+  if(dayCostBtn){
+    var d = dayCostBtn.dataset.day;
+    costFilter.day = d;
+    var daySel = document.getElementById("costDayFilter");
+    if(daySel) daySel.value = d;
+    renderCostList();
+    document.getElementById("costs").scrollIntoView({behavior:"smooth"});
+  }
+  if(e.target.id === "addExpenseBtn") openExpenseForm(null);
+  if(e.target.id === "expenseFormClose" || e.target.id === "expenseFormOverlay") closeExpenseForm();
   if(e.target.id === "previewOverlay") closePreview();
   if(e.target.id === "confirmOverlay") closeConfirm();
 });
@@ -1674,15 +1853,21 @@ document.addEventListener("change", function(e){
 });
 document.getElementById("confirmCancel").addEventListener("click", closeConfirm);
 document.getElementById("confirmOk").addEventListener("click", function(){
-  if(!pendingDeleteFile) return;
-  var id = pendingDeleteFile.id;
-  fetch("/api/files?id="+encodeURIComponent(id), {method:"DELETE"})
+  if(!pendingDelete) return;
+  var type = pendingDelete.type, id = pendingDelete.id;
+  var url = type === "file" ? ("/api/files?id="+encodeURIComponent(id)) : ("/api/expenses?id="+encodeURIComponent(id));
+  fetch(url, {method:"DELETE"})
     .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
     .then(function(){
-      FILES_STATE.all = FILES_STATE.all.filter(function(f){ return f.id !== id; });
-      renderAllFileSections();
+      if(type === "file"){
+        FILES_STATE.all = FILES_STATE.all.filter(function(f){ return f.id !== id; });
+        renderAllFileSections();
+      } else {
+        EXPENSES_STATE.manual = EXPENSES_STATE.manual.filter(function(x){ return x.id !== id; });
+        renderAllCostSections();
+      }
     })
-    .catch(function(){ alert("מחיקת הקובץ נכשלה. נסו שוב."); })
+    .catch(function(){ alert("המחיקה נכשלה. נסו שוב."); })
     .finally(function(){ closeConfirm(); });
 });
 
@@ -1791,6 +1976,316 @@ function uploadFileXhr(file, day, onProgress){
 }
 
 loadAllFiles();
+
+/* ===================== costs / budget ===================== */
+var EXPENSE_CATEGORIES = ["טיסות","מלונות","רכבות בין-עירוניות","תחבורה מקומית","אטרקציות","אוכל","קניות","כרטיסים","מזוודות / משלוח מזוודות","SIM / אינטרנט","ביטוח","מוניות","אחר"];
+var EXPENSE_CATEGORY_ICON = {
+  "טיסות":"✈️","מלונות":"🏨","רכבות בין-עירוניות":"🚄","תחבורה מקומית":"🚇","אטרקציות":"🎟️","אוכל":"🍽️",
+  "קניות":"🛍️","כרטיסים":"🎫","מזוודות / משלוח מזוודות":"🧳","SIM / אינטרנט":"📶","ביטוח":"🛡️","מוניות":"🚕","אחר":"📎"
+};
+var STATUS_LABEL = {paid:"✓ שולם", unpaid:"! טרם שולם", planned:"↔ מתוכנן"};
+var STATUS_CLASS = {paid:"booked", unpaid:"notbooked", planned:"flexible"};
+
+// Confirmed costs: static, like the rest of the site's confirmed
+// bookings — not stored via the API, not editable/deletable in the UI,
+// so a stray click can never make a paid booking's cost disappear.
+var CONFIRMED_EXPENSES = [
+  {id:"c-flights", confirmed:true, description:"טיסות — Sydney ⇄ Tokyo / Osaka ⇄ Dubai ⇄ Tel Aviv", amount:7118.67, currency:"AUD", category:"טיסות", date:"2026-10-14", tripDay:1, status:"paid", paidBy:"Family", notes:"Trip.com — כרטיס הונפק"},
+  {id:"c-yokohama", confirmed:true, description:"Mitsui Garden Hotel Yokohama Minatomirai Premier", amount:1231.00, currency:"AUD", category:"מלונות", date:"2026-10-14", tripDay:1, status:"paid", paidBy:"Family", notes:"14–18 באוקטובר · 4 לילות · Deluxe, 3 מיטות"},
+  {id:"c-hakone", confirmed:true, description:"Laforet Hakone Gora Yunosumika", amount:60016, currency:"JPY", category:"מלונות", date:"2026-10-18", tripDay:5, status:"unpaid", paidBy:"Family", notes:"תשלום במלון (Pay at property). חדר ¥49,228 + מיסים ¥10,338 + מס עירייה ¥450."},
+  {id:"c-kyoto-1", confirmed:true, description:"Shizutetsu Hotel Prezio Kyoto — חדר 1", amount:920.84, currency:"AUD", category:"מלונות", date:"2026-10-19", tripDay:7, status:"paid", paidBy:"Family", notes:"19–24 באוקטובר · 5 לילות · טווין"},
+  {id:"c-kyoto-2", confirmed:true, description:"Shizutetsu Hotel Prezio Kyoto — חדר 2", amount:1023.08, currency:"AUD", category:"מלונות", date:"2026-10-19", tripDay:7, status:"paid", paidBy:"Family", notes:"19–24 באוקטובר · 5 לילות · טווין"},
+  {id:"c-osaka", confirmed:true, description:"The Peak Namba West", amount:322.84, currency:"AUD", category:"מלונות", date:"2026-10-24", tripDay:11, status:"paid", paidBy:"Family", notes:"24–26 באוקטובר · 2 לילות · דירת נופש ל-4"}
+];
+
+var EXPENSES_STATE = { manual: [] };
+var costFilter = { q:"", category:"", status:"", day:"" };
+
+function allExpenses(){ return CONFIRMED_EXPENSES.concat(EXPENSES_STATE.manual); }
+
+function expenseAmountAUD(e){
+  if(e.currency === "AUD") return e.amount;
+  if(state.rate) return e.amount / state.rate;
+  return null;
+}
+
+function computeCostSummary(){
+  var totalAUD=0, paidAUD=0, remainingAUD=0, plannedAUD=0, anyUnknownRate=false;
+  allExpenses().forEach(function(e){
+    var aud = expenseAmountAUD(e);
+    if(aud === null){ anyUnknownRate = true; return; }
+    totalAUD += aud;
+    if(e.status === "paid") paidAUD += aud;
+    else if(e.status === "unpaid") remainingAUD += aud;
+    else if(e.status === "planned") plannedAUD += aud;
+  });
+  return {totalAUD:totalAUD, paidAUD:paidAUD, remainingAUD:remainingAUD, plannedAUD:plannedAUD, anyUnknownRate:anyUnknownRate};
+}
+
+function computeCategoryBreakdown(){
+  var byCat = {}, total = 0;
+  allExpenses().forEach(function(e){
+    var aud = expenseAmountAUD(e);
+    if(aud === null) return;
+    byCat[e.category] = (byCat[e.category]||0) + aud;
+    total += aud;
+  });
+  var rows = Object.keys(byCat).map(function(cat){
+    return {category:cat, amount:byCat[cat], pct: total>0 ? (byCat[cat]/total*100) : 0};
+  });
+  rows.sort(function(a,b){ return b.amount - a.amount; });
+  return rows;
+}
+
+function renderCostSummary(){
+  var totalEl = document.getElementById("costTotalVal");
+  if(!totalEl) return;
+  var s = computeCostSummary();
+  totalEl.textContent = "A$"+fmt2(s.totalAUD);
+  document.getElementById("costPaidVal").textContent = "A$"+fmt2(s.paidAUD);
+  document.getElementById("costRemainingVal").textContent = "A$"+fmt2(s.remainingAUD);
+  document.getElementById("costPlannedVal").textContent = "A$"+fmt2(s.plannedAUD);
+  var perPerson = s.totalAUD / 3;
+  document.getElementById("costPerPerson").textContent =
+    "עלות משפחתית כוללת: A$"+fmt2(s.totalAUD)+" · ממוצע לאדם (חלוקה שווה בלבד, לא בהכרח מי ששילם בפועל): A$"+fmt2(perPerson);
+  var rateNote = document.getElementById("costRateNote");
+  var txt = state.rate
+    ? ("שער המרה בשימוש: A$1 = ¥"+fmt2(state.rate)+(state.updated ? (" · עודכן: "+state.updated.toLocaleString("he-IL",{dateStyle:"medium",timeStyle:"short"})) : ""))
+    : "טוענים שער המרה עדכני…";
+  if(s.anyUnknownRate) txt += " · חלק מהסכומים ב-JPY עדיין ממתינים לשער";
+  rateNote.textContent = txt;
+}
+
+function renderBreakdown(){
+  var container = document.getElementById("costBreakdown");
+  if(!container) return;
+  var rows = computeCategoryBreakdown();
+  container.innerHTML = "";
+  if(!rows.length){
+    container.innerHTML = '<div class="files-empty">אין עדיין הוצאות להצגה.</div>';
+    return;
+  }
+  rows.forEach(function(r){
+    var row = el("div","cost-bar-row");
+    row.innerHTML =
+      '<div class="cost-bar-head"><span>'+(EXPENSE_CATEGORY_ICON[r.category]||"📎")+" "+esc(r.category)+'</span>'+
+      '<span class="cost-bar-amt">A$'+fmt2(r.amount)+' · '+r.pct.toFixed(0)+'%</span></div>'+
+      '<div class="cost-bar-track"><div class="cost-bar-fill" style="width:'+r.pct.toFixed(1)+'%"></div></div>';
+    container.appendChild(row);
+  });
+}
+
+function renderExpenseRow(e){
+  var row = el("div","file-card cost-row");
+  row.dataset.id = e.id;
+  var aud = expenseAmountAUD(e);
+  var amountHtml = e.currency === "AUD"
+    ? '<span class="num">A$'+fmt2(e.amount)+'</span>'
+    : '<span class="num">¥'+fmtInt(e.amount)+'</span>'+(aud!==null ? ' <span class="cost-aud-equiv">≈ A$'+fmt2(aud)+'</span>' : ' <span class="cost-aud-equiv">(ממתין לשער)</span>');
+  var dayLabel = e.tripDay ? (" · יום "+e.tripDay) : "";
+  var actionsHtml = e.confirmed
+    ? '<span class="badge booked">✓ מאושר</span>'
+    : '<button class="icon-mini" data-action="edit" title="עריכה" aria-label="עריכה">✏️</button>'+
+      '<button class="icon-mini" data-action="duplicate" title="שכפול" aria-label="שכפול">⧉</button>'+
+      '<button class="icon-mini" data-action="delete" title="מחיקה" aria-label="מחיקה">🗑️</button>';
+  row.innerHTML =
+    '<div class="file-thumb-icon" style="width:52px;height:52px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex:0 0 auto">'+(EXPENSE_CATEGORY_ICON[e.category]||"📎")+'</div>'+
+    '<div class="file-info" style="cursor:default">'+
+      '<div class="file-name">'+esc(e.description)+'</div>'+
+      '<div class="file-meta">'+esc(e.category)+dayLabel+(e.date ? (" · "+e.date) : "")+(e.paidBy && e.paidBy!=="Family" ? (" · "+esc(e.paidBy)) : "")+'</div>'+
+      '<div class="cost-row-amount">'+amountHtml+' <span class="badge '+STATUS_CLASS[e.status]+'">'+STATUS_LABEL[e.status]+'</span></div>'+
+    '</div>'+
+    '<div class="file-actions">'+actionsHtml+'</div>';
+  return row;
+}
+
+function renderCostList(){
+  var list = allExpenses().slice();
+  if(costFilter.category) list = list.filter(function(e){ return e.category === costFilter.category; });
+  if(costFilter.status) list = list.filter(function(e){ return e.status === costFilter.status; });
+  if(costFilter.day) list = list.filter(function(e){ return String(e.tripDay) === costFilter.day; });
+  if(costFilter.q){
+    var needle = costFilter.q.trim().toLowerCase();
+    list = list.filter(function(e){
+      return (e.description||"").toLowerCase().indexOf(needle) !== -1 || (e.notes||"").toLowerCase().indexOf(needle) !== -1;
+    });
+  }
+  list.sort(function(a,b){ return (b.date||"").localeCompare(a.date||""); });
+  var container = document.getElementById("costList");
+  if(!container) return;
+  container.innerHTML = "";
+  list.forEach(function(e){ container.appendChild(renderExpenseRow(e)); });
+  var emptyMsg = document.getElementById("costEmptyMsg");
+  if(emptyMsg){
+    emptyMsg.hidden = list.length > 0;
+    if(list.length === 0){
+      emptyMsg.textContent = allExpenses().length === 0 ? "עדיין אין הוצאות." : "אין הוצאות שתואמות את הסינון הנוכחי.";
+    }
+  }
+}
+
+function renderDayCostTotals(){
+  DAYS.forEach(function(d){
+    var container = document.getElementById("day-cost-total-"+d.day);
+    if(!container) return;
+    var dayExpenses = allExpenses().filter(function(e){ return Number(e.tripDay) === d.day; });
+    if(!dayExpenses.length){ container.hidden = true; container.innerHTML = ""; return; }
+    var total = 0, unknown = false;
+    dayExpenses.forEach(function(e){ var a = expenseAmountAUD(e); if(a===null){ unknown=true; } else { total += a; } });
+    container.hidden = false;
+    container.innerHTML = '<button class="day-cost-btn" data-day="'+d.day+'">💰 הוצאות היום: A$'+fmt2(total)+(unknown?" +":"")+' <span class="day-cost-arrow">←</span></button>';
+  });
+}
+
+function renderAllCostSections(){
+  renderCostSummary();
+  renderBreakdown();
+  renderCostList();
+  renderDayCostTotals();
+}
+
+function buildDayCostTotal(dayNum){
+  var div = el("div","day-cost-total");
+  div.id = "day-cost-total-"+dayNum;
+  div.hidden = true;
+  return div;
+}
+
+function loadExpenses(){
+  return fetch("/api/expenses").then(function(r){
+    if(!r.ok) throw new Error("failed");
+    return r.json();
+  }).then(function(data){
+    EXPENSES_STATE.manual = data.expenses || [];
+    renderAllCostSections();
+  }).catch(function(){
+    renderAllCostSections();
+  });
+}
+
+function duplicateExpense(expense){
+  var copy = {
+    description: expense.description+" (עותק)", amount: expense.amount, currency: expense.currency,
+    category: expense.category, date: expense.date, tripDay: expense.tripDay, status: expense.status,
+    paidBy: expense.paidBy, notes: expense.notes
+  };
+  fetch("/api/expenses", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(copy)})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(data){ EXPENSES_STATE.manual.unshift(data.expense); renderAllCostSections(); })
+    .catch(function(){ alert("השכפול נכשל. נסו שוב."); });
+}
+
+function todayDetectedDate(){ return new Date().toISOString().slice(0,10); }
+function detectTodayTripDay(){
+  var day = DAYS.find(function(d){ return d.dateISO === todayDetectedDate(); });
+  return day ? String(day.day) : "";
+}
+
+function openExpenseForm(expense){
+  document.getElementById("expenseFormTitle").textContent = expense ? "עריכת הוצאה" : "הוספת הוצאה";
+  document.getElementById("expenseId").value = expense ? expense.id : "";
+  document.getElementById("expDescription").value = expense ? expense.description : "";
+  document.getElementById("expAmount").value = expense ? expense.amount : "";
+  document.getElementById("expCurrency").value = expense ? expense.currency : "AUD";
+  document.getElementById("expCategory").value = expense ? expense.category : "אחר";
+  document.getElementById("expDate").value = expense ? expense.date : todayDetectedDate();
+  document.getElementById("expTripDay").value = expense && expense.tripDay ? String(expense.tripDay) : detectTodayTripDay();
+  document.getElementById("expStatus").value = expense ? expense.status : "paid";
+  document.getElementById("expPaidBy").value = expense ? expense.paidBy : "Family";
+  document.getElementById("expNotes").value = expense ? (expense.notes||"") : "";
+  document.getElementById("expReceiptInput").value = "";
+  document.getElementById("expReceiptStatus").textContent = "";
+  document.getElementById("expenseFormOverlay").classList.add("open");
+}
+function closeExpenseForm(){
+  document.getElementById("expenseFormOverlay").classList.remove("open");
+}
+
+(function initCostFilters(){
+  var catSel = document.getElementById("costCategoryFilter");
+  var formCatSel = document.getElementById("expCategory");
+  var daySel = document.getElementById("costDayFilter");
+  var formDaySel = document.getElementById("expTripDay");
+  EXPENSE_CATEGORIES.forEach(function(c){
+    var label = (EXPENSE_CATEGORY_ICON[c]||"")+" "+c;
+    var o1 = document.createElement("option"); o1.value = c; o1.textContent = label; catSel.appendChild(o1);
+    var o2 = document.createElement("option"); o2.value = c; o2.textContent = label; formCatSel.appendChild(o2);
+  });
+  DAYS.forEach(function(d){
+    var label = "יום "+d.day+" · "+d.dateHe;
+    var o1 = document.createElement("option"); o1.value = String(d.day); o1.textContent = label; daySel.appendChild(o1);
+    var o2 = document.createElement("option"); o2.value = String(d.day); o2.textContent = label; formDaySel.appendChild(o2);
+  });
+  document.getElementById("costSearchInput").addEventListener("input", function(e){ costFilter.q = e.target.value; renderCostList(); });
+  catSel.addEventListener("change", function(e){ costFilter.category = e.target.value; renderCostList(); });
+  document.getElementById("costStatusFilter").addEventListener("change", function(e){ costFilter.status = e.target.value; renderCostList(); });
+  daySel.addEventListener("change", function(e){ costFilter.day = e.target.value; renderCostList(); });
+})();
+
+document.getElementById("expenseForm").addEventListener("submit", function(ev){
+  ev.preventDefault();
+  var id = document.getElementById("expenseId").value;
+  var payload = {
+    description: document.getElementById("expDescription").value,
+    amount: document.getElementById("expAmount").value,
+    currency: document.getElementById("expCurrency").value,
+    category: document.getElementById("expCategory").value,
+    date: document.getElementById("expDate").value,
+    tripDay: document.getElementById("expTripDay").value || null,
+    status: document.getElementById("expStatus").value,
+    paidBy: document.getElementById("expPaidBy").value,
+    notes: document.getElementById("expNotes").value
+  };
+  var saveBtn = document.getElementById("expenseSaveBtn");
+  saveBtn.disabled = true; saveBtn.textContent = "שומר…";
+
+  var receiptFile = document.getElementById("expReceiptInput").files[0];
+  var receiptStatus = document.getElementById("expReceiptStatus");
+  var uploadPromise = Promise.resolve(null);
+
+  if(receiptFile){
+    receiptStatus.textContent = "מעלה קבלה…";
+    uploadPromise = prepareFileForUpload(receiptFile).then(function(prepared){
+      return uploadFileXhr(prepared, payload.tripDay || "", function(pct){ receiptStatus.textContent = "מעלה קבלה… "+pct+"%"; });
+    }).then(function(record){
+      return fetch("/api/files", {
+        method:"PATCH", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({id:record.id, category:"קבלה", displayName: payload.description ? ("קבלה — "+payload.description) : record.displayName})
+      }).then(function(){ receiptStatus.textContent = "✓ קבלה הועלתה"; return record.id; });
+    }).catch(function(){
+      receiptStatus.textContent = "העלאת הקבלה נכשלה — ההוצאה תישמר בלעדיה.";
+      return null;
+    });
+  }
+
+  uploadPromise.then(function(receiptFileId){
+    if(receiptFileId) payload.receiptFileId = receiptFileId;
+    if(id) payload.id = id;
+    return fetch("/api/expenses", {
+      method: id ? "PATCH" : "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+  }).then(function(r){
+    if(!r.ok) return r.json().then(function(d){ throw new Error((d && d.error) || "שגיאה בשמירה"); });
+    return r.json();
+  }).then(function(data){
+    if(id){
+      var idx = EXPENSES_STATE.manual.findIndex(function(x){ return x.id === id; });
+      if(idx !== -1) EXPENSES_STATE.manual[idx] = data.expense;
+    } else {
+      EXPENSES_STATE.manual.unshift(data.expense);
+    }
+    renderAllCostSections();
+    closeExpenseForm();
+  }).catch(function(err){
+    alert(err.message || "שמירת ההוצאה נכשלה.");
+  }).finally(function(){
+    saveBtn.disabled = false; saveBtn.textContent = "שמירה";
+  });
+});
+
+loadExpenses();
 
 /* ===================== scroll reveal ===================== */
 (function(){
