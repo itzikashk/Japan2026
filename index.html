@@ -206,6 +206,8 @@ section{padding:52px 0}
 .badge.notbooked{background:var(--amber-soft);color:var(--amber)}
 .badge.flexible{background:var(--blue-soft);color:var(--blue)}
 .badge.weather{background:var(--sky-soft);color:var(--sky)}
+.badge.priority{background:var(--gold-soft);color:var(--gold);font-weight:800}
+.badge.scheduledep{background:var(--blue-soft);color:var(--blue)}
 .legend .badge{font-size:.72rem;padding:5px 11px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
 .legend .badge b{font-weight:800}
 
@@ -242,6 +244,35 @@ section{padding:52px 0}
   padding:11px 13px;font-size:.84rem;line-height:1.55;margin:6px 0 16px;font-weight:600;
 }
 .day-note .ic{flex:0 0 auto}
+
+.highlight-card{
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%);border-radius:var(--r-md);
+  padding:18px;margin:6px 0 18px;color:var(--on-navy);
+}
+.highlight-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.highlight-icon{font-size:1.5rem;flex:0 0 auto}
+.highlight-title{font-weight:800;font-size:1.02rem;color:#fff;line-height:1.35}
+.highlight-sub{font-size:.8rem;color:var(--on-navy-2);margin-top:2px;direction:ltr;text-align:right;unicode-bidi:isolate}
+.highlight-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.highlight-quote{
+  font-size:.86rem;line-height:1.65;color:var(--on-navy);margin:0 0 10px;padding-inline-end:12px;
+  border-inline-end:2px solid var(--accent);font-style:italic;
+}
+.highlight-note{font-size:.8rem;color:var(--on-navy-2);line-height:1.6;margin:0 0 10px}
+.highlight-warning{
+  display:flex;gap:8px;align-items:flex-start;background:rgba(198,48,79,.16);border:1px solid rgba(198,48,79,.3);
+  border-radius:var(--r-sm);padding:10px 12px;font-size:.8rem;color:#f3c3ce;line-height:1.55;margin-bottom:12px;
+}
+.highlight-plan{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.highlight-plan-item{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--on-navy)}
+.highlight-plan-item .ic{flex:0 0 auto;font-size:.95rem}
+.highlight-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.highlight-tag{
+  display:inline-flex;align-items:center;font-size:.72rem;font-weight:700;color:var(--on-navy-2);
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:99px;padding:4px 10px;
+}
+.highlight-card .btn-mini{background:#fff;color:var(--navy);border-color:#fff}
+.highlight-card .btn-mini:hover{background:var(--on-navy)}
 
 .timeline{position:relative;padding-inline-start:0}
 .tl-item{position:relative;padding-inline-end:26px;padding-bottom:18px}
@@ -664,6 +695,8 @@ footer b{color:var(--on-navy)}
         <span class="badge notbooked">! <b>טרם הוזמן</b></span>
         <span class="badge flexible">↔ <b>גמיש</b></span>
         <span class="badge weather">☀ <b>תלוי במזג האוויר</b></span>
+        <span class="badge priority">⭐ <b>עדיפות גבוהה</b></span>
+        <span class="badge scheduledep">🎞️ <b>תלוי בלוח הקרנות</b></span>
       </div>
       <div id="daysContainer"></div>
     </div>
@@ -936,12 +969,31 @@ var DAYS = [
    ]},
   {day:5, dateISO:"2026-10-18", weekday:"ראשון", dateHe:"18 באוקטובר", city:"Hakone",
    title:"מעבר להאקונה", subtitle:"Transfer to Hakone",
-   note:"היום שולחים את המזוודות הגדולות (Takkyubin) ישירות מהמלון ביוקוהמה למלון בקיוטו. להאקונה יוצאים עם תיק לילה קטן בלבד — ראו רשימת ציוד למטה. Snoopy Museum בדרך הוא אופציה נחמדה אם יש אנרגיה וזמן — לא חובה, וטרם הוזמנו כרטיסים. אם עושים את סנופי, לא מתכננים את ה-Sky Pool של יוקוהמה באותו בוקר.",
+   note:"היום שולחים את המזוודות הגדולות (Takkyubin) ישירות מהמלון ביוקוהמה למלון בקיוטו. להאקונה יוצאים עם תיק לילה קטן בלבד — ראו רשימת ציוד למטה. ב-Grandberry Park יש שתי אופציות נחמדות (Snoopy Museum ו-ULTRA 4DX) — שתיהן אופציונליות וטרם הוזמנו, והסדר ביניהן עוד לא נקבע (ראו למטה). אם עושים אחת מהן או את שתיהן, לא מתכננים את ה-Sky Pool של יוקוהמה באותו בוקר. האקונה — צ׳ק-אין, אונסן וערב רגוע — נשארת בעדיפות עליונה, ולא נדחוק אליה הגעה מאוחרת מדי.",
+   highlight:{
+     icon:"🎬",
+     title:"ULTRA 4DX — חוויית קולנוע מיוחדת",
+     subtitle:"109 Cinemas Grandberry Park",
+     badges:["priority","notbooked","scheduledep"],
+     quote:"החוויה שאנחנו רוצים לנסות ביפן: 4DX בשילוב SCREENX — מושבים נעים, אפקטים פיזיים (רוח, רטט, מים ועוד) ומסכים המקיפים את הצופה עד כ-270°.",
+     note:"נמצא באותו Grandberry Park של מוזיאון סנופי, ולכן ננסה לשלב את שתי החוויות באותו בוקר/צהריים לפני הנסיעה להאקונה — בלי לקבוע כרגע איזו מהן קודמת.",
+     warning:"⚠️ נשלב את זה רק אם קיימת הקרנת בוקר/צהריים מוקדמת שלא תפגע בהגעה להאקונה. אם ההקרנה הזמינה תגרום להגעה מאוחרת מדי ל-Gora, לא נדחוס את זה ליום הזה.",
+     plan:[
+       {ic:"🐶", text:"Snoopy Museum Tokyo"},
+       {ic:"🎬", text:"ULTRA 4DX"},
+       {ic:"🍴", text:"ארוחת צהריים / קפה קליל — גמיש"},
+       {ic:"🛍️", text:"שיטוט קצר ב-Grandberry Park אם יישאר זמן — לא חובה"}
+     ],
+     tag:"מתאים במיוחד לאלון",
+     officialUrl:"https://109cinemas.net/grandberrypark/",
+     ticketLabel:"🎟️ כרטיסים ולוח הקרנות"
+   },
    items:[
      {time:"09:15", badges:["must"], title:"יציאה מהמלון + שילוח מזוודות · Takkyubin", desc:"ארוחת בוקר וצ׳ק-אאוט. שולחים את המזוודות הגדולות ישירות למלון בקיוטו — לוקחים רק תיק לילה קטן.", transport:"מלון יוקוהמה ← מלון קיוטו (שילוח) / יוקוהמה ← Minami-machida"},
-     {time:"10:30", badges:["optional","notbooked"], title:"Snoopy Museum Tokyo", desc:"עצירה אופציונלית ב-Minami-machida Grandberry Park — Snoopy Museum ו-Brown's Store, ואולי הצצה קצרה בפארק. כ-1.5–2 שעות. תלוי באנרגיה ובזמן — טרם הוזמנו כרטיסים.", transport:"יוקוהמה ← Minami-machida Grandberry Park", official:"https://snoopymuseum.tokyo/"},
-     {time:"12:30", badges:["optional"], title:"ארוחת צהריים קלה", desc:"ארוחה קלה באזור Grandberry Park לפני ההמשך להאקונה — רק אם עושים את סנופי.", transport:""},
-     {time:"13:15–13:30", badges:["must"], title:"המשך ל-Hakone / Gora", desc:"נסיעה לכיוון Hakone-Yumoto ומשם ל-Gora. הגעה משוערת כ-15:30–16:30, בהתאם לחיבורים ולעצירת סנופי.", transport:"Minami-machida ← Odawara ← Hakone Tozan Railway ← Gora"},
+     {time:"בוקר", badges:["optional","notbooked"], title:"Snoopy Museum Tokyo", desc:"עצירה אופציונלית ב-Minami-machida Grandberry Park — Snoopy Museum ו-Brown's Store, ואולי הצצה קצרה בפארק. כ-1.5–2 שעות. הסדר מול ULTRA 4DX (מי קודם) ייקבע כשלוח ההקרנות של ה-18/10 יתפרסם.", transport:"יוקוהמה ← Minami-machida Grandberry Park", official:"https://snoopymuseum.tokyo/"},
+     {time:"בוקר/צהריים", badges:["optional","notbooked","priority"], title:"ULTRA 4DX · 109 Cinemas Grandberry Park", desc:"הקרנת 4DX+SCREENX — רק אם יש הקרנת בוקר/צהריים מוקדמת שלא פוגעת בהגעה להאקונה. עדיין לא נבחר סרט או שעה.", transport:"Minami-machida Grandberry Park", official:"https://109cinemas.net/grandberrypark/"},
+     {time:"גמיש", badges:["optional"], title:"ארוחת צהריים קלה", desc:"רק אם נשאר זמן אחרי סנופי ו/או ULTRA 4DX — לא מעכבים בגללה את היציאה להאקונה.", transport:""},
+     {time:"אחה״צ", badges:["must"], title:"המשך ל-Hakone / Gora", desc:"נסיעה לכיוון Hakone-Yumoto ומשם ל-Gora. השעה המדויקת תלויה במה שנעשה ב-Grandberry Park בבוקר.", transport:"Minami-machida ← Odawara ← Hakone Tozan Railway ← Gora"},
      {time:"ערב", badges:["must"], title:"Laforet Hakone Gora Yunosumika", desc:"צ׳ק-אין, אונסן וארוחת ערב.", transport:"Gora ← שאטל מלון / גישה מקומית"}
    ]},
   {day:6, dateISO:"2026-10-19", weekday:"שני", dateHe:"19 באוקטובר", city:"Hakone → Kyoto",
@@ -1023,7 +1075,7 @@ var ROUTE = [
 
 var HOTELS = [
   {region:"Yokohama / Tokyo", dates:"14–18 באוקטובר · 4 לילות", name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", status:"booked",
-   details:["חדר אחד לשלושה מבוגרים.", "Sky Pool בבוקר לפני היציאה — רק אם לא עושים את Snoopy Museum באותו יום (ראו יום 5)."]},
+   details:["חדר אחד לשלושה מבוגרים.", "Sky Pool בבוקר לפני היציאה — רק אם לא עושים את Snoopy Museum ו/או ULTRA 4DX באותו יום (ראו יום 5)."]},
   {region:"Hakone", dates:"18–19 באוקטובר · לילה אחד", name:"Laforet Hakone Gora Yunosumika", status:"booked",
    details:["חדר יפני-מערבי לשלושה.", "אונסן וארוחת ערב בבית המלון."]},
   {region:"Kyoto", dates:"19–24 באוקטובר · 5 לילות", name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", status:"booked",
@@ -1040,8 +1092,8 @@ var HOTELS = [
 ];
 var HOTEL_STATUS_LABEL = {booked:"✓ הוזמן", paid:"✓ הוזמן ושולם"};
 
-var LEGEND_CLASS = {must:"must", optional:"optional", booked:"booked", notbooked:"notbooked", flexible:"flexible", weather:"weather"};
-var LEGEND_LABEL = {must:"★ חובה", optional:"○ אופציונלי", booked:"✓ הוזמן", notbooked:"! טרם הוזמן", flexible:"↔ גמיש", weather:"☀ תלוי במזג האוויר"};
+var LEGEND_CLASS = {must:"must", optional:"optional", booked:"booked", notbooked:"notbooked", flexible:"flexible", weather:"weather", priority:"priority", scheduledep:"scheduledep"};
+var LEGEND_LABEL = {must:"★ חובה", optional:"○ אופציונלי", booked:"✓ הוזמן", notbooked:"! טרם הוזמן", flexible:"↔ גמיש", weather:"☀ תלוי במזג האוויר", priority:"⭐ עדיפות גבוהה", scheduledep:"🎞️ תלוי בלוח הקרנות"};
 
 var PACK_HAKONE = ["דרכונים","ארנק / כרטיסי אשראי","טלפונים","מטענים","Power Bank","תרופות","משקפיים / עדשות אם נדרש","בגדים להחלפה","תחתונים וגרביים","כלי רחצה בסיסיים","פריטים אישיים","כרטיסים / אישורים חשובים","ציוד יקר שלא שולחים במזוודה"];
 var PACK_JAPAN = ["דרכונים","ביטוח נסיעות","אישורי טיסות","אישורי מלונות","teamLab QR / כרטיס","כרטיסים לאטרקציות","eSIM / חיבור לאינטרנט","Visit Japan Web","תרופות ומסמכים נלווים אם נדרש","מטענים","Power Banks","מתאם חשמל מתאים ליפן","נעליים נוחות להליכה","שכבה קלה / מטרייה לפי התחזית","עותקים offline של מסמכים חשובים"];
@@ -1234,6 +1286,26 @@ function makeExpandable(cardEl, headEl, bodyOuterEl, startOpen){
 function mapsUrl(q){ return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q); }
 function searchUrl(q){ return "https://www.google.com/search?q="+encodeURIComponent(q); }
 
+function buildHighlightCard(h){
+  var card = el("div","highlight-card");
+  var badgesHtml = (h.badges||[]).map(function(b){ return '<span class="badge '+LEGEND_CLASS[b]+'">'+LEGEND_LABEL[b]+'</span>'; }).join("");
+  var planHtml = (h.plan||[]).map(function(p){ return '<div class="highlight-plan-item"><span class="ic">'+p.ic+'</span><span>'+p.text+'</span></div>'; }).join("");
+  card.innerHTML =
+    '<div class="highlight-head"><span class="highlight-icon">'+h.icon+'</span>'+
+      '<div><div class="highlight-title">'+h.title+'</div><div class="highlight-sub">'+h.subtitle+'</div></div>'+
+    '</div>'+
+    '<div class="highlight-badges">'+badgesHtml+'</div>'+
+    (h.quote ? '<p class="highlight-quote">'+h.quote+'</p>' : '') +
+    (h.note ? '<p class="highlight-note">'+h.note+'</p>' : '') +
+    (h.warning ? '<div class="highlight-warning">'+h.warning+'</div>' : '') +
+    (planHtml ? '<div class="highlight-plan">'+planHtml+'</div>' : '') +
+    '<div class="highlight-foot">'+
+      (h.tag ? '<span class="highlight-tag">'+h.tag+'</span>' : '<span></span>') +
+      (h.officialUrl ? '<a class="btn-mini" target="_blank" rel="noopener" href="'+h.officialUrl+'">'+(h.ticketLabel||"אתר רשמי")+'</a>' : '') +
+    '</div>';
+  return card;
+}
+
 (function(){
   var container = document.getElementById("daysContainer");
   DAYS.forEach(function(d){
@@ -1255,6 +1327,10 @@ function searchUrl(q){ return "https://www.google.com/search?q="+encodeURICompon
 
     if(d.note){
       body.appendChild(el("div","day-note",'<span class="ic">💡</span><span>'+d.note+'</span>'));
+    }
+
+    if(d.highlight){
+      body.appendChild(buildHighlightCard(d.highlight));
     }
 
     var tl = el("div","timeline");
