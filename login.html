@@ -51,7 +51,7 @@ button:disabled{opacity:.6;cursor:default}
     <h1>יפן 2026</h1>
     <p class="sub">אתר משפחתי פרטי — הזינו את קוד הכניסה</p>
     <form id="loginForm">
-      <input type="password" id="passwordInput" placeholder="••••••" autocomplete="current-password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autofocus>
+      <input type="password" id="passwordInput" placeholder="••••" autocomplete="current-password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autofocus>
       <button type="submit" id="submitBtn">כניסה</button>
       <div class="err" id="errMsg"></div>
     </form>
@@ -63,7 +63,7 @@ var btn = document.getElementById("submitBtn");
 var err = document.getElementById("errMsg");
 
 input.addEventListener("input", function(){
-  if(/^[0-9]{6}$/.test(input.value)){
+  if(/^[0-9]{4}$/.test(input.value)){
     form.dispatchEvent(new Event("submit", {cancelable:true}));
   }
 });
