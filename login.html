@@ -33,7 +33,8 @@ h1{font-size:1.4rem;font-weight:800;margin:0 0 4px}
 p.sub{color:var(--on-navy-2);font-size:.88rem;margin:0 0 24px}
 input{
   width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:14px;
-  color:#fff;font-size:16px;padding:14px 16px;text-align:center;font-family:inherit;outline:0;margin-bottom:12px;
+  color:#fff;font-size:22px;padding:16px;text-align:center;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  outline:0;margin-bottom:12px;letter-spacing:.5em;direction:ltr;
 }
 input:focus{border-color:var(--accent)}
 button{
@@ -48,9 +49,9 @@ button:disabled{opacity:.6;cursor:default}
   <div class="card">
     <div class="flag">🎌</div>
     <h1>יפן 2026</h1>
-    <p class="sub">אתר משפחתי פרטי — הזינו את הסיסמה המשפחתית</p>
+    <p class="sub">אתר משפחתי פרטי — הזינו את קוד הכניסה</p>
     <form id="loginForm">
-      <input type="password" id="passwordInput" placeholder="סיסמה" autocomplete="current-password" autofocus>
+      <input type="password" id="passwordInput" placeholder="••••••" autocomplete="current-password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autofocus>
       <button type="submit" id="submitBtn">כניסה</button>
       <div class="err" id="errMsg"></div>
     </form>
@@ -60,6 +61,12 @@ var form = document.getElementById("loginForm");
 var input = document.getElementById("passwordInput");
 var btn = document.getElementById("submitBtn");
 var err = document.getElementById("errMsg");
+
+input.addEventListener("input", function(){
+  if(/^[0-9]{6}$/.test(input.value)){
+    form.dispatchEvent(new Event("submit", {cancelable:true}));
+  }
+});
 
 form.addEventListener("submit", function(e){
   e.preventDefault();
