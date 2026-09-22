@@ -373,6 +373,94 @@ footer b{color:var(--on-navy)}
 .reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
 .reveal.in{opacity:1;transform:translateY(0)}
 
+/* ---------- family files ---------- */
+.day-files{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.day-files-head{font-size:.85rem;font-weight:700;color:var(--ink-2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.file-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.file-card{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:9px;box-shadow:var(--shadow-sm)}
+.file-thumb{flex:0 0 auto;width:52px;height:52px;border-radius:10px;overflow:hidden;background:var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.file-thumb-img{width:100%;height:100%;object-fit:cover}
+.file-thumb-icon{font-size:1.4rem}
+.file-info{flex:1;min-width:0;cursor:pointer}
+.file-name{font-size:.86rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-meta{font-size:.72rem;color:var(--ink-3);margin:2px 0 5px}
+.file-cat-select{font-size:.72rem;border:1px solid var(--line);border-radius:99px;padding:3px 8px;background:var(--surface-2);color:var(--ink-2);max-width:100%;font-family:inherit}
+.file-actions{flex:0 0 auto;display:flex;flex-direction:column;gap:6px}
+.icon-mini{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;padding:0}
+.upload-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 18px;border-radius:99px;background:var(--navy);color:#fff;font-weight:700;font-size:.85rem;cursor:pointer}
+.file-input-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.upload-status{font-size:.78rem;margin-top:8px;min-height:1.2em;font-weight:600}
+.upload-status.busy{color:var(--ink-2)}
+.upload-status.ok{color:var(--green)}
+.upload-status.err{color:var(--accent-ink)}
+
+.modal-overlay{position:fixed;inset:0;z-index:70;background:rgba(15,16,21,.72);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.2s ease}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-box{background:var(--surface);border-radius:var(--r-lg);max-width:520px;width:100%;max-height:88vh;overflow:auto;box-shadow:var(--shadow-lg)}
+.modal-box-sm{padding:24px;text-align:center;max-width:340px}
+.modal-box-sm p{font-size:.95rem;font-weight:600;margin:0}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);font-weight:700;font-size:.9rem}
+.modal-body{padding:12px}
+.preview-img{width:100%;border-radius:12px;display:block}
+.preview-pdf{width:100%;height:60vh;border:0;border-radius:12px}
+.modal-foot{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
+.modal-actions{display:flex;gap:10px;justify-content:center;margin-top:18px}
+
+.files-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.files-toolbar input, .files-toolbar select{flex:1;min-width:120px;padding:11px 12px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface);font-family:inherit;font-size:.85rem;color:var(--ink)}
+.files-empty{color:var(--ink-3);font-size:.88rem;text-align:center;padding:24px 10px}
+.today-banner{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%);border-radius:var(--r-lg);padding:18px;margin-bottom:22px;color:var(--on-navy)}
+.today-banner-head{font-weight:800;margin-bottom:10px}
+.today-banner-empty{color:var(--on-navy-2);font-size:.85rem;margin:0}
+.today-banner .file-card{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14)}
+.today-banner .file-name{color:#fff}
+.today-banner .file-meta{color:var(--on-navy-2)}
+.important-row{margin-bottom:22px}
+.important-row-head{font-weight:700;font-size:.9rem;margin-bottom:10px;color:var(--accent-ink)}
+.gallery-block{margin-top:34px}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gallery-item{aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;background:var(--surface-2);border:0;padding:0}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ---------- costs / budget ---------- */
+.cost-summary-card{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%);border-radius:var(--r-lg);padding:24px 22px;color:var(--on-navy);box-shadow:var(--shadow-lg)}
+.cost-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.cost-stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-md);padding:14px}
+.cost-stat-label{font-size:.74rem;color:var(--on-navy-2);font-weight:700;margin-bottom:4px}
+.cost-stat-val{font-family:var(--mono);font-size:1.3rem;font-weight:600;color:#fff;direction:ltr;text-align:right;unicode-bidi:isolate}
+.cost-per-person{font-size:.82rem;color:var(--on-navy-2);margin-bottom:6px;line-height:1.6}
+.cost-rate-note{font-size:.74rem;color:var(--on-navy-2);opacity:.85}
+
+.cost-breakdown{display:flex;flex-direction:column;gap:14px;margin-bottom:8px}
+.cost-bar-row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:13px 15px;box-shadow:var(--shadow-sm)}
+.cost-bar-head{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:700;margin-bottom:8px}
+.cost-bar-amt{font-family:var(--mono);font-weight:600;color:var(--ink-2);font-size:.8rem;direction:ltr}
+.cost-bar-track{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.cost-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+
+.cost-row .file-name{white-space:normal}
+.cost-row-amount{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.cost-row-amount .num{font-weight:700;font-size:.9rem;color:var(--ink)}
+.cost-aud-equiv{font-size:.76rem;color:var(--ink-3)}
+.cost-add-btn{display:flex;align-items:center;justify-content:center;width:100%;margin-top:6px}
+
+.expense-form label{display:block;font-size:.8rem;font-weight:700;color:var(--ink-2);margin-bottom:14px}
+.expense-form input,.expense-form select,.expense-form textarea{
+  width:100%;margin-top:6px;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
+  font-family:inherit;font-size:.92rem;background:var(--surface);color:var(--ink)
+}
+.expense-form textarea{resize:vertical}
+.expense-form-row{display:flex;gap:10px}
+.expense-form-row label{flex:1}
+
+.day-cost-total{margin-top:14px}
+.day-cost-btn{
+  width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:var(--r-md);
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-family:inherit;font-weight:700;
+  font-size:.84rem;cursor:pointer
+}
+.day-cost-arrow{color:var(--ink-3);font-weight:400}
+
 /* ---------- dark mode ---------- */
 @media (prefers-color-scheme:dark){
   :root{
@@ -399,6 +487,7 @@ footer b{color:var(--on-navy)}
       <a href="#itinerary">תוכנית יומית</a>
       <a href="#food">אוכל</a>
       <a href="#currency">כסף</a>
+      <a href="#costs">עלויות</a>
       <a href="#packing">ציוד</a>
       <a href="#tips">טיפים</a>
       <a href="#files">קבצים</a>
@@ -425,6 +514,79 @@ footer b{color:var(--on-navy)}
   </div>
 </div>
 
+<div class="modal-overlay" id="previewOverlay">
+  <div class="modal-box" id="previewBox"></div>
+</div>
+
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal-box modal-box-sm">
+    <p id="confirmText"></p>
+    <div class="modal-actions">
+      <button class="btn-mini" id="confirmCancel">ביטול</button>
+      <button class="btn-mini" id="confirmOk" style="background:var(--accent);border-color:var(--accent);color:#fff">מחיקה</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="expenseFormOverlay">
+  <div class="modal-box" id="expenseFormBox">
+    <div class="modal-head"><span id="expenseFormTitle">הוספת הוצאה</span><button class="icon-mini" id="expenseFormClose" aria-label="סגירה">✕</button></div>
+    <div class="modal-body">
+      <form id="expenseForm" class="expense-form">
+        <input type="hidden" id="expenseId">
+        <label>תיאור
+          <input type="text" id="expDescription" required placeholder="למשל: ארוחת ערב, שינקנסן...">
+        </label>
+        <div class="expense-form-row">
+          <label>סכום
+            <input type="number" id="expAmount" step="0.01" min="0.01" required inputmode="decimal">
+          </label>
+          <label>מטבע
+            <select id="expCurrency"><option value="AUD">AUD</option><option value="JPY">JPY</option></select>
+          </label>
+        </div>
+        <label>קטגוריה
+          <select id="expCategory"></select>
+        </label>
+        <div class="expense-form-row">
+          <label>תאריך
+            <input type="date" id="expDate">
+          </label>
+          <label>יום בטיול (אופציונלי)
+            <select id="expTripDay"><option value="">—</option></select>
+          </label>
+        </div>
+        <div class="expense-form-row">
+          <label>סטטוס
+            <select id="expStatus">
+              <option value="planned">מתוכנן</option>
+              <option value="unpaid">טרם שולם</option>
+              <option value="paid">שולם</option>
+            </select>
+          </label>
+          <label>שולם ע״י
+            <select id="expPaidBy">
+              <option value="Family">משפחה / משותף</option>
+              <option value="Isaac">Isaac</option>
+              <option value="Anat">Anat</option>
+              <option value="Alon">Alon</option>
+              <option value="Other">אחר</option>
+            </select>
+          </label>
+        </div>
+        <label>הערות (אופציונלי)
+          <textarea id="expNotes" rows="2"></textarea>
+        </label>
+        <label>צרף קבלה (אופציונלי)
+          <input type="file" id="expReceiptInput" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf">
+        </label>
+        <div class="upload-status" id="expReceiptStatus"></div>
+        <button type="submit" class="upload-btn" style="width:100%;justify-content:center;margin-top:6px" id="expenseSaveBtn">שמירה</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="mobile-nav" id="mobileNav">
   <div class="wrap">
     <a href="#top">ראשי <span class="ico">🎌</span></a>
@@ -433,6 +595,7 @@ footer b{color:var(--on-navy)}
     <a href="#itinerary">תוכנית יומית <span class="ico">📅</span></a>
     <a href="#food">אוכל, שתייה וקינוחים <span class="ico">🍜</span></a>
     <a href="#currency">כסף והמרת מטבע <span class="ico">💴</span></a>
+    <a href="#costs">עלויות ותקציב <span class="ico">📊</span></a>
     <a href="#packing">רשימות ציוד <span class="ico">🎒</span></a>
     <a href="#tips">טיפים חשובים <span class="ico">💡</span></a>
     <a href="#phrases">ביטויים ביפנית <span class="ico">🗣️</span></a>
@@ -636,18 +799,79 @@ footer b{color:var(--on-navy)}
       <div class="section-head reveal">
         <div class="eyebrow">קבצים משפחתיים</div>
         <h2>Japan 2026 — כל הקבצים במקום אחד</h2>
+        <p>כרטיסים, שוברים, מסמכים ותמונות מכל הטיול — מעלים דרך היום הרלוונטי בתוכנית, ומוצאים כאן לפי יום, קטגוריה או חיפוש חופשי.</p>
       </div>
-      <div class="files-card reveal">
-        <div class="folder-row"><span class="n">01</span><span>יומן טיול והזמנות <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Itinerary and Bookings</span></span></div>
-        <div class="folder-row"><span class="n">02</span><span>אוכל ומקומות <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Food and Places</span></span></div>
-        <div class="folder-row"><span class="n">03</span><span>תמונות וסרטונים <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Photos and Videos</span></span></div>
-        <div class="folder-row"><span class="n">04</span><span>קבלות ורכישות <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Receipts and Purchases</span></span></div>
-        <div class="folder-row"><span class="n">05</span><span>הערות וזכרונות <span style="color:var(--ink-3);direction:ltr;unicode-bidi:isolate;display:inline-block">— Notes and Memories</span></span></div>
-        <div class="files-cta">
-          <span class="btn-disabled">📁 תיקיית Drive משפחתית — בקרוב</span>
-          <span class="files-hint">הקישור לתיקייה הפרטית יתווסף כאן בהמשך. מסמכי טיול פרטיים לא יפורסמו באתר.</span>
+
+      <div id="todayFilesBanner" class="today-banner" hidden></div>
+
+      <div id="importantFilesRow" class="important-row" hidden>
+        <div class="important-row-head">⭐ מסמכים חשובים</div>
+        <div class="file-grid" id="importantFilesList"></div>
+      </div>
+
+      <div class="files-toolbar">
+        <input type="text" id="filesSearchInput" placeholder="🔍 חיפוש בקבצים...">
+        <select id="filesDayFilter"><option value="">כל הימים</option></select>
+        <select id="filesCategoryFilter"><option value="">כל הקטגוריות</option></select>
+      </div>
+
+      <div class="file-grid" id="globalFilesList"></div>
+      <div class="files-empty" id="filesEmptyMsg" hidden>עדיין לא הועלו קבצים. אפשר להעלות דרך "קבצים ליום הזה" בכל יום בתוכנית.</div>
+
+      <div class="gallery-block" id="galleryBlock" hidden>
+        <div class="section-head reveal">
+          <div class="eyebrow">גלריה</div>
+          <h2>תמונות מהטיול</h2>
         </div>
+        <div class="gallery-grid" id="photoGallery"></div>
       </div>
+    </div>
+  </section>
+
+  <section id="costs">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">עלויות ותקציב</div>
+        <h2>איפה אנחנו עומדים כלכלית</h2>
+        <p>עלויות מאושרות משולבות עם הוצאות שמוסיפים תוך כדי — סכומים ב-JPY מומרים ל-AUD לפי השער החי.</p>
+      </div>
+
+      <div class="cost-summary-card reveal">
+        <div class="cost-summary-grid">
+          <div class="cost-stat"><div class="cost-stat-label">עלות כוללת</div><div class="cost-stat-val" id="costTotalVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label">שולם</div><div class="cost-stat-val" id="costPaidVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label">נותר לתשלום</div><div class="cost-stat-val" id="costRemainingVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label">מתוכנן</div><div class="cost-stat-val" id="costPlannedVal">—</div></div>
+        </div>
+        <div class="cost-per-person" id="costPerPerson"></div>
+        <div class="cost-rate-note" id="costRateNote">טוענים שער המרה עדכני…</div>
+      </div>
+
+      <div class="section-head reveal" style="margin-top:32px">
+        <div class="eyebrow">לפי קטגוריה</div>
+        <h2>התפלגות הוצאות</h2>
+      </div>
+      <div class="cost-breakdown" id="costBreakdown"></div>
+
+      <div class="section-head reveal" style="margin-top:32px">
+        <div class="eyebrow">כל ההוצאות</div>
+        <h2>רשימה מלאה</h2>
+      </div>
+      <div class="files-toolbar">
+        <input type="text" id="costSearchInput" placeholder="🔍 חיפוש בהוצאות...">
+        <select id="costCategoryFilter"><option value="">כל הקטגוריות</option></select>
+        <select id="costStatusFilter">
+          <option value="">כל הסטטוסים</option>
+          <option value="paid">שולם</option>
+          <option value="unpaid">טרם שולם</option>
+          <option value="planned">מתוכנן</option>
+        </select>
+        <select id="costDayFilter"><option value="">כל הימים</option></select>
+      </div>
+      <div class="cost-list file-grid" id="costList"></div>
+      <div class="files-empty" id="costEmptyMsg" hidden></div>
+
+      <button class="upload-btn cost-add-btn" id="addExpenseBtn">＋ הוספת הוצאה</button>
     </div>
   </section>
 
@@ -667,7 +891,7 @@ footer b{color:var(--on-navy)}
 <footer>
   <div class="wrap">
     <div><b>יפן 2026</b> — Isaac · Anat · Alon</div>
-    <div>אתר פרטי למשפחה. לא מיועד להפצה ציבורית.</div>
+    <div>אתר פרטי למשפחה, מוגן בסיסמה. לא מיועד להפצה ציבורית. <a href="#" id="logoutLink" style="color:inherit;text-decoration:underline">התנתקות</a></div>
   </div>
 </footer>
 
@@ -679,10 +903,13 @@ footer b{color:var(--on-navy)}
 
 var DAYS = [
   {day:1, dateISO:"2026-10-14", weekday:"רביעי", dateHe:"14 באוקטובר", city:"Yokohama",
-   title:"הגעה ונחיתה רכה", subtitle:"Arrival & Soft Landing",
+   title:"טיסה והגעה ליפן", subtitle:"Flight & Arrival",
+   note:"הנחיתה בהאנדה רק ב-20:10 בערב — היום נשאר יום נסיעה בלבד, בלי סיורים. אחרי המלון פשוט נחים.",
    items:[
-     {time:"אחה״צ", badges:["must"], title:"Mitsui Garden Hotel Yokohama Minatomirai Premier", desc:"הגעה, מעבר למלון וצ׳ק-אין.", transport:"שדה התעופה ← יוקוהמה / Minatomirai"},
-     {time:"ערב", badges:["optional"], title:"Minato Mirai Waterfront", desc:"הליכה קלה לאורך קו המים וארוחת ערב רגועה.", transport:"מלון ← הטיילת: הליכה"}
+     {time:"12:15", badges:["must","booked"], title:"טיסה Sydney → Tokyo Haneda", desc:"Qantas QF059. כרטיס הונפק. נחיתה משוערת 20:10 (שעון מקומי).", transport:"Sydney (SYD) → Tokyo Haneda (HND)"},
+     {time:"20:10", badges:["must"], title:"נחיתה בהאנדה, ביקורת גבולות ומזוודות", desc:"ביקורת דרכונים, איסוף מזוודות ויציאה משדה התעופה.", transport:"Tokyo Haneda (HND)"},
+     {time:"ערב", badges:["must"], title:"מעבר ליוקוהמה", desc:"נסיעה מהאנדה לאזור Minatomirai.", transport:"Haneda ← יוקוהמה / Minatomirai"},
+     {time:"ערב מאוחר", badges:["must"], title:"Mitsui Garden Hotel Yokohama Minatomirai Premier", desc:"צ׳ק-אין ושינה. מינימרקט קרוב אם צריך משהו קטן — לא מתוכנן שום סיור הערב.", transport:""}
    ]},
   {day:2, dateISO:"2026-10-15", weekday:"חמישי", dateHe:"15 באוקטובר", city:"Tokyo",
    title:"טוקיו הקלאסית · גינזה · אודייבה", subtitle:"Classic Tokyo · Ginza · Odaiba",
@@ -774,13 +1001,15 @@ var DAYS = [
      {time:"ערב", badges:["flexible"], title:"ארוחת פרידה באוסקה", desc:"ערב אחרון נעים באוסקה, בלי מרוץ בין אטרקציות.", transport:""}
    ]},
   {day:13, dateISO:"2026-10-26", weekday:"שני", dateHe:"26 באוקטובר", city:"Osaka",
-   title:"אוסקה → נמל תעופה קנסאי → ישראל", subtitle:"Osaka → Kansai International Airport → Israel",
-   note:"מומלץ להשאיר מרווח ביטחון נוח לטיסה בינלאומית בשדה קנסאי. ברגע ששעת הטיסה תאושר, לוח הזמנים של היום — כולל שעת היציאה המומלצת מהמלון — יתעדכן בהתאם.",
+   title:"יום אחרון באוסקה → דובאי → תל אביב", subtitle:"Osaka → Kansai → Dubai → Tel Aviv",
+   note:"הטיסה מאוסקה יוצאת רק ב-23:10, אז 26 באוקטובר נשאר יום שימושי לגמרי באוסקה — בלי להוסיף אטרקציה גדולה נוספת אוטומטית. הטיסה חוזרת דרך דובאי, עם נחיתה בתל אביב בבוקר ה-27 באוקטובר.",
    items:[
-     {time:"בוקר", badges:["must"], title:"The Peak Namba West — צ׳ק-אאוט", desc:"צ׳ק-אאוט עד השעה 11:00. איסוף כל המזוודות והציוד.", transport:""},
-     {time:"בוקר/צהריים", badges:["must","notbooked"], title:"נסיעה לנמל התעופה קנסאי (KIX)", desc:"שעת היציאה מהמלון תיקבע לפי שעת הטיסה בפועל, ברגע שתאושר.", transport:"Namba ← KIX: Nankai Rapi:t או JR Kansai Airport Line / Haruka"},
-     {time:"טרם נקבע", badges:["notbooked"], title:"טיסה מיפן לישראל", desc:"שעת הטיסה טרם נמסרה. ברגע שתתקבל, פרטי היום יתעדכנו כאן.", transport:""},
-     {time:"אופציונלי", badges:["optional"], title:"קניות אחרונות בנמבה", desc:"רק אם שעת הטיסה בפועל תאפשר זאת.", transport:""}
+     {time:"בוקר", badges:["must"], title:"The Peak Namba West — צ׳ק-אאוט", desc:"צ׳ק-אאוט עד השעה 11:00. איסוף כל המזוודות והציוד, ואפשר להשאיר מזוודות בעמדת אחסון מתאימה להמשך היום.", transport:""},
+     {time:"לפנה״צ / אחה״צ", badges:["optional"], title:"יום אחרון נינוח באוסקה", desc:"קניות אחרונות, ארוחת צהריים וזמן פנוי — בלי אטרקציה גדולה נוספת.", transport:""},
+     {time:"אחה״צ מאוחר", badges:["must"], title:"איסוף מזוודות והמשך לשדה התעופה", desc:"איסוף הציוד המאוחסן והמשך לכיוון קנסאי.", transport:""},
+     {time:"אחה״צ/ערב", badges:["must","notbooked"], title:"נסיעה לנמל התעופה קנסאי (KIX)", desc:"שעת היציאה המומלצת מאוסקה תחושב בהמשך לפי אמצעי ההגעה לשדה שייבחר — לא קובעים כרגע הזמנת רכבת ספציפית.", transport:"Namba ← KIX: Nankai Rapi:t או JR Kansai Airport Line / Haruka"},
+     {time:"23:10", badges:["must","booked"], title:"טיסה Osaka Kansai → Dubai", desc:"Emirates EK317. נחיתה בדובאי 05:25 ב-27 באוקטובר (שעון מקומי).", transport:"Osaka Kansai (KIX) → Dubai (DXB)"},
+     {time:"27/10 · 07:15", badges:["must","booked"], title:"טיסת המשך Dubai → Tel Aviv", desc:"EK2369, מופעלת בפועל כ-FZ1549. נחיתה בתל אביב 09:10.", transport:"Dubai (DXB) → Tel Aviv (TLV)"}
    ]}
 ];
 
@@ -1051,6 +1280,8 @@ function searchUrl(q){ return "https://www.google.com/search?q="+encodeURICompon
       tl.appendChild(item);
     });
     body.appendChild(tl);
+    body.appendChild(buildDayCostTotal(d.day));
+    body.appendChild(buildDayFilesBlock(d.day));
     bodyOuter.appendChild(body);
     card.appendChild(bodyOuter);
     container.appendChild(card);
@@ -1273,6 +1504,7 @@ function applyRate(rate, source, updatedDate){
     document.getElementById("rateUpdated").textContent = "שער ידני לצורך הערכה בלבד — לא שער אמיתי בזמן אמת.";
   }
   recompute("jpy");
+  if(typeof renderAllCostSections === "function") renderAllCostSections();
 }
 
 function fetchFrankfurter(){
@@ -1358,6 +1590,702 @@ document.getElementById("manualRateInput").addEventListener("input", function(e)
   }
   refreshRate();
 })();
+
+/* ===================== family files ===================== */
+var CATEGORIES = ["כרטיסים","מלון","תחבורה","מסעדה","מפה","קבלה","תמונה","מסמך","אחר"];
+var CATEGORY_ICON = {"כרטיסים":"🎫","מלון":"🏨","תחבורה":"🚆","מסעדה":"🍽️","מפה":"🗺️","קבלה":"🧾","תמונה":"🖼️","מסמך":"📄","אחר":"📎"};
+var FILES_STATE = { all: [] };
+var filesFilter = { q:"", day:"", category:"" };
+var pendingDelete = null; // {type:"file"|"expense", id, label}
+
+function esc(s){
+  return String(s==null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function fmtBytes(n){
+  if(n === null || n === undefined || isNaN(n)) return "";
+  if(n < 1024) return n+" B";
+  if(n < 1024*1024) return (n/1024).toFixed(0)+" KB";
+  return (n/(1024*1024)).toFixed(1)+" MB";
+}
+function filesForDay(day){
+  return FILES_STATE.all.filter(function(f){ return Number(f.tripDay) === Number(day); });
+}
+
+function buildDayFilesBlock(dayNum){
+  var wrap = el("div","day-files");
+  wrap.innerHTML =
+    '<div class="day-files-head">📎 קבצים ליום הזה</div>'+
+    '<div class="file-grid" id="day-files-list-'+dayNum+'"></div>'+
+    '<label class="upload-btn">＋ העלאת קובץ'+
+      '<input type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf" data-day="'+dayNum+'" class="file-input-hidden">'+
+    '</label>'+
+    '<div class="upload-status" id="upload-status-'+dayNum+'"></div>';
+  return wrap;
+}
+
+function renderFileCard(f){
+  var card = el("div","file-card");
+  card.dataset.id = f.id;
+  var isImage = f.mimeType && f.mimeType.indexOf("image/") === 0;
+  var thumb = isImage
+    ? '<img class="file-thumb-img" src="'+f.storageURL+'" alt="" loading="lazy">'
+    : '<div class="file-thumb-icon">📄</div>';
+  var typeLabel = f.mimeType === "application/pdf" ? "PDF" : (isImage ? "תמונה" : "קובץ");
+  var dayLabel = f.tripDay ? (" · יום "+f.tripDay) : "";
+  var catOptions = CATEGORIES.map(function(c){
+    return '<option value="'+c+'"'+(c===f.category ? " selected" : "")+'>'+CATEGORY_ICON[c]+" "+c+"</option>";
+  }).join("");
+  card.innerHTML =
+    '<div class="file-thumb" data-action="preview">'+thumb+'</div>'+
+    '<div class="file-info" data-action="preview">'+
+      '<div class="file-name">'+(f.important ? '<span class="file-star">⭐</span> ' : "")+esc(f.displayName)+'</div>'+
+      '<div class="file-meta">'+typeLabel+' · '+fmtBytes(f.fileSize)+dayLabel+'</div>'+
+      '<select class="file-cat-select" data-action="category">'+catOptions+'</select>'+
+    '</div>'+
+    '<div class="file-actions">'+
+      '<button class="icon-mini" data-action="star" title="חשוב" aria-label="סמן כחשוב">'+(f.important ? "⭐" : "☆")+'</button>'+
+      '<button class="icon-mini" data-action="rename" title="שינוי שם" aria-label="שינוי שם">✏️</button>'+
+      '<button class="icon-mini" data-action="delete" title="מחיקה" aria-label="מחיקה">🗑️</button>'+
+    '</div>';
+  return card;
+}
+
+function renderAllFileSections(){
+  DAYS.forEach(function(d){
+    var container = document.getElementById("day-files-list-"+d.day);
+    if(!container) return;
+    container.innerHTML = "";
+    filesForDay(d.day).forEach(function(f){ container.appendChild(renderFileCard(f)); });
+  });
+  renderTodayBanner();
+  renderGlobalFiles();
+}
+
+function renderTodayBanner(){
+  var banner = document.getElementById("todayFilesBanner");
+  if(!banner) return;
+  var todayISO = new Date().toISOString().slice(0,10);
+  var day = DAYS.find(function(d){ return d.dateISO === todayISO; });
+  if(!day){ banner.hidden = true; return; }
+  var files = filesForDay(day.day);
+  banner.hidden = false;
+  banner.innerHTML =
+    '<div class="today-banner-head">📍 היום — יום '+day.day+' · '+day.city+'</div>'+
+    (files.length ? '<div class="file-grid" id="todayFilesList"></div>' : '<p class="today-banner-empty">עדיין אין קבצים ליום הזה.</p>');
+  if(files.length){
+    var list = document.getElementById("todayFilesList");
+    files.forEach(function(f){ list.appendChild(renderFileCard(f)); });
+  }
+}
+
+function renderGlobalFiles(){
+  var list = FILES_STATE.all.slice();
+  if(filesFilter.day) list = list.filter(function(f){ return String(f.tripDay) === filesFilter.day; });
+  if(filesFilter.category) list = list.filter(function(f){ return f.category === filesFilter.category; });
+  if(filesFilter.q){
+    var needle = filesFilter.q.trim().toLowerCase();
+    list = list.filter(function(f){
+      return (f.displayName||"").toLowerCase().indexOf(needle) !== -1 ||
+             (f.originalFilename||"").toLowerCase().indexOf(needle) !== -1 ||
+             (f.description||"").toLowerCase().indexOf(needle) !== -1;
+    });
+  }
+  var container = document.getElementById("globalFilesList");
+  container.innerHTML = "";
+  list.forEach(function(f){ container.appendChild(renderFileCard(f)); });
+  var emptyMsg = document.getElementById("filesEmptyMsg");
+  if(emptyMsg){
+    emptyMsg.hidden = list.length > 0;
+    if(list.length === 0){
+      emptyMsg.textContent = FILES_STATE.all.length === 0
+        ? 'עדיין לא הועלו קבצים. אפשר להעלות דרך "קבצים ליום הזה" בכל יום בתוכנית.'
+        : "אין קבצים שתואמים את הסינון הנוכחי.";
+    }
+  }
+
+  var important = FILES_STATE.all.filter(function(f){ return f.important; });
+  var impRow = document.getElementById("importantFilesRow");
+  var impList = document.getElementById("importantFilesList");
+  if(impRow && impList){
+    impList.innerHTML = "";
+    important.forEach(function(f){ impList.appendChild(renderFileCard(f)); });
+    impRow.hidden = important.length === 0;
+  }
+
+  var photos = FILES_STATE.all.filter(function(f){ return f.category === "תמונה" && f.mimeType && f.mimeType.indexOf("image/") === 0; });
+  var galleryBlock = document.getElementById("galleryBlock");
+  var gallery = document.getElementById("photoGallery");
+  if(galleryBlock && gallery){
+    gallery.innerHTML = "";
+    photos.forEach(function(f){
+      var btn = document.createElement("button");
+      btn.className = "gallery-item";
+      btn.innerHTML = '<img src="'+f.storageURL+'" alt="" loading="lazy">';
+      btn.addEventListener("click", function(){ openPreview(f); });
+      gallery.appendChild(btn);
+    });
+    galleryBlock.hidden = photos.length === 0;
+  }
+}
+
+function loadAllFiles(){
+  return fetch("/api/files").then(function(r){
+    if(!r.ok) throw new Error("failed");
+    return r.json();
+  }).then(function(data){
+    FILES_STATE.all = data.files || [];
+    renderAllFileSections();
+  }).catch(function(){
+    renderAllFileSections();
+  });
+}
+
+/* ---- modals: preview + confirm ---- */
+function openPreview(file){
+  var box = document.getElementById("previewBox");
+  var isImage = file.mimeType && file.mimeType.indexOf("image/") === 0;
+  var content = isImage
+    ? '<img class="preview-img" src="'+file.storageURL+'" alt="">'
+    : '<iframe class="preview-pdf" src="'+file.storageURL+'"></iframe>';
+  box.innerHTML =
+    '<div class="modal-head"><span>'+esc(file.displayName)+'</span><button class="icon-mini" id="previewClose" aria-label="סגירה">✕</button></div>'+
+    '<div class="modal-body">'+content+'</div>'+
+    '<div class="modal-foot">'+
+      '<a class="btn-mini solid" href="'+file.storageURL+'" target="_blank" rel="noopener">⬇️ הורדה</a>'+
+      '<button class="btn-mini" id="previewBack">חזרה ליום</button>'+
+    '</div>';
+  document.getElementById("previewOverlay").classList.add("open");
+  document.getElementById("previewClose").addEventListener("click", closePreview);
+  document.getElementById("previewBack").addEventListener("click", closePreview);
+}
+function closePreview(){
+  document.getElementById("previewOverlay").classList.remove("open");
+  document.getElementById("previewBox").innerHTML = "";
+}
+
+function confirmDeleteGeneric(type, id, label){
+  pendingDelete = {type:type, id:id};
+  document.getElementById("confirmText").textContent = 'למחוק את "'+label+'"?';
+  document.getElementById("confirmOverlay").classList.add("open");
+}
+function confirmDelete(file){
+  confirmDeleteGeneric("file", file.id, file.displayName);
+}
+function closeConfirm(){
+  document.getElementById("confirmOverlay").classList.remove("open");
+  pendingDelete = null;
+}
+
+/* ---- actions ---- */
+function toggleImportant(file){
+  var newVal = !file.important;
+  fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, important:newVal})})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(){ file.important = newVal; renderAllFileSections(); })
+    .catch(function(){ alert("העדכון נכשל. נסו שוב."); });
+}
+function renameFile(file){
+  var name = prompt("שם חדש לקובץ:", file.displayName);
+  if(name === null) return;
+  name = name.trim();
+  if(!name) return;
+  fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, displayName:name})})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(){ file.displayName = name; renderAllFileSections(); })
+    .catch(function(){ alert("שינוי השם נכשל. נסו שוב."); });
+}
+function updateFileCategory(file, newCat){
+  fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, category:newCat})})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(){ file.category = newCat; renderAllFileSections(); })
+    .catch(function(){ alert("עדכון הקטגוריה נכשל. נסו שוב."); });
+}
+
+document.addEventListener("click", function(e){
+  var card = e.target.closest && e.target.closest(".file-card:not(.cost-row)");
+  if(card){
+    var file = FILES_STATE.all.find(function(f){ return f.id === card.dataset.id; });
+    if(file){
+      var actionEl = e.target.closest("[data-action]");
+      var action = actionEl && actionEl.dataset.action;
+      if(action === "preview") openPreview(file);
+      else if(action === "star") toggleImportant(file);
+      else if(action === "rename") renameFile(file);
+      else if(action === "delete") confirmDelete(file);
+    }
+  }
+  var costRow = e.target.closest && e.target.closest(".cost-row");
+  if(costRow){
+    var expense = allExpenses().find(function(x){ return x.id === costRow.dataset.id; });
+    if(expense && !expense.confirmed){
+      var costActionEl = e.target.closest("[data-action]");
+      var costAction = costActionEl && costActionEl.dataset.action;
+      if(costAction === "edit") openExpenseForm(expense);
+      else if(costAction === "duplicate") duplicateExpense(expense);
+      else if(costAction === "delete") confirmDeleteGeneric("expense", expense.id, expense.description);
+    }
+  }
+  var dayCostBtn = e.target.closest && e.target.closest(".day-cost-btn");
+  if(dayCostBtn){
+    var d = dayCostBtn.dataset.day;
+    costFilter.day = d;
+    var daySel = document.getElementById("costDayFilter");
+    if(daySel) daySel.value = d;
+    renderCostList();
+    document.getElementById("costs").scrollIntoView({behavior:"smooth"});
+  }
+  if(e.target.id === "addExpenseBtn") openExpenseForm(null);
+  if(e.target.id === "expenseFormClose" || e.target.id === "expenseFormOverlay") closeExpenseForm();
+  if(e.target.id === "previewOverlay") closePreview();
+  if(e.target.id === "confirmOverlay") closeConfirm();
+});
+document.addEventListener("change", function(e){
+  if(e.target.matches && e.target.matches(".file-cat-select")){
+    var card = e.target.closest(".file-card");
+    var file = FILES_STATE.all.find(function(f){ return f.id === card.dataset.id; });
+    if(file) updateFileCategory(file, e.target.value);
+  }
+  if(e.target.matches && e.target.matches(".file-input-hidden")){
+    handleFileSelected(e.target);
+  }
+});
+document.getElementById("confirmCancel").addEventListener("click", closeConfirm);
+document.getElementById("confirmOk").addEventListener("click", function(){
+  if(!pendingDelete) return;
+  var type = pendingDelete.type, id = pendingDelete.id;
+  var url = type === "file" ? ("/api/files?id="+encodeURIComponent(id)) : ("/api/expenses?id="+encodeURIComponent(id));
+  fetch(url, {method:"DELETE"})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(){
+      if(type === "file"){
+        FILES_STATE.all = FILES_STATE.all.filter(function(f){ return f.id !== id; });
+        renderAllFileSections();
+      } else {
+        EXPENSES_STATE.manual = EXPENSES_STATE.manual.filter(function(x){ return x.id !== id; });
+        renderAllCostSections();
+      }
+    })
+    .catch(function(){ alert("המחיקה נכשלה. נסו שוב."); })
+    .finally(function(){ closeConfirm(); });
+});
+
+var logoutLink = document.getElementById("logoutLink");
+if(logoutLink){
+  logoutLink.addEventListener("click", function(e){
+    e.preventDefault();
+    fetch("/api/auth", {method:"DELETE"}).then(function(){ window.location.href = "/login.html"; });
+  });
+}
+
+/* ---- filters ---- */
+(function initFileFilters(){
+  var daySel = document.getElementById("filesDayFilter");
+  DAYS.forEach(function(d){
+    var opt = document.createElement("option");
+    opt.value = String(d.day);
+    opt.textContent = "יום "+d.day+" · "+d.dateHe;
+    daySel.appendChild(opt);
+  });
+  var catSel = document.getElementById("filesCategoryFilter");
+  CATEGORIES.forEach(function(c){
+    var opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = CATEGORY_ICON[c]+" "+c;
+    catSel.appendChild(opt);
+  });
+  document.getElementById("filesSearchInput").addEventListener("input", function(e){ filesFilter.q = e.target.value; renderGlobalFiles(); });
+  daySel.addEventListener("change", function(e){ filesFilter.day = e.target.value; renderGlobalFiles(); });
+  catSel.addEventListener("change", function(e){ filesFilter.category = e.target.value; renderGlobalFiles(); });
+})();
+
+/* ---- upload ---- */
+function handleFileSelected(inputEl){
+  var day = inputEl.dataset.day;
+  var file = inputEl.files && inputEl.files[0];
+  inputEl.value = "";
+  if(!file) return;
+  var statusEl = document.getElementById("upload-status-"+day);
+  function setStatus(text, cls){ if(statusEl){ statusEl.textContent = text; statusEl.className = "upload-status"+(cls?" "+cls:""); } }
+  setStatus("מעלה…", "busy");
+
+  prepareFileForUpload(file).then(function(prepared){
+    return uploadFileXhr(prepared, day, function(pct){ setStatus("מעלה… "+pct+"%", "busy"); });
+  }).then(function(record){
+    FILES_STATE.all.unshift(record);
+    renderAllFileSections();
+    setStatus("✓ הועלה בהצלחה", "ok");
+    setTimeout(function(){ setStatus(""); }, 2500);
+  }).catch(function(err){
+    setStatus((err && err.message) || "ההעלאה נכשלה", "err");
+  });
+}
+
+function prepareFileForUpload(file){
+  var compressible = file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/webp";
+  if(!compressible || file.size < 1.2*1024*1024) return Promise.resolve(file);
+  return compressImage(file).catch(function(){ return file; });
+}
+
+function compressImage(file){
+  return new Promise(function(resolve, reject){
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      var maxDim = 1920;
+      var w = img.naturalWidth, h = img.naturalHeight;
+      var scale = Math.min(1, maxDim / Math.max(w, h));
+      var cw = Math.max(1, Math.round(w*scale)), ch = Math.max(1, Math.round(h*scale));
+      var canvas = document.createElement("canvas");
+      canvas.width = cw; canvas.height = ch;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, cw, ch);
+      canvas.toBlob(function(blob){
+        if(!blob){ reject(new Error("compress failed")); return; }
+        resolve(new File([blob], file.name.replace(/\.\w+$/, ".jpg"), {type:"image/jpeg"}));
+      }, "image/jpeg", 0.82);
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error("decode failed")); };
+    img.src = url;
+  });
+}
+
+function uploadFileXhr(file, day, onProgress){
+  return new Promise(function(resolve, reject){
+    var fd = new FormData();
+    fd.append("file", file, file.name);
+    fd.append("tripDay", day);
+    fd.append("displayName", file.name.replace(/\.\w+$/, ""));
+    fd.append("category", file.type === "application/pdf" ? "מסמך" : "אחר");
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/upload");
+    xhr.upload.addEventListener("progress", function(e){
+      if(e.lengthComputable && onProgress) onProgress(Math.round(e.loaded/e.total*100));
+    });
+    xhr.onload = function(){
+      var data = null;
+      try{ data = JSON.parse(xhr.responseText); }catch(e){}
+      if(xhr.status >= 200 && xhr.status < 300 && data && data.file){ resolve(data.file); }
+      else { reject(new Error((data && data.error) || "ההעלאה נכשלה")); }
+    };
+    xhr.onerror = function(){ reject(new Error("בעיית רשת. נסו שוב.")); };
+    xhr.send(fd);
+  });
+}
+
+loadAllFiles();
+
+/* ===================== costs / budget ===================== */
+var EXPENSE_CATEGORIES = ["טיסות","מלונות","רכבות בין-עירוניות","תחבורה מקומית","אטרקציות","אוכל","קניות","כרטיסים","מזוודות / משלוח מזוודות","SIM / אינטרנט","ביטוח","מוניות","אחר"];
+var EXPENSE_CATEGORY_ICON = {
+  "טיסות":"✈️","מלונות":"🏨","רכבות בין-עירוניות":"🚄","תחבורה מקומית":"🚇","אטרקציות":"🎟️","אוכל":"🍽️",
+  "קניות":"🛍️","כרטיסים":"🎫","מזוודות / משלוח מזוודות":"🧳","SIM / אינטרנט":"📶","ביטוח":"🛡️","מוניות":"🚕","אחר":"📎"
+};
+var STATUS_LABEL = {paid:"✓ שולם", unpaid:"! טרם שולם", planned:"↔ מתוכנן"};
+var STATUS_CLASS = {paid:"booked", unpaid:"notbooked", planned:"flexible"};
+
+// Confirmed costs: static, like the rest of the site's confirmed
+// bookings — not stored via the API, not editable/deletable in the UI,
+// so a stray click can never make a paid booking's cost disappear.
+var CONFIRMED_EXPENSES = [
+  {id:"c-flights", confirmed:true, description:"טיסות — Sydney ⇄ Tokyo / Osaka ⇄ Dubai ⇄ Tel Aviv", amount:7118.67, currency:"AUD", category:"טיסות", date:"2026-10-14", tripDay:1, status:"paid", paidBy:"Family", notes:"Trip.com — כרטיס הונפק"},
+  {id:"c-yokohama", confirmed:true, description:"Mitsui Garden Hotel Yokohama Minatomirai Premier", amount:1231.00, currency:"AUD", category:"מלונות", date:"2026-10-14", tripDay:1, status:"paid", paidBy:"Family", notes:"14–18 באוקטובר · 4 לילות · Deluxe, 3 מיטות"},
+  {id:"c-hakone", confirmed:true, description:"Laforet Hakone Gora Yunosumika", amount:60016, currency:"JPY", category:"מלונות", date:"2026-10-18", tripDay:5, status:"unpaid", paidBy:"Family", notes:"תשלום במלון (Pay at property). חדר ¥49,228 + מיסים ¥10,338 + מס עירייה ¥450."},
+  {id:"c-kyoto-1", confirmed:true, description:"Shizutetsu Hotel Prezio Kyoto — חדר 1", amount:920.84, currency:"AUD", category:"מלונות", date:"2026-10-19", tripDay:7, status:"paid", paidBy:"Family", notes:"19–24 באוקטובר · 5 לילות · טווין"},
+  {id:"c-kyoto-2", confirmed:true, description:"Shizutetsu Hotel Prezio Kyoto — חדר 2", amount:1023.08, currency:"AUD", category:"מלונות", date:"2026-10-19", tripDay:7, status:"paid", paidBy:"Family", notes:"19–24 באוקטובר · 5 לילות · טווין"},
+  {id:"c-osaka", confirmed:true, description:"The Peak Namba West", amount:322.84, currency:"AUD", category:"מלונות", date:"2026-10-24", tripDay:11, status:"paid", paidBy:"Family", notes:"24–26 באוקטובר · 2 לילות · דירת נופש ל-4"}
+];
+
+var EXPENSES_STATE = { manual: [] };
+var costFilter = { q:"", category:"", status:"", day:"" };
+
+function allExpenses(){ return CONFIRMED_EXPENSES.concat(EXPENSES_STATE.manual); }
+
+function expenseAmountAUD(e){
+  if(e.currency === "AUD") return e.amount;
+  if(state.rate) return e.amount / state.rate;
+  return null;
+}
+
+function computeCostSummary(){
+  var totalAUD=0, paidAUD=0, remainingAUD=0, plannedAUD=0, anyUnknownRate=false;
+  allExpenses().forEach(function(e){
+    var aud = expenseAmountAUD(e);
+    if(aud === null){ anyUnknownRate = true; return; }
+    totalAUD += aud;
+    if(e.status === "paid") paidAUD += aud;
+    else if(e.status === "unpaid") remainingAUD += aud;
+    else if(e.status === "planned") plannedAUD += aud;
+  });
+  return {totalAUD:totalAUD, paidAUD:paidAUD, remainingAUD:remainingAUD, plannedAUD:plannedAUD, anyUnknownRate:anyUnknownRate};
+}
+
+function computeCategoryBreakdown(){
+  var byCat = {}, total = 0;
+  allExpenses().forEach(function(e){
+    var aud = expenseAmountAUD(e);
+    if(aud === null) return;
+    byCat[e.category] = (byCat[e.category]||0) + aud;
+    total += aud;
+  });
+  var rows = Object.keys(byCat).map(function(cat){
+    return {category:cat, amount:byCat[cat], pct: total>0 ? (byCat[cat]/total*100) : 0};
+  });
+  rows.sort(function(a,b){ return b.amount - a.amount; });
+  return rows;
+}
+
+function renderCostSummary(){
+  var totalEl = document.getElementById("costTotalVal");
+  if(!totalEl) return;
+  var s = computeCostSummary();
+  totalEl.textContent = "A$"+fmt2(s.totalAUD);
+  document.getElementById("costPaidVal").textContent = "A$"+fmt2(s.paidAUD);
+  document.getElementById("costRemainingVal").textContent = "A$"+fmt2(s.remainingAUD);
+  document.getElementById("costPlannedVal").textContent = "A$"+fmt2(s.plannedAUD);
+  var perPerson = s.totalAUD / 3;
+  document.getElementById("costPerPerson").textContent =
+    "עלות משפחתית כוללת: A$"+fmt2(s.totalAUD)+" · ממוצע לאדם (חלוקה שווה בלבד, לא בהכרח מי ששילם בפועל): A$"+fmt2(perPerson);
+  var rateNote = document.getElementById("costRateNote");
+  var txt = state.rate
+    ? ("שער המרה בשימוש: A$1 = ¥"+fmt2(state.rate)+(state.updated ? (" · עודכן: "+state.updated.toLocaleString("he-IL",{dateStyle:"medium",timeStyle:"short"})) : ""))
+    : "טוענים שער המרה עדכני…";
+  if(s.anyUnknownRate) txt += " · חלק מהסכומים ב-JPY עדיין ממתינים לשער";
+  rateNote.textContent = txt;
+}
+
+function renderBreakdown(){
+  var container = document.getElementById("costBreakdown");
+  if(!container) return;
+  var rows = computeCategoryBreakdown();
+  container.innerHTML = "";
+  if(!rows.length){
+    container.innerHTML = '<div class="files-empty">אין עדיין הוצאות להצגה.</div>';
+    return;
+  }
+  rows.forEach(function(r){
+    var row = el("div","cost-bar-row");
+    row.innerHTML =
+      '<div class="cost-bar-head"><span>'+(EXPENSE_CATEGORY_ICON[r.category]||"📎")+" "+esc(r.category)+'</span>'+
+      '<span class="cost-bar-amt">A$'+fmt2(r.amount)+' · '+r.pct.toFixed(0)+'%</span></div>'+
+      '<div class="cost-bar-track"><div class="cost-bar-fill" style="width:'+r.pct.toFixed(1)+'%"></div></div>';
+    container.appendChild(row);
+  });
+}
+
+function renderExpenseRow(e){
+  var row = el("div","file-card cost-row");
+  row.dataset.id = e.id;
+  var aud = expenseAmountAUD(e);
+  var amountHtml = e.currency === "AUD"
+    ? '<span class="num">A$'+fmt2(e.amount)+'</span>'
+    : '<span class="num">¥'+fmtInt(e.amount)+'</span>'+(aud!==null ? ' <span class="cost-aud-equiv">≈ A$'+fmt2(aud)+'</span>' : ' <span class="cost-aud-equiv">(ממתין לשער)</span>');
+  var dayLabel = e.tripDay ? (" · יום "+e.tripDay) : "";
+  var actionsHtml = e.confirmed
+    ? '<span class="badge booked">✓ מאושר</span>'
+    : '<button class="icon-mini" data-action="edit" title="עריכה" aria-label="עריכה">✏️</button>'+
+      '<button class="icon-mini" data-action="duplicate" title="שכפול" aria-label="שכפול">⧉</button>'+
+      '<button class="icon-mini" data-action="delete" title="מחיקה" aria-label="מחיקה">🗑️</button>';
+  row.innerHTML =
+    '<div class="file-thumb-icon" style="width:52px;height:52px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex:0 0 auto">'+(EXPENSE_CATEGORY_ICON[e.category]||"📎")+'</div>'+
+    '<div class="file-info" style="cursor:default">'+
+      '<div class="file-name">'+esc(e.description)+'</div>'+
+      '<div class="file-meta">'+esc(e.category)+dayLabel+(e.date ? (" · "+e.date) : "")+(e.paidBy && e.paidBy!=="Family" ? (" · "+esc(e.paidBy)) : "")+'</div>'+
+      '<div class="cost-row-amount">'+amountHtml+' <span class="badge '+STATUS_CLASS[e.status]+'">'+STATUS_LABEL[e.status]+'</span></div>'+
+    '</div>'+
+    '<div class="file-actions">'+actionsHtml+'</div>';
+  return row;
+}
+
+function renderCostList(){
+  var list = allExpenses().slice();
+  if(costFilter.category) list = list.filter(function(e){ return e.category === costFilter.category; });
+  if(costFilter.status) list = list.filter(function(e){ return e.status === costFilter.status; });
+  if(costFilter.day) list = list.filter(function(e){ return String(e.tripDay) === costFilter.day; });
+  if(costFilter.q){
+    var needle = costFilter.q.trim().toLowerCase();
+    list = list.filter(function(e){
+      return (e.description||"").toLowerCase().indexOf(needle) !== -1 || (e.notes||"").toLowerCase().indexOf(needle) !== -1;
+    });
+  }
+  list.sort(function(a,b){ return (b.date||"").localeCompare(a.date||""); });
+  var container = document.getElementById("costList");
+  if(!container) return;
+  container.innerHTML = "";
+  list.forEach(function(e){ container.appendChild(renderExpenseRow(e)); });
+  var emptyMsg = document.getElementById("costEmptyMsg");
+  if(emptyMsg){
+    emptyMsg.hidden = list.length > 0;
+    if(list.length === 0){
+      emptyMsg.textContent = allExpenses().length === 0 ? "עדיין אין הוצאות." : "אין הוצאות שתואמות את הסינון הנוכחי.";
+    }
+  }
+}
+
+function renderDayCostTotals(){
+  DAYS.forEach(function(d){
+    var container = document.getElementById("day-cost-total-"+d.day);
+    if(!container) return;
+    var dayExpenses = allExpenses().filter(function(e){ return Number(e.tripDay) === d.day; });
+    if(!dayExpenses.length){ container.hidden = true; container.innerHTML = ""; return; }
+    var total = 0, unknown = false;
+    dayExpenses.forEach(function(e){ var a = expenseAmountAUD(e); if(a===null){ unknown=true; } else { total += a; } });
+    container.hidden = false;
+    container.innerHTML = '<button class="day-cost-btn" data-day="'+d.day+'">💰 הוצאות היום: A$'+fmt2(total)+(unknown?" +":"")+' <span class="day-cost-arrow">←</span></button>';
+  });
+}
+
+function renderAllCostSections(){
+  renderCostSummary();
+  renderBreakdown();
+  renderCostList();
+  renderDayCostTotals();
+}
+
+function buildDayCostTotal(dayNum){
+  var div = el("div","day-cost-total");
+  div.id = "day-cost-total-"+dayNum;
+  div.hidden = true;
+  return div;
+}
+
+function loadExpenses(){
+  return fetch("/api/expenses").then(function(r){
+    if(!r.ok) throw new Error("failed");
+    return r.json();
+  }).then(function(data){
+    EXPENSES_STATE.manual = data.expenses || [];
+    renderAllCostSections();
+  }).catch(function(){
+    renderAllCostSections();
+  });
+}
+
+function duplicateExpense(expense){
+  var copy = {
+    description: expense.description+" (עותק)", amount: expense.amount, currency: expense.currency,
+    category: expense.category, date: expense.date, tripDay: expense.tripDay, status: expense.status,
+    paidBy: expense.paidBy, notes: expense.notes
+  };
+  fetch("/api/expenses", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(copy)})
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(data){ EXPENSES_STATE.manual.unshift(data.expense); renderAllCostSections(); })
+    .catch(function(){ alert("השכפול נכשל. נסו שוב."); });
+}
+
+function todayDetectedDate(){ return new Date().toISOString().slice(0,10); }
+function detectTodayTripDay(){
+  var day = DAYS.find(function(d){ return d.dateISO === todayDetectedDate(); });
+  return day ? String(day.day) : "";
+}
+
+function openExpenseForm(expense){
+  document.getElementById("expenseFormTitle").textContent = expense ? "עריכת הוצאה" : "הוספת הוצאה";
+  document.getElementById("expenseId").value = expense ? expense.id : "";
+  document.getElementById("expDescription").value = expense ? expense.description : "";
+  document.getElementById("expAmount").value = expense ? expense.amount : "";
+  document.getElementById("expCurrency").value = expense ? expense.currency : "AUD";
+  document.getElementById("expCategory").value = expense ? expense.category : "אחר";
+  document.getElementById("expDate").value = expense ? expense.date : todayDetectedDate();
+  document.getElementById("expTripDay").value = expense && expense.tripDay ? String(expense.tripDay) : detectTodayTripDay();
+  document.getElementById("expStatus").value = expense ? expense.status : "paid";
+  document.getElementById("expPaidBy").value = expense ? expense.paidBy : "Family";
+  document.getElementById("expNotes").value = expense ? (expense.notes||"") : "";
+  document.getElementById("expReceiptInput").value = "";
+  document.getElementById("expReceiptStatus").textContent = "";
+  document.getElementById("expenseFormOverlay").classList.add("open");
+}
+function closeExpenseForm(){
+  document.getElementById("expenseFormOverlay").classList.remove("open");
+}
+
+(function initCostFilters(){
+  var catSel = document.getElementById("costCategoryFilter");
+  var formCatSel = document.getElementById("expCategory");
+  var daySel = document.getElementById("costDayFilter");
+  var formDaySel = document.getElementById("expTripDay");
+  EXPENSE_CATEGORIES.forEach(function(c){
+    var label = (EXPENSE_CATEGORY_ICON[c]||"")+" "+c;
+    var o1 = document.createElement("option"); o1.value = c; o1.textContent = label; catSel.appendChild(o1);
+    var o2 = document.createElement("option"); o2.value = c; o2.textContent = label; formCatSel.appendChild(o2);
+  });
+  DAYS.forEach(function(d){
+    var label = "יום "+d.day+" · "+d.dateHe;
+    var o1 = document.createElement("option"); o1.value = String(d.day); o1.textContent = label; daySel.appendChild(o1);
+    var o2 = document.createElement("option"); o2.value = String(d.day); o2.textContent = label; formDaySel.appendChild(o2);
+  });
+  document.getElementById("costSearchInput").addEventListener("input", function(e){ costFilter.q = e.target.value; renderCostList(); });
+  catSel.addEventListener("change", function(e){ costFilter.category = e.target.value; renderCostList(); });
+  document.getElementById("costStatusFilter").addEventListener("change", function(e){ costFilter.status = e.target.value; renderCostList(); });
+  daySel.addEventListener("change", function(e){ costFilter.day = e.target.value; renderCostList(); });
+})();
+
+document.getElementById("expenseForm").addEventListener("submit", function(ev){
+  ev.preventDefault();
+  var id = document.getElementById("expenseId").value;
+  var payload = {
+    description: document.getElementById("expDescription").value,
+    amount: document.getElementById("expAmount").value,
+    currency: document.getElementById("expCurrency").value,
+    category: document.getElementById("expCategory").value,
+    date: document.getElementById("expDate").value,
+    tripDay: document.getElementById("expTripDay").value || null,
+    status: document.getElementById("expStatus").value,
+    paidBy: document.getElementById("expPaidBy").value,
+    notes: document.getElementById("expNotes").value
+  };
+  var saveBtn = document.getElementById("expenseSaveBtn");
+  saveBtn.disabled = true; saveBtn.textContent = "שומר…";
+
+  var receiptFile = document.getElementById("expReceiptInput").files[0];
+  var receiptStatus = document.getElementById("expReceiptStatus");
+  var uploadPromise = Promise.resolve(null);
+
+  if(receiptFile){
+    receiptStatus.textContent = "מעלה קבלה…";
+    uploadPromise = prepareFileForUpload(receiptFile).then(function(prepared){
+      return uploadFileXhr(prepared, payload.tripDay || "", function(pct){ receiptStatus.textContent = "מעלה קבלה… "+pct+"%"; });
+    }).then(function(record){
+      return fetch("/api/files", {
+        method:"PATCH", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({id:record.id, category:"קבלה", displayName: payload.description ? ("קבלה — "+payload.description) : record.displayName})
+      }).then(function(){ receiptStatus.textContent = "✓ קבלה הועלתה"; return record.id; });
+    }).catch(function(){
+      receiptStatus.textContent = "העלאת הקבלה נכשלה — ההוצאה תישמר בלעדיה.";
+      return null;
+    });
+  }
+
+  uploadPromise.then(function(receiptFileId){
+    if(receiptFileId) payload.receiptFileId = receiptFileId;
+    if(id) payload.id = id;
+    return fetch("/api/expenses", {
+      method: id ? "PATCH" : "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+  }).then(function(r){
+    if(!r.ok) return r.json().then(function(d){ throw new Error((d && d.error) || "שגיאה בשמירה"); });
+    return r.json();
+  }).then(function(data){
+    if(id){
+      var idx = EXPENSES_STATE.manual.findIndex(function(x){ return x.id === id; });
+      if(idx !== -1) EXPENSES_STATE.manual[idx] = data.expense;
+    } else {
+      EXPENSES_STATE.manual.unshift(data.expense);
+    }
+    renderAllCostSections();
+    closeExpenseForm();
+  }).catch(function(err){
+    alert(err.message || "שמירת ההוצאה נכשלה.");
+  }).finally(function(){
+    saveBtn.disabled = false; saveBtn.textContent = "שמירה";
+  });
+});
+
+loadExpenses();
 
 /* ===================== scroll reveal ===================== */
 (function(){
