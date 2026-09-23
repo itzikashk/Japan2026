@@ -23,7 +23,11 @@ const ALLOWED_TYPES = new Set([
 ]);
 // Images are compressed client-side before upload, so this ceiling is
 // mostly a backstop for PDFs and any file that skipped compression.
-const MAX_SIZE = 8 * 1024 * 1024;
+// Kept under Vercel's own ~4.5MB hard request-body limit for serverless
+// functions, which would reject anything larger before this code even
+// runs (and did so silently from the client's point of view, since a
+// platform-level rejection isn't a JSON response formidable can parse).
+const MAX_SIZE = 4 * 1024 * 1024;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

@@ -502,7 +502,10 @@ footer b{color:var(--on-navy)}
 .upload-status{font-size:.78rem;margin-top:8px;min-height:1.2em;font-weight:600}
 .upload-status.busy{color:var(--ink-2)}
 .upload-status.ok{color:var(--green)}
-.upload-status.err{color:var(--accent-ink)}
+.upload-status.err{
+  color:#FFB4AC;background:rgba(255,59,48,.14);border:1px solid rgba(255,59,48,.28);
+  border-radius:var(--r-sm);padding:9px 12px;display:block;line-height:1.5;
+}
 
 .modal-overlay{position:fixed;inset:0;z-index:70;background:rgba(15,16,21,.72);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.2s ease}
 .modal-overlay.open{opacity:1;pointer-events:auto}
@@ -2147,6 +2150,9 @@ function handleFileSelected(inputEl){
   setStatus("מעלה…", "busy");
 
   prepareFileForUpload(file).then(function(prepared){
+    if(prepared.size > UPLOAD_HARD_LIMIT){
+      throw new Error("הקובץ גדול מדי להעלאה (עד כ-4MB). נסו תמונה קטנה יותר או צילום מסך.");
+    }
     return uploadFileXhr(prepared, day, function(pct){ setStatus("מעלה… "+pct+"%", "busy"); });
   }).then(function(record){
     FILES_STATE.all.unshift(record);
@@ -2158,8 +2164,16 @@ function handleFileSelected(inputEl){
   });
 }
 
+var UPLOAD_HARD_LIMIT = 4 * 1024 * 1024; // Vercel's serverless functions reject bodies over ~4.5MB before our own code even runs
+
 function prepareFileForUpload(file){
-  var compressible = file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/webp";
+  // iPhones default to HEIC for camera photos — Safari can decode it via
+  // <img>/canvas even though most other browsers can't, so it's worth
+  // attempting compression there too rather than sending the raw file
+  // (which routinely exceeds the platform's hard request-size limit and
+  // fails with little visible feedback).
+  var compressible = file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/webp"
+    || file.type === "image/heic" || file.type === "image/heif";
   if(!compressible || file.size < 1.2*1024*1024) return Promise.resolve(file);
   return compressImage(file).catch(function(){ return file; });
 }
@@ -2484,14 +2498,17 @@ document.getElementById("expenseForm").addEventListener("submit", function(ev){
   if(receiptFile){
     receiptStatus.textContent = "מעלה קבלה…";
     uploadPromise = prepareFileForUpload(receiptFile).then(function(prepared){
+      if(prepared.size > UPLOAD_HARD_LIMIT){
+        throw new Error("קובץ הקבלה גדול מדי (עד כ-4MB). נסו תמונה קטנה יותר.");
+      }
       return uploadFileXhr(prepared, payload.tripDay || "", function(pct){ receiptStatus.textContent = "מעלה קבלה… "+pct+"%"; });
     }).then(function(record){
       return fetch("/api/files", {
         method:"PATCH", headers:{"Content-Type":"application/json"},
         body: JSON.stringify({id:record.id, category:"קבלה", displayName: payload.description ? ("קבלה — "+payload.description) : record.displayName})
       }).then(function(){ receiptStatus.textContent = "✓ קבלה הועלתה"; return record.id; });
-    }).catch(function(){
-      receiptStatus.textContent = "העלאת הקבלה נכשלה — ההוצאה תישמר בלעדיה.";
+    }).catch(function(err){
+      receiptStatus.textContent = ((err && err.message) || "העלאת הקבלה נכשלה") + " — ההוצאה תישמר בלעדיה.";
       return null;
     });
   }
