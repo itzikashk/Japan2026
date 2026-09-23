@@ -363,6 +363,20 @@ section{padding:64px 0}
 .tl-desc{font-size:.88rem;color:var(--ink-2);line-height:1.55;margin:0 0 8px}
 .tl-transport{display:flex;align-items:flex-start;gap:6px;font-size:.8rem;color:var(--ink-3);margin-bottom:9px;direction:ltr;text-align:right;unicode-bidi:isolate}
 .tl-transport .ic{flex:0 0 auto;margin-top:1px}
+
+/* ---------- google maps destination block ---------- */
+.dest-block{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 14px;margin:0 0 10px}
+.dest-label{display:flex;align-items:center;gap:5px;font-size:.68rem;font-weight:800;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.dest-label svg{width:12px;height:12px}
+.dest-name{font-weight:700;font-size:.95rem;color:var(--text-primary);direction:ltr;text-align:right;unicode-bidi:isolate;line-height:1.4}
+.dest-address{font-size:.78rem;color:var(--text-secondary);margin-top:2px;direction:ltr;text-align:right;unicode-bidi:isolate;line-height:1.5}
+.dest-route{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px;font-size:.78rem;color:var(--text-secondary);direction:ltr;text-align:right;unicode-bidi:isolate}
+.dest-route span{display:inline-flex;align-items:center;gap:4px}
+.dest-navigate{
+  margin-top:11px;width:100%;justify-content:center;font-size:.86rem;padding:12px 14px;
+  background:linear-gradient(135deg,var(--accent-magenta),var(--accent-violet));border-color:transparent;color:#fff;
+}
+.dest-navigate:hover{filter:brightness(1.1)}
 .tl-actions{display:flex;flex-wrap:wrap;gap:8px}
 .btn-mini{
   display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;padding:10px 13px;border-radius:99px;
@@ -1057,33 +1071,70 @@ var DAYS = [
    title:"טיסה והגעה ליפן", subtitle:"Flight & Arrival",
    note:"הנחיתה בהאנדה רק ב-20:10 בערב — היום נשאר יום נסיעה בלבד, בלי סיורים. אחרי המלון פשוט נחים.",
    items:[
-     {time:"12:15", badges:["must","booked"], title:"טיסה Sydney → Tokyo Haneda", desc:"Qantas QF059. כרטיס הונפק. נחיתה משוערת 20:10 (שעון מקומי).", transport:"Sydney (SYD) → Tokyo Haneda (HND)"},
-     {time:"20:10", badges:["must"], title:"נחיתה בהאנדה, ביקורת גבולות ומזוודות", desc:"ביקורת דרכונים, איסוף מזוודות ויציאה משדה התעופה.", transport:"Tokyo Haneda (HND)"},
-     {time:"ערב", badges:["must"], title:"מעבר ליוקוהמה", desc:"נסיעה מהאנדה לאזור Minatomirai.", transport:"Haneda ← יוקוהמה / Minatomirai"},
-     {time:"ערב מאוחר", badges:["must"], title:"Mitsui Garden Hotel Yokohama Minatomirai Premier", desc:"צ׳ק-אין ושינה. מינימרקט קרוב אם צריך משהו קטן — לא מתוכנן שום סיור הערב.", transport:""}
+     {time:"12:15", badges:["must","booked"], title:"טיסה Sydney → Tokyo Haneda", desc:"Qantas QF059. כרטיס הונפק. נחיתה משוערת 20:10 (שעון מקומי).", transport:"Sydney (SYD) → Tokyo Haneda (HND)",
+      dest:{name:"Tokyo Haneda Airport — Terminal 3 (International)", address:"2-6-5 Haneda, Ota City, Tokyo 144-0041, Japan", query:"Tokyo Haneda Airport Terminal 3"}},
+     {time:"20:10", badges:["must"], title:"נחיתה בהאנדה, ביקורת גבולות ומזוודות", desc:"ביקורת דרכונים, איסוף מזוודות ויציאה משדה התעופה.", transport:"Tokyo Haneda (HND)",
+      dest:{name:"Tokyo Haneda Airport — Terminal 3 (International)", address:"2-6-5 Haneda, Ota City, Tokyo 144-0041, Japan", query:"Tokyo Haneda Airport Terminal 3"}},
+     {time:"ערב", badges:["must"], title:"מעבר ליוקוהמה", desc:"נסיעה מהאנדה לאזור Minatomirai.", transport:"Haneda ← יוקוהמה / Minatomirai",
+      dest:{name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", address:"3-3-3 Minatomirai, Nishi Ward, Yokohama, Kanagawa 220-0012, Japan", query:"Mitsui Garden Hotel Yokohama Minatomirai Premier"},
+      route:{time:"כ-45–60 דק׳ דלת לדלת", transfers:"כ-1 החלפה (בד״כ ביוקוהמה)"}},
+     {time:"ערב מאוחר", badges:["must"], title:"Mitsui Garden Hotel Yokohama Minatomirai Premier", desc:"צ׳ק-אין ושינה. מינימרקט קרוב אם צריך משהו קטן — לא מתוכנן שום סיור הערב.", transport:"",
+      dest:{name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", address:"3-3-3 Minatomirai, Nishi Ward, Yokohama, Kanagawa 220-0012, Japan", query:"Mitsui Garden Hotel Yokohama Minatomirai Premier"}}
    ]},
   {day:2, dateISO:"2026-10-15", weekday:"חמישי", dateHe:"15 באוקטובר", city:"Tokyo",
    title:"טוקיו הקלאסית · גינזה · אודייבה", subtitle:"Classic Tokyo · Ginza · Odaiba",
    items:[
-     {time:"בוקר", badges:["must"], title:"Asakusa & Senso-ji", desc:"מקדש Senso-ji ורחוב הקניות Nakamise.", transport:"Minatomirai ← יוקוהמה ← טוקיו / Asakusa"},
-     {time:"צהריים", badges:["must"], title:"Ginza", desc:"טיול ברובע הקניות והאדריכלות.", transport:"Asakusa ← Ginza: קו מטרו Ginza"},
-     {time:"צהריים מאוחר", badges:["optional"], title:"UNIQLO Ginza", desc:"יוניקלו גינזה — עצירה קצרה להתרשמות מהחנות היפנית הגדולה. לא מתוכנן מסע קניות. כ-20–30 דקות.", transport:"הליכה באזור Ginza"},
-     {time:"אחה״צ", badges:["must"], title:"Odaiba · DiverCity · Gundam", desc:"פסל Gundam בגודל מלא ב-DiverCity.", transport:"Ginza/Shimbashi ← Daiba: Yurikamome"}
+     {time:"בוקר", badges:["must"], title:"Asakusa & Senso-ji", desc:"מקדש Senso-ji ורחוב הקניות Nakamise.", transport:"Minatomirai ← יוקוהמה ← טוקיו / Asakusa",
+      dest:{name:"Senso-ji", address:"2-3-1 Asakusa, Taito City, Tokyo 111-0032, Japan", query:"Senso-ji, Asakusa, Tokyo"},
+      route:{time:"כ-60–75 דק׳ דלת לדלת", transfers:"כ-1–2 החלפות"}},
+     {time:"צהריים", badges:["must"], title:"Ginza", desc:"טיול ברובע הקניות והאדריכלות.", transport:"Asakusa ← Ginza: קו מטרו Ginza",
+      dest:{name:"Ginza 4-chome Crossing", address:"4-chome Ginza, Chuo City, Tokyo, Japan", query:"Ginza 4-chome Crossing, Tokyo"},
+      route:{time:"כ-20–25 דק׳", transfers:"ישיר, קו Ginza"}},
+     {time:"צהריים מאוחר", badges:["optional"], title:"UNIQLO Ginza", desc:"יוניקלו גינזה — עצירה קצרה להתרשמות מהחנות היפנית הגדולה. לא מתוכנן מסע קניות. כ-20–30 דקות.", transport:"הליכה באזור Ginza",
+      dest:{name:"UNIQLO TOKYO (Ginza flagship)", address:"Ginza Komatsu East Wing, 6-9-5 Ginza, Chuo City, Tokyo 104-0061, Japan", query:"UNIQLO Ginza flagship store, Tokyo"}},
+     {time:"אחה״צ", badges:["must"], title:"Odaiba · DiverCity · Gundam", desc:"פסל Gundam בגודל מלא ב-DiverCity. לתשומת לב: לפי מידע עדכני, תערוכת פסל האוניקורן גאנדם הסתיימה בסוף אוגוסט 2026 — כדאי לבדוק שוב לפני היום הזה אם יש תחליף/פסל חדש.", transport:"Ginza/Shimbashi ← Daiba: Yurikamome",
+      dest:{name:"DiverCity Tokyo Plaza", address:"1-1-10 Aomi, Koto City, Tokyo 135-0064, Japan", query:"DiverCity Tokyo Plaza, Odaiba"},
+      route:{time:"כ-25–35 דק׳", transfers:"כ-1 החלפה (Yurikamome)"}}
    ]},
   {day:3, dateISO:"2026-10-16", weekday:"שישי", dateHe:"16 באוקטובר", city:"Tokyo",
    title:"אמנות דיגיטלית ועיר החשמל", subtitle:"Digital Art & Electric City",
    items:[
-     {time:"10:30", badges:["must","booked"], title:"teamLab Borderless · Azabudai Hills", desc:"כרטיסים כבר הוזמנו. מומלץ להגיע 20–30 דקות מראש.", transport:"יוקוהמה ← טוקיו ← Kamiyacho / Roppongi-itchome"},
-     {time:"אחה״צ", badges:["must"], title:"Akihabara", desc:"יום הגיימינג/אנימה של אלון — Radio Kaikan, Super Potato, GiGO.", transport:"Azabudai ← Akihabara: מטרו/JR"},
-     {time:"ערב", badges:["must"], title:"Tokyo Tower / Roppongi", desc:"תצפית ערב ואזור Roppongi.", transport:"Akihabara ← אזור Roppongi"}
+     {time:"10:30", badges:["must","booked"], title:"teamLab Borderless · Azabudai Hills", desc:"כרטיסים כבר הוזמנו. מומלץ להגיע 20–30 דקות מראש.", transport:"יוקוהמה ← טוקיו ← Kamiyacho / Roppongi-itchome",
+      dest:{name:"teamLab Borderless (Azabudai Hills)", address:"Azabudai Hills Garden Plaza B, B1F, 1-2-4 Azabudai, Minato City, Tokyo, Japan", query:"teamLab Borderless, Azabudai Hills, Tokyo"},
+      route:{time:"כ-50–65 דק׳ דלת לדלת", transfers:"כ-1–2 החלפות"}},
+     {time:"אחה״צ", badges:["must"], title:"Akihabara", desc:"יום הגיימינג/אנימה של אלון — Radio Kaikan, Super Potato, GiGO.", transport:"Azabudai ← Akihabara: מטרו/JR",
+      dest:[
+        {name:"Akihabara Radio Kaikan", address:"1-15-16 Sotokanda, Chiyoda City, Tokyo 101-0021, Japan", query:"Akihabara Radio Kaikan, Tokyo"},
+        {name:"Super Potato Akihabara", address:"1-11-2 Sotokanda, Chiyoda City, Tokyo 101-0021, Japan (קומות 3–5)", query:"Super Potato Akihabara, Tokyo"},
+        {name:"GiGO Akihabara Building 3", address:"1-11-11 Sotokanda, Chiyoda City, Tokyo 101-0021, Japan", query:"GiGO Akihabara Building 3, Tokyo"}
+      ],
+      route:{time:"כ-15–20 דק׳", transfers:"כ-1 החלפה"}},
+     {time:"ערב", badges:["must"], title:"Tokyo Tower / Roppongi", desc:"תצפית ערב ואזור Roppongi.", transport:"Akihabara ← אזור Roppongi",
+      dest:{name:"Tokyo Tower", address:"4-2-8 Shiba-koen, Minato City, Tokyo 105-0011, Japan", query:"Tokyo Tower"},
+      route:{time:"כ-25–35 דק׳", transfers:"כ-1 החלפה"}}
    ]},
   {day:4, dateISO:"2026-10-17", weekday:"שבת", dateHe:"17 באוקטובר", city:"Tokyo",
    title:"מייג׳י · הראג׳וקו · שיבויה", subtitle:"Meiji · Harajuku · Shibuya",
    items:[
-     {time:"בוקר", badges:["must"], title:"Meiji Jingu & Yoyogi", desc:"פתיחה ירוקה ושקטה לפני האזורים העמוסים.", transport:"יוקוהמה ← Harajuku / Meiji-jingumae"},
-     {time:"צהריים", badges:["must"], title:"Harajuku & Omotesando", desc:"אופנה, עיצוב ואדריכלות — לפי הזמן שנשאר.", transport:"הליכה"},
-     {time:"אחה״צ", badges:["must"], title:"Shibuya Parco", desc:"Nintendo Tokyo + Pokémon Center בקומה 6.", transport:"Omotesando ← Shibuya"},
-     {time:"שקיעה", badges:["must","weather"], title:"Shibuya Crossing & Shibuya Sky", desc:"לסגור חלון לשקיעה כשהמכירה נפתחת — תלוי במזג האוויר.", transport:"הליכה"}
+     {time:"בוקר", badges:["must"], title:"Meiji Jingu & Yoyogi", desc:"פתיחה ירוקה ושקטה לפני האזורים העמוסים.", transport:"יוקוהמה ← Harajuku / Meiji-jingumae",
+      dest:[
+        {name:"Meiji Jingu", address:"1-1 Yoyogikamizonocho, Shibuya City, Tokyo 151-8557, Japan", query:"Meiji Jingu, Tokyo"},
+        {name:"Yoyogi Park", address:"2-1 Yoyogikamizonocho, Shibuya City, Tokyo 151-0052, Japan", query:"Yoyogi Park, Tokyo"}
+      ],
+      route:{time:"כ-60–70 דק׳ דלת לדלת", transfers:"כ-1–2 החלפות"}},
+     {time:"צהריים", badges:["must"], title:"Harajuku & Omotesando", desc:"אופנה, עיצוב ואדריכלות — לפי הזמן שנשאר.", transport:"הליכה",
+      dest:[
+        {name:"Takeshita Street (Harajuku)", address:"Jingumae, Shibuya City, Tokyo, Japan", query:"Takeshita Street, Harajuku, Tokyo"},
+        {name:"Omotesando Hills", address:"4-12-10 Jingumae, Shibuya City, Tokyo 150-0001, Japan", query:"Omotesando Hills, Tokyo"}
+      ]},
+     {time:"אחה״צ", badges:["must"], title:"Shibuya Parco", desc:"Nintendo Tokyo + Pokémon Center בקומה 6.", transport:"Omotesando ← Shibuya",
+      dest:{name:"Shibuya PARCO", address:"15-1 Udagawacho, Shibuya City, Tokyo 150-0042, Japan", query:"Shibuya PARCO"},
+      route:{time:"כ-10–15 דק׳", transfers:"הליכה או תחנה אחת"}},
+     {time:"שקיעה", badges:["must","weather"], title:"Shibuya Crossing & Shibuya Sky", desc:"לסגור חלון לשקיעה כשהמכירה נפתחת — תלוי במזג האוויר.", transport:"הליכה",
+      dest:[
+        {name:"Shibuya Scramble Crossing", address:"Dogenzaka, Shibuya City, Tokyo, Japan (ליד יציאת Hachiko)", query:"Shibuya Scramble Crossing, Tokyo"},
+        {name:"Shibuya Sky", address:"Shibuya Scramble Square, 2-24-12 Shibuya, Shibuya City, Tokyo 150-0002, Japan", query:"Shibuya Sky, Tokyo"}
+      ]}
    ]},
   {day:5, dateISO:"2026-10-18", weekday:"ראשון", dateHe:"18 באוקטובר", city:"Hakone",
    title:"מעבר להאקונה", subtitle:"Transfer to Hakone",
@@ -1107,77 +1158,145 @@ var DAYS = [
      ticketLabel:"🎟️ כרטיסים ולוח הקרנות"
    },
    items:[
-     {time:"09:15", badges:["must"], title:"יציאה מהמלון + שילוח מזוודות · Takkyubin", desc:"ארוחת בוקר וצ׳ק-אאוט. שולחים את המזוודות הגדולות ישירות למלון בקיוטו — לוקחים רק תיק לילה קטן.", transport:"מלון יוקוהמה ← מלון קיוטו (שילוח) / יוקוהמה ← Minami-machida"},
-     {time:"בוקר", badges:["optional","notbooked"], title:"Snoopy Museum Tokyo", desc:"עצירה אופציונלית ב-Minami-machida Grandberry Park — Snoopy Museum ו-Brown's Store, ואולי הצצה קצרה בפארק. כ-1.5–2 שעות. הסדר מול ULTRA 4DX (מי קודם) ייקבע כשלוח ההקרנות של ה-18/10 יתפרסם.", transport:"יוקוהמה ← Minami-machida Grandberry Park", official:"https://snoopymuseum.tokyo/"},
-     {time:"בוקר/צהריים", badges:["optional","notbooked","priority"], title:"ULTRA 4DX · 109 Cinemas Grandberry Park", desc:"הקרנת 4DX+SCREENX — רק אם יש הקרנת בוקר/צהריים מוקדמת שלא פוגעת בהגעה להאקונה. עדיין לא נבחר סרט או שעה.", transport:"Minami-machida Grandberry Park", official:"https://109cinemas.net/grandberrypark/"},
+     {time:"09:15", badges:["must"], title:"יציאה מהמלון + שילוח מזוודות · Takkyubin", desc:"ארוחת בוקר וצ׳ק-אאוט. שולחים את המזוודות הגדולות ישירות למלון בקיוטו — לוקחים רק תיק לילה קטן.", transport:"מלון יוקוהמה ← מלון קיוטו (שילוח) / יוקוהמה ← Minami-machida",
+      dest:{name:"Minami-machida Grandberry Park", address:"3-4-1 Tsuruma, Machida, Tokyo 194-0004, Japan", query:"Minami-machida Grandberry Park, Tokyo"},
+      route:{time:"כ-60–80 דק׳ דלת לדלת", transfers:"כ-1–2 החלפות"}},
+     {time:"בוקר", badges:["optional","notbooked"], title:"Snoopy Museum Tokyo", desc:"עצירה אופציונלית ב-Minami-machida Grandberry Park — Snoopy Museum ו-Brown's Store, ואולי הצצה קצרה בפארק. כ-1.5–2 שעות. הסדר מול ULTRA 4DX (מי קודם) ייקבע כשלוח ההקרנות של ה-18/10 יתפרסם.", transport:"יוקוהמה ← Minami-machida Grandberry Park", official:"https://snoopymuseum.tokyo/",
+      dest:{name:"Snoopy Museum Tokyo", address:"3-1-4 Tsuruma, Machida, Tokyo 194-0004, Japan", query:"Snoopy Museum Tokyo, Machida"}},
+     {time:"בוקר/צהריים", badges:["optional","notbooked","priority"], title:"ULTRA 4DX · 109 Cinemas Grandberry Park", desc:"הקרנת 4DX+SCREENX — רק אם יש הקרנת בוקר/צהריים מוקדמת שלא פוגעת בהגעה להאקונה. עדיין לא נבחר סרט או שעה.", transport:"Minami-machida Grandberry Park", official:"https://109cinemas.net/grandberrypark/",
+      dest:{name:"109 Cinemas Grandberry Park", address:"3-4-1 Tsuruma, Machida, Tokyo 194-0004, Japan (Grandberry Park 2F)", query:"109 Cinemas Grandberry Park, Machida"}},
      {time:"גמיש", badges:["optional"], title:"ארוחת צהריים קלה", desc:"רק אם נשאר זמן אחרי סנופי ו/או ULTRA 4DX — לא מעכבים בגללה את היציאה להאקונה.", transport:""},
-     {time:"אחה״צ", badges:["must"], title:"המשך ל-Hakone / Gora", desc:"נסיעה לכיוון Hakone-Yumoto ומשם ל-Gora. השעה המדויקת תלויה במה שנעשה ב-Grandberry Park בבוקר.", transport:"Minami-machida ← Odawara ← Hakone Tozan Railway ← Gora"},
-     {time:"ערב", badges:["must"], title:"Laforet Hakone Gora Yunosumika", desc:"צ׳ק-אין, אונסן וארוחת ערב.", transport:"Gora ← שאטל מלון / גישה מקומית"}
+     {time:"אחה״צ", badges:["must"], title:"המשך ל-Hakone / Gora", desc:"נסיעה לכיוון Hakone-Yumoto ומשם ל-Gora. השעה המדויקת תלויה במה שנעשה ב-Grandberry Park בבוקר.", transport:"Minami-machida ← Odawara ← Hakone Tozan Railway ← Gora",
+      dest:{name:"Laforet Hakone Gora Yunosumika", address:"1320 Gora, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan", query:"Laforet Hakone Gora Yunosumika"},
+      route:{time:"כ-2–2.5 שעות דלת לדלת", transfers:"כ-2–3 החלפות (Odawara, Hakone-Yumoto)"}},
+     {time:"ערב", badges:["must"], title:"Laforet Hakone Gora Yunosumika", desc:"צ׳ק-אין, אונסן וארוחת ערב.", transport:"Gora ← שאטל מלון / גישה מקומית",
+      dest:{name:"Laforet Hakone Gora Yunosumika", address:"1320 Gora, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan", query:"Laforet Hakone Gora Yunosumika"}}
    ]},
   {day:6, dateISO:"2026-10-19", weekday:"שני", dateHe:"19 באוקטובר", city:"Hakone → Kyoto",
    title:"מעגל האקונה · פוג׳י · שינקנסן", subtitle:"Hakone Loop · Mt Fuji · Shinkansen",
    items:[
-     {time:"09:00", badges:["must"], title:"Hakone Open-Air Museum", desc:"מוזיאון הפיסול הפתוח — כדאי להתחיל מוקדם.", transport:"Gora ← Chokoku-no-Mori: Hakone Tozan Railway"},
-     {time:"לפנה״צ מאוחר", badges:["must","weather"], title:"Gora ← Sounzan ← Owakudani", desc:"Cable Car ואז Ropeway. תצפית פוג׳י תלויה במזג האוויר.", transport:"Gora ← Cable Car ← Sounzan ← Ropeway ← Owakudani"},
-     {time:"צהריים", badges:["must"], title:"Togendai & שיט באגם Ashi", desc:"ממשיכים ברכבל ל-Togendai ואז שיט באגם Ashi.", transport:"Owakudani ← Togendai ← שיט באגם"},
-     {time:"אחה״צ מאוחר", badges:["must"], title:"Hakone ← Mishima ← Kyoto", desc:"מתקדמים למישימה ועולים על שינקנסן Tokaido לקיוטו.", transport:"אזור Hakone ← Mishima ← Tokaido Shinkansen ← Kyoto"}
+     {time:"09:00", badges:["must"], title:"Hakone Open-Air Museum", desc:"מוזיאון הפיסול הפתוח — כדאי להתחיל מוקדם.", transport:"Gora ← Chokoku-no-Mori: Hakone Tozan Railway",
+      dest:{name:"Hakone Open-Air Museum", address:"1121 Ninotaira, Hakone, Ashigarashimo District, Kanagawa 250-0493, Japan", query:"Hakone Open-Air Museum"},
+      route:{time:"כ-10 דק׳", transfers:"ישיר, Hakone Tozan Railway"}},
+     {time:"לפנה״צ מאוחר", badges:["must","weather"], title:"Gora ← Sounzan ← Owakudani", desc:"Cable Car ואז Ropeway. תצפית פוג׳י תלויה במזג האוויר.", transport:"Gora ← Cable Car ← Sounzan ← Ropeway ← Owakudani",
+      dest:{name:"Owakudani", address:"Owakudani, Hakone, Ashigarashimo District, Kanagawa, Japan", query:"Owakudani Ropeway Station, Hakone"},
+      route:{time:"כ-25–30 דק׳", transfers:"1 החלפה (Sounzan: Cable Car → Ropeway)"}},
+     {time:"צהריים", badges:["must"], title:"Togendai & שיט באגם Ashi", desc:"ממשיכים ברכבל ל-Togendai ואז שיט באגם Ashi.", transport:"Owakudani ← Togendai ← שיט באגם",
+      dest:{name:"Togendai Port (Lake Ashi)", address:"164-17 Motohakone, Hakone, Ashigarashimo District, Kanagawa 250-0522, Japan", query:"Togendai Ropeway Station, Hakone"},
+      route:{time:"כ-15–20 דק׳", transfers:"ישיר, Ropeway"}},
+     {time:"אחה״צ מאוחר", badges:["must"], title:"Hakone ← Mishima ← Kyoto", desc:"מתקדמים למישימה ועולים על שינקנסן Tokaido לקיוטו.", transport:"אזור Hakone ← Mishima ← Tokaido Shinkansen ← Kyoto",
+      dest:[
+        {name:"Mishima Station", address:"16-1 Ichibancho, Mishima, Shizuoka 411-0036, Japan", query:"Mishima Station, Shizuoka"},
+        {name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", address:"339 Nushiyacho, Karasuma-dori Oike-sagaru, Nakagyo Ward, Kyoto, 604-0843, Japan", query:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike"}
+      ],
+      route:{time:"כ-2.5–3 שעות עד המלון בקיוטו", transfers:"כ-2 החלפות (Togendai←→Mishima באוטובוס, ואז שינקנסן)"}}
    ]},
   {day:7, dateISO:"2026-10-20", weekday:"שלישי", dateHe:"20 באוקטובר", city:"Kyoto",
    title:"אראשியאמה · קינקאקו-ג׳י · עיצוב", subtitle:"Arashiyama · Kinkaku-ji · Design",
    items:[
-     {time:"מוקדם", badges:["must"], title:"Arashiyama Bamboo Grove", desc:"כדאי להגיע מוקדם ככל האפשר, לפני העומס.", transport:"Karasuma Oike ← Arashiyama: מטרו + JR/Hankyu"},
-     {time:"בוקר", badges:["must"], title:"Tenryu-ji", desc:"מקדש וגן סמוך לחורשת הבמבוק.", transport:"הליכה"},
-     {time:"צהריים", badges:["must"], title:"Kinkaku-ji", desc:"ה-Golden Pavilion.", transport:"Arashiyama ← Kinkaku-ji: אוטובוס/מונית"},
-     {time:"אחה״צ", badges:["optional"], title:"Ace Hotel / ShinPuhKan", desc:"קפה והפסקה ליד המלון.", transport:"חזרה ל-Karasuma Oike"}
+     {time:"מוקדם", badges:["must"], title:"Arashiyama Bamboo Grove", desc:"כדאי להגיע מוקדם ככל האפשר, לפני העומס.", transport:"Karasuma Oike ← Arashiyama: מטרו + JR/Hankyu",
+      dest:{name:"Arashiyama Bamboo Grove", address:"Sagano, Ukyo Ward, Kyoto, Japan", query:"Arashiyama Bamboo Grove, Kyoto"},
+      route:{time:"כ-30–40 דק׳", transfers:"כ-1 החלפה"}},
+     {time:"בוקר", badges:["must"], title:"Tenryu-ji", desc:"מקדש וגן סמוך לחורשת הבמבוק.", transport:"הליכה",
+      dest:{name:"Tenryu-ji", address:"68 Susukinobaba-cho, Saga Tenryuji, Ukyo Ward, Kyoto 616-8385, Japan", query:"Tenryu-ji, Arashiyama, Kyoto"}},
+     {time:"צהריים", badges:["must"], title:"Kinkaku-ji", desc:"ה-Golden Pavilion.", transport:"Arashiyama ← Kinkaku-ji: אוטובוס/מונית",
+      dest:{name:"Kinkaku-ji", address:"1 Kinkakujicho, Kita Ward, Kyoto 603-8361, Japan", query:"Kinkaku-ji, Kyoto"},
+      route:{time:"כ-25–35 דק׳", transfers:"אוטובוס ישיר או מונית"}},
+     {time:"אחה״צ", badges:["optional"], title:"Ace Hotel / ShinPuhKan", desc:"קפה והפסקה ליד המלון.", transport:"חזרה ל-Karasuma Oike",
+      dest:[
+        {name:"Ace Hotel Kyoto", address:"245-2 Kurumayacho, Nakagyo Ward, Kyoto, 604-8185, Japan", query:"Ace Hotel Kyoto"},
+        {name:"ShinPuhKan", address:"Karasuma-dori, Nakagyo Ward, Kyoto (מעל תחנת Karasuma Oike), Japan", query:"Shinpuhkan, Kyoto"}
+      ],
+      route:{time:"כ-15–20 דק׳", transfers:"ישיר, קרוב למלון"}}
    ]},
   {day:8, dateISO:"2026-10-21", weekday:"רביעי", dateHe:"21 באוקטובר", city:"Kyoto",
    title:"פושימי אינארי · קיומיזו · גיון", subtitle:"Fushimi Inari · Kiyomizu · Gion",
    items:[
-     {time:"מוקדם", badges:["must"], title:"Fushimi Inari", desc:"יציאה מוקדמת כדי להקדים את העומס בשערי הטוריאי.", transport:"Karasuma Oike ← Kyoto/Keihan/JR ← Fushimi Inari"},
-     {time:"צהריים", badges:["must"], title:"Kiyomizu-dera", desc:"מקדש ונוף פתוח על העיר.", transport:"Fushimi ← Kiyomizu-Gojo: אוטובוס"},
-     {time:"אחה״צ", badges:["must"], title:"Ninenzaka · Sannenzaka · Gion", desc:"הליכה רגועה מהרובע ההיסטורי לכיוון Gion.", transport:"הליכה"}
+     {time:"מוקדם", badges:["must"], title:"Fushimi Inari", desc:"יציאה מוקדמת כדי להקדים את העומס בשערי הטוריאי.", transport:"Karasuma Oike ← Kyoto/Keihan/JR ← Fushimi Inari",
+      dest:{name:"Fushimi Inari Taisha", address:"68 Fukakusa Yabunouchicho, Fushimi Ward, Kyoto 612-0882, Japan", query:"Fushimi Inari Taisha, Kyoto"},
+      route:{time:"כ-20–25 דק׳", transfers:"ישיר, קו JR Nara"}},
+     {time:"צהריים", badges:["must"], title:"Kiyomizu-dera", desc:"מקדש ונוף פתוח על העיר.", transport:"Fushimi ← Kiyomizu-Gojo: אוטובוס",
+      dest:{name:"Kiyomizu-dera", address:"1-294 Kiyomizu, Higashiyama Ward, Kyoto 605-0862, Japan", query:"Kiyomizu-dera, Kyoto"},
+      route:{time:"כ-25–30 דק׳", transfers:"כ-1 החלפה"}},
+     {time:"אחה״צ", badges:["must"], title:"Ninenzaka · Sannenzaka · Gion", desc:"הליכה רגועה מהרובע ההיסטורי לכיוון Gion.", transport:"הליכה",
+      dest:[
+        {name:"Sannenzaka Slope", address:"Kiyomizu, Higashiyama Ward, Kyoto, Japan", query:"Sannenzaka, Kyoto"},
+        {name:"Gion (Hanamikoji Street)", address:"Gion, Higashiyama Ward, Kyoto, Japan", query:"Hanamikoji Street, Gion, Kyoto"}
+      ]}
    ]},
   {day:9, dateISO:"2026-10-22", weekday:"חמישי", dateHe:"22 באוקטובר", city:"Kyoto",
    title:"טירת נִיג׳וֹ · שביל הפילוסופים", subtitle:"Nijo Castle · Philosopher's Path",
    note:"אופציה ליום הזה: לקצר חלק משביל הפילוסופים אחה״צ ולפנות זמן לעצירת קפה-חתולים.",
    items:[
-     {time:"בוקר", badges:["must"], title:"Nijo Castle", desc:"קרוב יחסית למלון — התחלה יעילה ליום.", transport:"Karasuma Oike ← Nijojo-mae: קו Tozai"},
-     {time:"אחה״צ", badges:["must"], title:"Ginkaku-ji & שביל הפילוסופים", desc:"ה-Silver Pavilion והליכה בשביל הפילוסופים.", transport:"אזור Nijo ← מזרח קיוטו: מטרו/אוטובוס"},
-     {time:"אחה״צ מאוחר", badges:["optional"], title:"Cat Café MOCHA Kyoto Kawaramachi", desc:"עצירה משפחתית נעימה עם חתולים — רק אם מקצרים חלק משביל הפילוסופים. מתנהגים לפי כללי בית הקפה ונותנים לחתולים להתקרב לפי בחירתם, בלי לרדוף או להעיר אותם.", transport:"מרכז קיוטו, Kawaramachi", official:"https://catmocha.jp/en/shoplist/"}
+     {time:"בוקר", badges:["must"], title:"Nijo Castle", desc:"קרוב יחסית למלון — התחלה יעילה ליום.", transport:"Karasuma Oike ← Nijojo-mae: קו Tozai",
+      dest:{name:"Nijo Castle", address:"541 Nijojocho, Horikawa-nishiiru, Nijo-dori, Nakagyo Ward, Kyoto, Japan", query:"Nijo Castle, Kyoto"},
+      route:{time:"כ-10 דק׳", transfers:"ישיר, קו Tozai"}},
+     {time:"אחה״צ", badges:["must"], title:"Ginkaku-ji & שביל הפילוסופים", desc:"ה-Silver Pavilion והליכה בשביל הפילוסופים.", transport:"אזור Nijo ← מזרח קיוטו: מטרו/אוטובוס",
+      dest:[
+        {name:"Ginkaku-ji", address:"2 Ginkakujicho, Sakyo Ward, Kyoto 606-8402, Japan", query:"Ginkaku-ji, Kyoto"},
+        {name:"Philosopher's Path", address:"Sakyo Ward, Kyoto, Japan", query:"Philosopher's Path, Kyoto"}
+      ],
+      route:{time:"כ-25–35 דק׳", transfers:"כ-1 החלפה"}},
+     {time:"אחה״צ מאוחר", badges:["optional"], title:"Cat Café MOCHA Kyoto Kawaramachi", desc:"עצירה משפחתית נעימה עם חתולים — רק אם מקצרים חלק משביל הפילוסופים. מתנהגים לפי כללי בית הקפה ונותנים לחתולים להתקרב לפי בחירתם, בלי לרדוף או להעיר אותם.", transport:"מרכז קיוטו, Kawaramachi", official:"https://catmocha.jp/en/shoplist/",
+      dest:{name:"Cat Café MOCHA Kyoto Kawaramachi", address:"mina 4F, 58 Kawaramachi-dori Sanjo-sagaru Daikokucho, Nakagyo Ward, Kyoto 604-8031, Japan", query:"Cat Cafe MOCHA Kyoto Kawaramachi"}}
    ]},
   {day:10, dateISO:"2026-10-23", weekday:"שישי", dateHe:"23 באוקטובר", city:"Nara",
    title:"טיול יום לנארה", subtitle:"Day Trip to Nara",
    items:[
-     {time:"בוקר", badges:["must"], title:"Kyoto ← Nara", desc:"רכבת Kintetsu Nara נוחה מאוד ומגיעה קרוב למרכז Nara Park.", transport:"Kyoto ← Kintetsu Nara / JR Nara"},
-     {time:"יום", badges:["must"], title:"Nara Park & Todai-ji", desc:"האיילים החופשיים, ה-Great Buddha ופארק נארה.", transport:"הליכה"},
-     {time:"ערב", badges:["must"], title:"חזרה לקיוטו", desc:"חזרה לארוחת ערב בקיוטו.", transport:"Nara ← Kyoto"}
+     {time:"בוקר", badges:["must"], title:"Kyoto ← Nara", desc:"רכבת Kintetsu Nara נוחה מאוד ומגיעה קרוב למרכז Nara Park.", transport:"Kyoto ← Kintetsu Nara / JR Nara",
+      dest:{name:"Nara Park", address:"Nara Park, Nara, Nara Prefecture, Japan", query:"Nara Park"},
+      route:{time:"כ-45–50 דק׳", transfers:"ישיר, קו Kintetsu Nara"}},
+     {time:"יום", badges:["must"], title:"Nara Park & Todai-ji", desc:"האיילים החופשיים, ה-Great Buddha ופארק נארה.", transport:"הליכה",
+      dest:[
+        {name:"Nara Park", address:"Nara Park, Nara, Nara Prefecture, Japan", query:"Nara Park"},
+        {name:"Todai-ji", address:"1 Zoshicho, Nara, Nara Prefecture, Japan", query:"Todai-ji, Nara"}
+      ]},
+     {time:"ערב", badges:["must"], title:"חזרה לקיוטו", desc:"חזרה לארוחת ערב בקיוטו.", transport:"Nara ← Kyoto",
+      dest:{name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", address:"339 Nushiyacho, Karasuma-dori Oike-sagaru, Nakagyo Ward, Kyoto, 604-0843, Japan", query:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike"},
+      route:{time:"כ-45–50 דק׳", transfers:"ישיר, קו Kintetsu"}}
    ]},
   {day:11, dateISO:"2026-10-24", weekday:"שבת", dateHe:"24 באוקטובר", city:"Osaka",
    title:"קיוטו → אוסקה · גיימינג וניאון", subtitle:"Kyoto → Osaka · Gaming & Neon",
    items:[
-     {time:"בוקר", badges:["must"], title:"צ׳ק-אאוט ורכבת לאוסקה", desc:"נסיעה לאוסקה, לכיוון The Peak Namba West.", transport:"Kyoto ← Osaka/Namba: כ-30–60 דק׳ בהתאם לרכבת"},
-     {time:"אחה״צ", badges:["must","booked"], title:"The Peak Namba West — צ׳ק-אין", desc:"דירת נופש עד 4 אורחים — 2 מיטות זוגיות, כ-32 מ״ר, שירותים ומקלחת פרטיים, Wi-Fi. צ׳ק-אין החל מ-15:00.", transport:"אזור Namba"},
-     {time:"אחה״צ", badges:["must"], title:"Den Den Town", desc:"אלקטרוניקה, אנימה, גיימינג ורטרו.", transport:"Namba ← Nipponbashi: הליכה/מטרו"},
-     {time:"ערב", badges:["must"], title:"Dotonbori", desc:"אורות ניאון, תעלה ואווירת אוסקה.", transport:"הליכה"}
+     {time:"בוקר", badges:["must"], title:"צ׳ק-אאוט ורכבת לאוסקה", desc:"נסיעה לאוסקה, לכיוון The Peak Namba West.", transport:"Kyoto ← Osaka/Namba: כ-30–60 דק׳ בהתאם לרכבת",
+      dest:{name:"The Peak Namba West", address:"5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka, 556-0012, Japan", query:"The Peak Namba West, Osaka"},
+      route:{time:"כ-30–60 דק׳", transfers:"תלוי ברכבת — ישיר עד 1 החלפה"}},
+     {time:"אחה״צ", badges:["must","booked"], title:"The Peak Namba West — צ׳ק-אין", desc:"דירת נופש עד 4 אורחים — 2 מיטות זוגיות, כ-32 מ״ר, שירותים ומקלחת פרטיים, Wi-Fi. צ׳ק-אין החל מ-15:00.", transport:"אזור Namba",
+      dest:{name:"The Peak Namba West", address:"5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka, 556-0012, Japan", query:"The Peak Namba West, Osaka"}},
+     {time:"אחה״צ", badges:["must"], title:"Den Den Town", desc:"אלקטרוניקה, אנימה, גיימינג ורטרו.", transport:"Namba ← Nipponbashi: הליכה/מטרו",
+      dest:{name:"Nipponbashi Den Den Town", address:"4-9 Nipponbashi, Naniwa Ward, Osaka 556-0005, Japan", query:"Den Den Town, Nipponbashi, Osaka"},
+      route:{time:"כ-10–15 דק׳", transfers:"הליכה"}},
+     {time:"ערב", badges:["must"], title:"Dotonbori", desc:"אורות ניאון, תעלה ואווירת אוסקה.", transport:"הליכה",
+      dest:{name:"Dotonbori (Glico Sign)", address:"Dotonbori, Chuo Ward, Osaka, Japan", query:"Glico Sign, Dotonbori, Osaka"}}
    ]},
   {day:12, dateISO:"2026-10-25", weekday:"ראשון", dateHe:"25 באוקטובר", city:"Osaka",
    title:"אוסקה — יום הקאיוקאן", subtitle:"Osaka — Kaiyukan Day",
    note:"החלטת מסלול: השנה Osaka Aquarium Kaiyukan מחליף את טירת אוסקה כאטרקציה המרכזית של היום. לא מתכננים ביקור נוסף בטירה.",
    items:[
      {time:"בוקר", badges:["optional"], title:"ארוחת בוקר רגועה", desc:"במלון או באזור Namba, בלי למהר.", transport:""},
-     {time:"לפנה״צ", badges:["must"], title:"Osaka Aquarium Kaiyukan", desc:"האטרקציה המרכזית של היום. מומלץ להקדיש כ-2–3 שעות בתוך האקווריום.", transport:"Namba ← Osakako: מטרו", official:"https://www.kaiyukan.com/language/eng/"},
-     {time:"צהריים", badges:["must"], title:"Tempozan Marketplace", desc:"ארוחת צהריים, חנויות, קינוחים ומנוחה. עם הקאיוקאן זה בערך חצי יום שלם — בלי למהר.", transport:"הליכה מהאקווריום"},
-     {time:"אחה״צ / ערב", badges:["optional"], title:"Umeda Sky Building", desc:"רק אם עדיין יש אנרגיה והקאיוקאן לא התעכב — לא חובה.", transport:"Osakako ← Umeda"},
+     {time:"לפנה״צ", badges:["must"], title:"Osaka Aquarium Kaiyukan", desc:"האטרקציה המרכזית של היום. מומלץ להקדיש כ-2–3 שעות בתוך האקווריום.", transport:"Namba ← Osakako: מטרו", official:"https://www.kaiyukan.com/language/eng/",
+      dest:{name:"Osaka Aquarium Kaiyukan", address:"1-1-10 Kaigandori, Minato Ward, Osaka 552-0022, Japan", query:"Osaka Aquarium Kaiyukan"},
+      route:{time:"כ-20–25 דק׳", transfers:"ישיר, קו Chuo"}},
+     {time:"צהריים", badges:["must"], title:"Tempozan Marketplace", desc:"ארוחת צהריים, חנויות, קינוחים ומנוחה. עם הקאיוקאן זה בערך חצי יום שלם — בלי למהר.", transport:"הליכה מהאקווריום",
+      dest:{name:"Tempozan Marketplace", address:"1-1-10 Kaigandori, Minato Ward, Osaka 552-0022, Japan", query:"Tempozan Marketplace, Osaka"}},
+     {time:"אחה״צ / ערב", badges:["optional"], title:"Umeda Sky Building", desc:"רק אם עדיין יש אנרגיה והקאיוקאן לא התעכב — לא חובה.", transport:"Osakako ← Umeda",
+      dest:{name:"Umeda Sky Building", address:"1-1-88 Oyodonaka, Kita Ward, Osaka 531-6023, Japan", query:"Umeda Sky Building, Osaka"},
+      route:{time:"כ-25–35 דק׳", transfers:"כ-1 החלפה"}},
      {time:"ערב", badges:["flexible"], title:"ארוחת פרידה באוסקה", desc:"ערב אחרון נעים באוסקה, בלי מרוץ בין אטרקציות.", transport:""}
    ]},
   {day:13, dateISO:"2026-10-26", weekday:"שני", dateHe:"26 באוקטובר", city:"Osaka",
    title:"יום אחרון באוסקה → דובאי → תל אביב", subtitle:"Osaka → Kansai → Dubai → Tel Aviv",
    note:"הטיסה מאוסקה יוצאת רק ב-23:10, אז 26 באוקטובר נשאר יום שימושי לגמרי באוסקה — בלי להוסיף אטרקציה גדולה נוספת אוטומטית. הטיסה חוזרת דרך דובאי, עם נחיתה בתל אביב בבוקר ה-27 באוקטובר.",
    items:[
-     {time:"בוקר", badges:["must"], title:"The Peak Namba West — צ׳ק-אאוט", desc:"צ׳ק-אאוט עד השעה 11:00. איסוף כל המזוודות והציוד, ואפשר להשאיר מזוודות בעמדת אחסון מתאימה להמשך היום.", transport:""},
+     {time:"בוקר", badges:["must"], title:"The Peak Namba West — צ׳ק-אאוט", desc:"צ׳ק-אאוט עד השעה 11:00. איסוף כל המזוודות והציוד, ואפשר להשאיר מזוודות בעמדת אחסון מתאימה להמשך היום.", transport:"",
+      dest:{name:"The Peak Namba West", address:"5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka, 556-0012, Japan", query:"The Peak Namba West, Osaka"}},
      {time:"לפנה״צ / אחה״צ", badges:["optional"], title:"יום אחרון נינוח באוסקה", desc:"קניות אחרונות, ארוחת צהריים וזמן פנוי — בלי אטרקציה גדולה נוספת.", transport:""},
-     {time:"אחה״צ מאוחר", badges:["must"], title:"איסוף מזוודות והמשך לשדה התעופה", desc:"איסוף הציוד המאוחסן והמשך לכיוון קנסאי.", transport:""},
-     {time:"אחה״צ/ערב", badges:["must","notbooked"], title:"נסיעה לנמל התעופה קנסאי (KIX)", desc:"שעת היציאה המומלצת מאוסקה תחושב בהמשך לפי אמצעי ההגעה לשדה שייבחר — לא קובעים כרגע הזמנת רכבת ספציפית.", transport:"Namba ← KIX: Nankai Rapi:t או JR Kansai Airport Line / Haruka"},
+     {time:"אחה״צ מאוחר", badges:["must"], title:"איסוף מזוודות והמשך לשדה התעופה", desc:"איסוף הציוד המאוחסן והמשך לכיוון קנסאי.", transport:"",
+      dest:{name:"Kansai International Airport — Terminal 1", address:"1 Senshukukokita, Izumisano, Osaka 549-0001, Japan", query:"Kansai International Airport Terminal 1"},
+      route:{time:"כ-45–60 דק׳ מנמבה", transfers:"ישיר (Nankai Rapi:t / JR Haruka)"}},
+     {time:"אחה״צ/ערב", badges:["must","notbooked"], title:"נסיעה לנמל התעופה קנסאי (KIX)", desc:"שעת היציאה המומלצת מאוסקה תחושב בהמשך לפי אמצעי ההגעה לשדה שייבחר — לא קובעים כרגע הזמנת רכבת ספציפית.", transport:"Namba ← KIX: Nankai Rapi:t או JR Kansai Airport Line / Haruka",
+      dest:{name:"Kansai International Airport — Terminal 1", address:"1 Senshukukokita, Izumisano, Osaka 549-0001, Japan", query:"Kansai International Airport Terminal 1"},
+      route:{time:"כ-45–60 דק׳ מנמבה", transfers:"ישיר (Nankai Rapi:t / JR Haruka)"}},
      {time:"23:10", badges:["must","booked"], title:"טיסה Osaka Kansai → Dubai", desc:"Emirates EK317. נחיתה בדובאי 05:25 ב-27 באוקטובר (שעון מקומי).", transport:"Osaka Kansai (KIX) → Dubai (DXB)"},
      {time:"27/10 · 07:15", badges:["must","booked"], title:"טיסת המשך Dubai → Tel Aviv", desc:"EK2369, מופעלת בפועל כ-FZ1549. נחיתה בתל אביב 09:10.", transport:"Dubai (DXB) → Tel Aviv (TLV)"}
    ]}
@@ -1193,11 +1312,14 @@ var ROUTE = [
 
 var HOTELS = [
   {region:"Yokohama / Tokyo", dates:"14–18 באוקטובר · 4 לילות", name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", status:"booked",
-   details:["חדר אחד לשלושה מבוגרים.", "Sky Pool בבוקר לפני היציאה — רק אם לא עושים את Snoopy Museum ו/או ULTRA 4DX באותו יום (ראו יום 5)."]},
+   details:["חדר אחד לשלושה מבוגרים.", "Sky Pool בבוקר לפני היציאה — רק אם לא עושים את Snoopy Museum ו/או ULTRA 4DX באותו יום (ראו יום 5)."],
+   dest:{name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", address:"3-3-3 Minatomirai, Nishi Ward, Yokohama, Kanagawa 220-0012, Japan", query:"Mitsui Garden Hotel Yokohama Minatomirai Premier"}},
   {region:"Hakone", dates:"18–19 באוקטובר · לילה אחד", name:"Laforet Hakone Gora Yunosumika", status:"booked",
-   details:["חדר יפני-מערבי לשלושה.", "אונסן וארוחת ערב בבית המלון."]},
+   details:["חדר יפני-מערבי לשלושה.", "אונסן וארוחת ערב בבית המלון."],
+   dest:{name:"Laforet Hakone Gora Yunosumika", address:"1320 Gora, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan", query:"Laforet Hakone Gora Yunosumika"}},
   {region:"Kyoto", dates:"19–24 באוקטובר · 5 לילות", name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", status:"booked",
-   details:["שני חדרי טווין — ההורים ואלון בנפרד."]},
+   details:["שני חדרי טווין — ההורים ואלון בנפרד."],
+   dest:{name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", address:"339 Nushiyacho, Karasuma-dori Oike-sagaru, Nakagyo Ward, Kyoto, 604-0843, Japan", query:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike"}},
   {region:"Osaka", dates:"24–26 באוקטובר · 2 לילות", name:"The Peak Namba West", status:"paid",
    details:[
      "כתובת: 5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka City, Osaka Prefecture 556-0012, Japan",
@@ -1206,7 +1328,8 @@ var HOTELS = [
      "שירותים ומקלחת פרטיים, Wi-Fi. ללא ארוחות.",
      "עלות ששולמה: A$322.84 — מאושר ושולם במלואו",
      "ביטול חינם עד 23:59 בשעון המלון המקומי ב-17 באוקטובר 2026. לאחר מכן — ללא החזר."
-   ]}
+   ],
+   dest:{name:"The Peak Namba West", address:"5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka, 556-0012, Japan", query:"The Peak Namba West, Osaka"}}
 ];
 var HOTEL_STATUS_LABEL = {booked:"✓ הוזמן", paid:"✓ הוזמן ושולם"};
 
@@ -1412,11 +1535,16 @@ setInterval(updateCountdown, 60000);
     var ul = document.createElement("ul");
     h.details.forEach(function(d){ var l=document.createElement("li"); l.textContent=d; ul.appendChild(l); });
     body.appendChild(ul);
-    body.appendChild((function(){
-      var actions = el("div","tl-actions");
-      actions.innerHTML = '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(h.name+" "+h.region+" Japan")+'">'+ICON.pin+' פתיחה במפות</a>';
-      return actions;
-    })());
+    if(h.dest){
+      var destWrap = el("div", null, buildDestBlock(h.dest));
+      body.appendChild(destWrap);
+    } else {
+      body.appendChild((function(){
+        var actions = el("div","tl-actions");
+        actions.innerHTML = '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(h.name+" "+h.region+" Japan")+'">'+ICON.pin+' פתיחה במפות</a>';
+        return actions;
+      })());
+    }
     bodyOuter.appendChild(body);
     card.appendChild(bodyOuter);
     container.appendChild(card);
@@ -1448,6 +1576,37 @@ function makeExpandable(cardEl, headEl, bodyOuterEl, startOpen){
 /* ===================== itinerary render ===================== */
 function mapsUrl(q){ return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q); }
 function searchUrl(q){ return "https://www.google.com/search?q="+encodeURIComponent(q); }
+// No origin specified -> Google Maps uses the visitor's live location and
+// calculates the route/transfers itself, rather than us hard-coding a
+// specific train time.
+function directionsUrl(q){ return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(q)+"&travelmode=transit"; }
+
+// dest can be a single {name,address,query} object, or an array of them
+// when one itinerary stop bundles several named places (e.g. a few shops
+// in the same district) that each deserve their own exact Maps destination.
+function buildDestBlock(dest, route){
+  if(!dest) return "";
+  var list = Array.isArray(dest) ? dest : [dest];
+  if(!list.length) return "";
+  var routeHtml = "";
+  if(route && (route.time || route.transfers)){
+    routeHtml = '<div class="dest-route">'+
+      (route.time ? '<span>🚆 '+esc(route.time)+'</span>' : '')+
+      (route.transfers ? '<span>🔄 '+esc(route.transfers)+'</span>' : '')+
+    '</div>';
+  }
+  var navLabel = list.length>1 ? function(d){ return "🗺️ ניווט ל-"+esc(d.name); } : function(){ return "🗺️ ניווט"; };
+  var entriesHtml = list.map(function(d){
+    return '<div class="dest-name">'+esc(d.name)+'</div>'+
+      (d.address ? '<div class="dest-address">'+esc(d.address)+'</div>' : '')+
+      '<a class="btn-mini solid dest-navigate" target="_blank" rel="noopener" href="'+directionsUrl(d.query||d.name)+'">'+navLabel(d)+'</a>';
+  }).join('<div style="height:10px"></div>');
+  return '<div class="dest-block">'+
+    '<div class="dest-label">'+ICON.pin+' '+(list.length>1?"יעדים ב":"יעד ב")+'-Google Maps</div>'+
+    entriesHtml+
+    routeHtml+
+  '</div>';
+}
 
 function buildHighlightCard(h){
   var card = el("div","highlight-card");
@@ -1502,10 +1661,14 @@ function buildHighlightCard(h){
       item.id = "day-"+d.day+"-item-"+idx;
       var badgesHtml = it.badges.map(function(b){ return '<span class="badge '+LEGEND_CLASS[b]+'">'+LEGEND_LABEL[b]+'</span>'; }).join("");
       var actions = '<div class="tl-actions">';
-      actions += '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(it.title)+'">'+ICON.pin+' פתיחה במפות</a>';
+      if(!it.dest){
+        // fallback for the handful of items with no single fixed destination
+        // (free time, an unspecified meal) — same behavior as before.
+        actions += '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(it.title)+'">'+ICON.pin+' פתיחה במפות</a>';
+      }
       if(it.official){
-        actions += '<a class="btn-mini solid" target="_blank" rel="noopener" href="'+it.official+'">'+ICON.link+' אתר רשמי</a>';
-      } else {
+        actions += '<a class="btn-mini'+(it.dest?" solid":"")+'" target="_blank" rel="noopener" href="'+it.official+'">'+ICON.link+' אתר רשמי</a>';
+      } else if(!it.dest){
         actions += '<a class="btn-mini" target="_blank" rel="noopener" href="'+searchUrl(it.title+" official site")+'">'+ICON.info+' מידע נוסף</a>';
       }
       actions += '</div>';
@@ -1515,6 +1678,7 @@ function buildHighlightCard(h){
         '<div class="tl-title-row"><span class="tl-title">'+it.title+'</span>'+badgesHtml+'</div>'+
         (it.desc ? '<p class="tl-desc">'+it.desc+'</p>' : '') +
         (it.transport ? '<div class="tl-transport"><span class="ic">🚏</span><span>'+it.transport+'</span></div>' : '') +
+        buildDestBlock(it.dest, it.route) +
         actions;
       tl.appendChild(item);
     });
