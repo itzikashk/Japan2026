@@ -284,11 +284,19 @@ section{padding:64px 0}
 }
 @media (hover:hover){ .day-head:hover, .acc-head:hover{ background:rgba(255,255,255,.025) } }
 .day-head .daynum{
-  flex:0 0 auto;width:46px;height:46px;border-radius:14px;background:var(--surface-2);
+  flex:0 0 auto;width:46px;height:46px;border-radius:14px;
+  background:linear-gradient(155deg, rgba(255,45,141,.18) 0%, rgba(139,92,246,.16) 100%), var(--surface-2);
+  border:1px solid rgba(255,255,255,.09);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:border-color .2s;
 }
-.day-head .daynum .d{font-family:var(--mono);font-weight:700;font-size:1.1rem;line-height:1}
-.day-head .daynum .l{font-size:.55rem;color:var(--ink-3);font-weight:700;letter-spacing:.04em}
+.day-card[data-open="true"] .day-head .daynum{border-color:rgba(255,45,141,.35)}
+.day-head .daynum .d{
+  font-family:var(--mono);font-weight:700;font-size:1.15rem;line-height:1;
+  background:linear-gradient(135deg,var(--accent-magenta),var(--accent-violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.day-head .daynum .l{font-size:.55rem;color:var(--ink-3);font-weight:700;letter-spacing:.04em;margin-top:2px}
 .day-head .meta{flex:1 1 auto;min-width:0}
 .day-head .meta .dt{font-size:.76rem;color:var(--ink-3);font-weight:600;margin-bottom:2px}
 .day-head .meta .ti{font-size:1.02rem;font-weight:700;letter-spacing:-.01em;margin-bottom:2px;color:var(--text-primary)}
