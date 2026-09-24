@@ -382,6 +382,11 @@ section{padding:64px 0}
   display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;padding:10px 13px;border-radius:99px;
   border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;transition:.15s;
 }
+/* Icons in this codebase are raw <svg viewBox="0 0 24 24"> with no explicit
+   width/height, sized by CSS instead. Without this, a flexed/stretched
+   .btn-mini (flex:1 etc.) hands the SVG a large definite containing width
+   to resolve its 1:1 viewBox aspect ratio against, ballooning the icon. */
+.btn-mini svg{width:15px;height:15px;flex:0 0 auto}
 .btn-mini:hover{background:var(--surface-2);border-color:var(--border-strong)}
 .btn-mini.solid{
   background:linear-gradient(135deg,var(--accent-magenta),var(--accent-violet));border-color:transparent;color:#fff;
@@ -588,6 +593,25 @@ footer b{color:var(--on-navy)}
 }
 .day-cost-arrow{color:var(--ink-3);font-weight:400}
 
+/* ---------- open items (booking status) ---------- */
+.openitems-count{
+  display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;color:#FFB4AC;
+  background:rgba(255,59,48,.14);border:1px solid rgba(255,59,48,.28);border-radius:99px;padding:5px 12px;margin-bottom:16px;
+}
+.openitem-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:13px 14px;margin-bottom:10px;box-shadow:var(--shadow-sm)}
+.openitem-head{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.openitem-icon{
+  flex:0 0 auto;width:40px;height:40px;border-radius:10px;background:rgba(255,59,48,.14);color:#FFB4AC;
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.openitem-info{flex:1;min-width:0}
+.openitem-day{font-size:.72rem;color:var(--ink-3);font-weight:700;margin-bottom:2px}
+.openitem-title{font-weight:700;font-size:.92rem;direction:ltr;text-align:right;unicode-bidi:isolate;line-height:1.4}
+.openitem-actions{display:flex;flex-wrap:wrap;gap:8px}
+.openitem-actions .btn-mini{flex:1;justify-content:center;white-space:nowrap}
+.openitems-empty{text-align:center;padding:30px 10px;color:var(--ink-3);font-size:.9rem}
+.openitems-empty .big{font-size:1.8rem;display:block;margin-bottom:8px}
+
 /* ---------- bottom nav (mobile app bar) ---------- */
 .bottom-nav{display:none}
 @media (max-width:819px){
@@ -617,6 +641,7 @@ footer b{color:var(--on-navy)}
     <div class="brand"><span class="dot"></span> Japan 2026</div>
     <nav class="primary">
       <a href="#top">ראשי</a>
+      <a href="#openitems">לא הוזמן</a>
       <a href="#hotels">מלונות</a>
       <a href="#itinerary">תוכנית יומית</a>
       <a href="#food">אוכל</a>
@@ -725,6 +750,7 @@ footer b{color:var(--on-navy)}
   <div class="wrap">
     <a href="#top">ראשי <span class="ico">🎌</span></a>
     <a href="#route">מסלול</a>
+    <a href="#openitems">דברים שעוד צריך לסגור <span class="ico">🎫</span></a>
     <a href="#hotels">מלונות <span class="ico">🏨</span></a>
     <a href="#itinerary">תוכנית יומית <span class="ico">📅</span></a>
     <a href="#food">אוכל, שתייה וקינוחים <span class="ico">🍜</span></a>
@@ -799,6 +825,17 @@ footer b{color:var(--on-navy)}
         <p>חמישה אזורים, קצב נוח, בלי למהר בין ערים.</p>
       </div>
       <div class="route-scroll" id="routeScroll"></div>
+    </div>
+  </section>
+
+  <section id="openitems">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">סטטוס הזמנות</div>
+        <h2 id="openItemsHeading">דברים שעוד צריך לסגור</h2>
+        <p>כל הפריטים בטיול שטרם הוזמנו — במקום אחד, עם קישור ישיר לכל אחד.</p>
+      </div>
+      <div id="openItemsList"></div>
     </div>
   </section>
 
@@ -1692,6 +1729,51 @@ function buildHighlightCard(h){
     makeExpandable(card, head, bodyOuter, d.day===1);
   });
 })();
+
+/* ===================== open items (booking status) ===================== */
+function renderOpenItems(){
+  var container = document.getElementById("openItemsList");
+  var heading = document.getElementById("openItemsHeading");
+  if(!container) return;
+  var openList = [];
+  DAYS.forEach(function(d){
+    d.items.forEach(function(it, idx){
+      if(it.badges && it.badges.indexOf("notbooked") !== -1){
+        openList.push({
+          day: d.day,
+          dayLabel: "יום "+d.day+" · "+d.dateHe,
+          title: it.title,
+          official: it.official,
+          cardId: "day-"+d.day,
+          targetId: "day-"+d.day+"-item-"+idx
+        });
+      }
+    });
+  });
+  container.innerHTML = "";
+  if(!openList.length){
+    heading.textContent = "הכל סגור ומוזמן ✓";
+    container.innerHTML = '<div class="openitems-empty"><span class="big">✓</span>לכל הפריטים בטיול יש הזמנה או שהם לא דורשים הזמנה.</div>';
+    return;
+  }
+  heading.textContent = "דברים שעוד צריך לסגור";
+  var countPill = el("div","openitems-count", "! "+openList.length+" פריטים טרם הוזמנו");
+  container.appendChild(countPill);
+  openList.forEach(function(o){
+    var row = el("div","openitem-card");
+    var actionsHtml = '<a class="btn-mini" data-jump="1">'+ICON.pin+' ליום '+o.day+'</a>';
+    if(o.official){
+      actionsHtml += '<a class="btn-mini solid" target="_blank" rel="noopener" href="'+o.official+'">'+ICON.link+' אתר</a>';
+    }
+    row.innerHTML =
+      '<div class="openitem-head"><div class="openitem-icon">'+ICON.ticket+'</div>'+
+      '<div class="openitem-info"><div class="openitem-day">'+esc(o.dayLabel)+'</div><div class="openitem-title">'+esc(o.title)+'</div></div></div>'+
+      '<div class="openitem-actions">'+actionsHtml+'</div>';
+    row.querySelector('[data-jump]').addEventListener("click", function(){ goToResult(o); });
+    container.appendChild(row);
+  });
+}
+renderOpenItems();
 
 /* ===================== checklists ===================== */
 function buildChecklist(containerId, storageKey, items, progressId){
