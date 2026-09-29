@@ -2,9 +2,19 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
+<script>
+// Runs before CSS paints, so there's no flash of the wrong theme.
+// Default (no stored preference yet) is light.
+(function(){
+  try{
+    var t = localStorage.getItem("jp2026_theme");
+    if(t === "dark"){ document.documentElement.setAttribute("data-theme","dark"); }
+  }catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<meta name="theme-color" content="#0B0B0D">
+<meta name="theme-color" content="#FAFAFA" id="themeColorMeta">
 <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
 <title>יפן 2026 — Isaac · Anat · Alon</title>
 <meta name="description" content="הטיול המשפחתי שלנו ליפן, 14–26 באוקטובר 2026. תוכנית יומית, תחבורה, כסף וטיפים — הכל במקום אחד.">
@@ -20,7 +30,100 @@
    ========================================================== */
 
 :root{
+  /* ==========================================================
+     LIGHT THEME (default). Dark ("Tokyo at night", the original
+     look) lives entirely in the :root[data-theme="dark"] override
+     below — same token names, different values, so no component
+     rule needs to know which theme is active.
+
+     The hero, footer and the "premium spotlight" cards (highlight,
+     currency, cost-summary, today-banner, countdown/stat pills) are
+     intentionally NOT part of this swap: they stay on the fixed
+     dark navy/glow treatment in both themes — that was this site's
+     look from the very first version, before any dark-mode work,
+     and reads as a deliberate signature accent rather than a
+     leftover dark patch. Fixed tokens for those: --navy, --navy-2,
+     --on-navy, --on-navy-2, --glow-card-bg, --accent-*.
+     ========================================================== */
+
   /* ---- core surfaces ---- */
+  --bg-primary:#FAFAFA;
+  --bg-secondary:#FFFFFF;
+  --surface:#FFFFFF;
+  --surface-2:#F2F2F5;
+  --surface-elevated:#FFFFFF;
+  --border:rgba(0,0,0,.08);
+  --border-strong:rgba(0,0,0,.14);
+
+  /* ---- text ---- */
+  --text-primary:#0B0B0D;
+  --text-secondary:#52525B;
+  --text-tertiary:#71717A;
+
+  /* ---- accents (fixed across themes — vivid enough to read on both) ---- */
+  --accent-magenta:#FF2D8D;
+  --accent-violet:#8B5CF6;
+  --accent-blue:#3B82F6;
+  --accent-cyan:#22D3EE;
+  --accent-red:#FF3B30;
+
+  /* ---- fixed dark tokens for the spotlight cards (see note above) ---- */
+  --navy:#121018;
+  --navy-2:#18141F;
+  --navy-3:#211C2C;
+  --navy-line:#332C44;
+  --on-navy:#F5F3FA;
+  --on-navy-2:#B7B2C6;
+  --navy-glass-bg:rgba(255,255,255,.06);
+  --navy-glass-border:1px solid rgba(255,255,255,.12);
+
+  /* ---- legacy token names, remapped onto the palette above so every
+     existing component (already built on these variables) picks up the
+     new look without touching each selector individually ---- */
+  --paper:var(--bg-primary);
+  --ink:var(--text-primary);
+  --ink-2:var(--text-secondary);
+  --ink-3:var(--text-tertiary);
+  --line:var(--border);
+  --line-soft:rgba(0,0,0,.05);
+
+  --accent:var(--accent-magenta);
+  --accent-ink:#C2185B;
+  --accent-soft:rgba(255,45,141,.10);
+  --gold:#6D28D9;
+  --gold-soft:rgba(139,92,246,.12);
+  --green:#059669;
+  --green-soft:rgba(52,211,153,.16);
+  --blue:#1D4ED8;
+  --blue-soft:rgba(59,130,246,.10);
+  --amber:#DC2626;
+  --amber-soft:rgba(255,59,48,.10);
+  --sky:#0E7490;
+  --sky-soft:rgba(34,211,238,.16);
+
+  --r-lg:24px;
+  --r-md:18px;
+  --r-sm:12px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 10px 30px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.04);
+  --shadow-lg:0 24px 60px rgba(0,0,0,.12),0 8px 20px rgba(0,0,0,.06);
+
+  --glass-bg:rgba(255,255,255,.72);
+  --glass-border:1px solid rgba(0,0,0,.08);
+  --panel-bg:rgba(255,255,255,.97);
+  --glow-card-bg:
+    radial-gradient(130% 100% at 100% 0%, rgba(255,45,141,.16), transparent 60%),
+    radial-gradient(110% 100% at 0% 100%, rgba(139,92,246,.14), transparent 60%),
+    linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%);
+
+  --display:"Inter","Heebo","Segoe UI",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --maxw:760px;
+  --header-h:64px;
+  --bottomnav-h:64px;
+}
+
+:root[data-theme="dark"]{
   --bg-primary:#0B0B0D;
   --bg-secondary:#111114;
   --surface:#111114;
@@ -29,35 +132,12 @@
   --border:rgba(255,255,255,.08);
   --border-strong:rgba(255,255,255,.16);
 
-  /* ---- text ---- */
   --text-primary:#FFFFFF;
   --text-secondary:#A1A1AA;
   --text-tertiary:#8A8A94;
 
-  /* ---- accents ---- */
-  --accent-magenta:#FF2D8D;
-  --accent-violet:#8B5CF6;
-  --accent-blue:#3B82F6;
-  --accent-cyan:#22D3EE;
-  --accent-red:#FF3B30;
-
-  /* ---- legacy token names, remapped onto the palette above so every
-     existing component (already built on these variables) picks up the
-     new look without touching each selector individually ---- */
-  --navy:#121018;
-  --navy-2:#18141F;
-  --navy-3:#211C2C;
-  --navy-line:#332C44;
-  --paper:var(--bg-primary);
-  --ink:var(--text-primary);
-  --ink-2:var(--text-secondary);
-  --ink-3:var(--text-tertiary);
-  --on-navy:#F5F3FA;
-  --on-navy-2:#B7B2C6;
-  --line:var(--border);
   --line-soft:rgba(255,255,255,.05);
 
-  --accent:var(--accent-magenta);
   --accent-ink:#FF7DB6;
   --accent-soft:rgba(255,45,141,.14);
   --gold:var(--accent-violet);
@@ -71,25 +151,13 @@
   --sky:var(--accent-cyan);
   --sky-soft:rgba(34,211,238,.14);
 
-  --r-lg:24px;
-  --r-md:18px;
-  --r-sm:12px;
   --shadow-sm:0 1px 2px rgba(0,0,0,.4);
   --shadow-md:0 10px 30px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.03);
   --shadow-lg:0 24px 60px rgba(0,0,0,.6),0 0 40px rgba(139,92,246,.10);
 
   --glass-bg:rgba(20,20,24,.75);
   --glass-border:1px solid rgba(255,255,255,.08);
-  --glow-card-bg:
-    radial-gradient(130% 100% at 100% 0%, rgba(255,45,141,.16), transparent 60%),
-    radial-gradient(110% 100% at 0% 100%, rgba(139,92,246,.14), transparent 60%),
-    linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%);
-
-  --display:"Inter","Heebo","Segoe UI",Arial,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
-  --maxw:760px;
-  --header-h:64px;
-  --bottomnav-h:64px;
+  --panel-bg:rgba(11,11,13,.98);
 }
 
 *{box-sizing:border-box}
@@ -140,8 +208,12 @@ nav.primary{display:none}
 .icon-btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
 @media (min-width:820px){.hamburger-btn{display:none}}
 .icon-btn svg{width:18px;height:18px}
+#themeToggle .theme-icon-moon{display:block}
+#themeToggle .theme-icon-sun{display:none}
+html[data-theme="dark"] #themeToggle .theme-icon-sun{display:block}
+html[data-theme="dark"] #themeToggle .theme-icon-moon{display:none}
 .mobile-nav{
-  position:fixed;inset:var(--header-h) 0 0 0;z-index:49;background:rgba(11,11,13,.98);backdrop-filter:blur(14px);
+  position:fixed;inset:var(--header-h) 0 0 0;z-index:49;background:var(--panel-bg);backdrop-filter:blur(14px);
   transform:translateY(-8px);opacity:0;pointer-events:none;transition:.22s ease;
   overflow-y:auto;
 }
@@ -152,7 +224,7 @@ nav.primary{display:none}
 
 /* ---------- search ---------- */
 .search-overlay{
-  position:fixed;inset:var(--header-h) 0 0 0;z-index:55;background:rgba(11,11,13,.98);backdrop-filter:blur(14px);
+  position:fixed;inset:var(--header-h) 0 0 0;z-index:55;background:var(--panel-bg);backdrop-filter:blur(14px);
   transform:translateY(-8px);opacity:0;pointer-events:none;transition:.22s ease;overflow-y:auto;
 }
 .search-overlay.open{transform:translateY(0);opacity:1;pointer-events:auto}
@@ -211,8 +283,8 @@ nav.primary{display:none}
   font-weight:500;
 }
 .countdown{
-  display:flex;align-items:center;gap:18px;background:var(--glass-bg);
-  border:var(--glass-border);border-radius:var(--r-lg);padding:20px 24px;
+  display:flex;align-items:center;gap:18px;background:var(--navy-glass-bg);
+  border:var(--navy-glass-border);border-radius:var(--r-lg);padding:20px 24px;
   backdrop-filter:blur(18px);margin-bottom:24px;box-shadow:var(--shadow-md);
 }
 .countdown .big{
@@ -225,7 +297,7 @@ nav.primary{display:none}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media (max-width:480px){.stat-grid{grid-template-columns:1fr 1fr}}
 .stat-card{
-  position:relative;background:var(--glass-bg);border:var(--glass-border);border-radius:var(--r-md);
+  position:relative;background:var(--navy-glass-bg);border:var(--navy-glass-border);border-radius:var(--r-md);
   padding:18px 14px;text-align:center;backdrop-filter:blur(14px);overflow:hidden;
 }
 .stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--stat-accent,var(--accent-magenta))}
@@ -282,11 +354,11 @@ section{padding:64px 0}
   width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;background:none;border:0;cursor:pointer;text-align:right;
   transition:background .15s;
 }
-@media (hover:hover){ .day-head:hover, .acc-head:hover{ background:rgba(255,255,255,.025) } }
+@media (hover:hover){ .day-head:hover, .acc-head:hover{ background:rgba(127,127,127,.08) } }
 .day-head .daynum{
   flex:0 0 auto;width:46px;height:46px;border-radius:14px;
   background:linear-gradient(155deg, rgba(255,45,141,.18) 0%, rgba(139,92,246,.16) 100%), var(--surface-2);
-  border:1px solid rgba(255,255,255,.09);
+  border:1px solid var(--border);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   transition:border-color .2s;
 }
@@ -311,7 +383,7 @@ section{padding:64px 0}
 .day-body-outer{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
 .day-body{padding:2px 18px 20px}
 .day-note{
-  display:flex;gap:9px;align-items:flex-start;background:var(--gold-soft);color:#C9B6FF;border-radius:var(--r-sm);
+  display:flex;gap:9px;align-items:flex-start;background:var(--gold-soft);color:var(--gold);border-radius:var(--r-sm);
   padding:12px 14px;font-size:.84rem;line-height:1.55;margin:6px 0 16px;font-weight:600;
 }
 .day-note .ic{flex:0 0 auto}
@@ -522,7 +594,7 @@ footer b{color:var(--on-navy)}
 .upload-status.busy{color:var(--ink-2)}
 .upload-status.ok{color:var(--green)}
 .upload-status.err{
-  color:#FFB4AC;background:rgba(255,59,48,.14);border:1px solid rgba(255,59,48,.28);
+  color:var(--amber);background:var(--amber-soft);border:1px solid var(--amber-soft);
   border-radius:var(--r-sm);padding:9px 12px;display:block;line-height:1.5;
 }
 
@@ -595,13 +667,13 @@ footer b{color:var(--on-navy)}
 
 /* ---------- open items (booking status) ---------- */
 .openitems-count{
-  display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;color:#FFB4AC;
-  background:rgba(255,59,48,.14);border:1px solid rgba(255,59,48,.28);border-radius:99px;padding:5px 12px;margin-bottom:16px;
+  display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;color:var(--amber);
+  background:var(--amber-soft);border:1px solid var(--amber-soft);border-radius:99px;padding:5px 12px;margin-bottom:16px;
 }
 .openitem-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:13px 14px;margin-bottom:10px;box-shadow:var(--shadow-sm)}
 .openitem-head{display:flex;align-items:center;gap:12px;margin-bottom:11px}
 .openitem-icon{
-  flex:0 0 auto;width:40px;height:40px;border-radius:10px;background:rgba(255,59,48,.14);color:#FFB4AC;
+  flex:0 0 auto;width:40px;height:40px;border-radius:10px;background:var(--amber-soft);color:var(--amber);
   display:flex;align-items:center;justify-content:center;font-size:1.1rem;
 }
 .openitem-info{flex:1;min-width:0}
@@ -652,6 +724,10 @@ footer b{color:var(--on-navy)}
       <a href="#files">קבצים</a>
     </nav>
     <div style="display:flex;gap:8px">
+      <button class="icon-btn" id="themeToggle" aria-label="החלפת ערכת נושא בהירה/כהה" aria-pressed="false">
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+      </button>
       <button class="icon-btn" id="searchBtn" aria-label="חיפוש">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
@@ -1480,6 +1556,25 @@ var ICON = {
   clip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.5 9.5 17a3 3 0 0 1-4.2-4.2l9-9a2 2 0 0 1 2.8 2.8l-8.5 8.5a1 1 0 0 1-1.4-1.4L15 6"/></svg>',
   close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg>'
 };
+
+/* ===================== theme toggle ===================== */
+var THEME_KEY = "jp2026_theme";
+function applyTheme(theme){
+  if(theme === "dark"){ document.documentElement.setAttribute("data-theme", "dark"); }
+  else{ document.documentElement.removeAttribute("data-theme"); }
+  try{ localStorage.setItem(THEME_KEY, theme); }catch(e){}
+  var meta = document.getElementById("themeColorMeta");
+  if(meta) meta.setAttribute("content", theme === "dark" ? "#0B0B0D" : "#FAFAFA");
+  var btn = document.getElementById("themeToggle");
+  if(btn) btn.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+}
+var themeToggleBtn = document.getElementById("themeToggle");
+if(themeToggleBtn){
+  themeToggleBtn.addEventListener("click", function(){
+    var current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    applyTheme(current === "dark" ? "light" : "dark");
+  });
+}
 
 /* ===================== header / mobile nav ===================== */
 var header = document.getElementById("siteHeader");
