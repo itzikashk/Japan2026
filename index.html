@@ -2731,7 +2731,13 @@ function renderCostSummary(){
 function renderBreakdown(){
   var container = document.getElementById("costBreakdown");
   if(!container) return;
-  var rows = computeCategoryBreakdown();
+  var rows;
+  try{ rows = computeCategoryBreakdown(); }
+  catch(e){
+    console.error("computeCategoryBreakdown failed:", e);
+    container.innerHTML = '<div class="files-empty">לא ניתן להציג כרגע את פירוט ההוצאות. נסו לרענן את הדף.</div>';
+    return;
+  }
   container.innerHTML = "";
   if(!rows.length){
     container.innerHTML = '<div class="files-empty">אין עדיין הוצאות להצגה.</div>';
@@ -2812,10 +2818,12 @@ function renderDayCostTotals(){
 }
 
 function renderAllCostSections(){
-  renderCostSummary();
-  renderBreakdown();
-  renderCostList();
-  renderDayCostTotals();
+  // Each renderer runs independently: one bad expense record (malformed
+  // data from a past edit, an unexpected field) throwing partway through
+  // shouldn't be able to take the rest of the costs page down with it.
+  [renderCostSummary, renderBreakdown, renderCostList, renderDayCostTotals].forEach(function(fn){
+    try{ fn(); }catch(e){ console.error(fn.name + " failed:", e); }
+  });
 }
 
 function buildDayCostTotal(dayNum){
