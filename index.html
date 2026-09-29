@@ -36,14 +36,17 @@
      below — same token names, different values, so no component
      rule needs to know which theme is active.
 
-     The hero, footer and the "premium spotlight" cards (highlight,
-     currency, cost-summary, today-banner, countdown/stat pills) are
-     intentionally NOT part of this swap: they stay on the fixed
-     dark navy/glow treatment in both themes — that was this site's
-     look from the very first version, before any dark-mode work,
-     and reads as a deliberate signature accent rather than a
-     leftover dark patch. Fixed tokens for those: --navy, --navy-2,
-     --on-navy, --on-navy-2, --glow-card-bg, --accent-*.
+     The footer and the "premium spotlight" cards (highlight,
+     currency, cost-summary, today-banner) are intentionally NOT part
+     of this swap: they stay on the fixed dark navy/glow treatment in
+     both themes — that was this site's look from the very first
+     version, before any dark-mode work, and reads as a deliberate
+     signature accent rather than a leftover dark patch. Fixed tokens
+     for those: --navy, --navy-2, --on-navy, --on-navy-2,
+     --glow-card-bg, --accent-*.
+
+     The hero banner itself (and its countdown/stat pills) DOES
+     switch with the theme — see --hero-* tokens below.
      ========================================================== */
 
   /* ---- core surfaces ---- */
@@ -76,6 +79,15 @@
   --on-navy-2:#B7B2C6;
   --navy-glass-bg:rgba(255,255,255,.06);
   --navy-glass-border:1px solid rgba(255,255,255,.12);
+
+  /* ---- hero banner (theme-aware; see note above) ---- */
+  --hero-base-1:#FAFAFA;
+  --hero-base-2:#F1EEF7;
+  --hero-title-grad:linear-gradient(135deg,#17151F 35%,#7C3AED 100%);
+  --hero-dot-color:rgba(20,16,30,.4);
+  --hero-skyline-color:rgba(20,16,30,.06);
+  --hero-glass-bg:rgba(255,255,255,.85);
+  --hero-glass-border:1px solid rgba(20,16,30,.10);
 
   /* ---- legacy token names, remapped onto the palette above so every
      existing component (already built on these variables) picks up the
@@ -150,6 +162,14 @@
   --amber-soft:rgba(255,59,48,.14);
   --sky:var(--accent-cyan);
   --sky-soft:rgba(34,211,238,.14);
+
+  --hero-base-1:#0B0B0D;
+  --hero-base-2:#0F0E13;
+  --hero-title-grad:linear-gradient(135deg,#fff 40%,#E9D8FF 100%);
+  --hero-dot-color:rgba(255,255,255,.9);
+  --hero-skyline-color:rgba(255,255,255,.05);
+  --hero-glass-bg:rgba(255,255,255,.06);
+  --hero-glass-border:1px solid rgba(255,255,255,.12);
 
   --shadow-sm:0 1px 2px rgba(0,0,0,.4);
   --shadow-md:0 10px 30px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.03);
@@ -250,54 +270,55 @@ html[data-theme="dark"] #themeToggle .theme-icon-moon{display:none}
     radial-gradient(85% 55% at 88% -8%, rgba(255,45,141,.28), transparent 62%),
     radial-gradient(70% 55% at -5% 15%, rgba(139,92,246,.24), transparent 60%),
     radial-gradient(65% 45% at 50% 115%, rgba(59,130,246,.18), transparent 60%),
-    linear-gradient(180deg,#0B0B0D 0%,#0F0E13 100%);
-  color:var(--on-navy);
+    linear-gradient(180deg,var(--hero-base-1) 0%,var(--hero-base-2) 100%);
+  color:var(--ink);
   padding:72px 0 40px;
 }
 .hero::after{
   content:"";position:absolute;inset:0;pointer-events:none;opacity:.04;
-  background-image:radial-gradient(rgba(255,255,255,.9) 1px, transparent 1px);
+  background-image:radial-gradient(var(--hero-dot-color) 1px, transparent 1px);
   background-size:22px 22px;
 }
 .hero-motif{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
 .hero-motif svg{position:absolute;bottom:-2px;inset-inline-start:0;width:100%;height:auto;opacity:.55}
+.hero-motif svg path{fill:var(--hero-skyline-color)}
 .hero-sun{position:absolute;top:8%;inset-inline-end:6%;width:140px;height:140px;border-radius:50%;
   background:radial-gradient(circle at 50% 50%, rgba(255,59,48,.32), rgba(255,59,48,0) 72%);filter:blur(1px)}
 .hero .wrap{position:relative;z-index:1}
 .hero .kicker{
   display:flex;align-items:center;gap:8px;font-size:.76rem;letter-spacing:.16em;font-weight:700;
-  color:var(--on-navy-2);text-transform:uppercase;margin-bottom:16px;
+  color:var(--ink-2);text-transform:uppercase;margin-bottom:16px;
 }
 .hero .kicker .flag{font-size:1rem}
 .hero h1{
   font-size:clamp(2.9rem,10vw,4.1rem);line-height:1.02;font-weight:800;letter-spacing:-.03em;margin:0 0 12px;
-  background:linear-gradient(135deg,#fff 40%,#E9D8FF 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  background:var(--hero-title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .hero h1 small{
-  display:block;font-size:.38em;font-weight:600;color:var(--on-navy-2);margin-top:10px;letter-spacing:0;
-  background:none;-webkit-text-fill-color:var(--on-navy-2);
+  display:block;font-size:.38em;font-weight:600;color:var(--ink-2);margin-top:10px;letter-spacing:0;
+  background:none;-webkit-text-fill-color:var(--ink-2);
 }
-.hero .dates{font-size:1.06rem;color:var(--on-navy);opacity:.92;margin:0 0 4px;font-weight:600}
+.hero .dates{font-size:1.06rem;color:var(--ink);opacity:.92;margin:0 0 4px;font-weight:600}
 .hero .route-line{
-  font-size:.96rem;color:var(--on-navy-2);margin:2px 0 30px;direction:ltr;text-align:right;unicode-bidi:isolate;
+  font-size:.96rem;color:var(--ink-2);margin:2px 0 30px;direction:ltr;text-align:right;unicode-bidi:isolate;
   font-weight:500;
 }
 .countdown{
-  display:flex;align-items:center;gap:18px;background:var(--navy-glass-bg);
-  border:var(--navy-glass-border);border-radius:var(--r-lg);padding:20px 24px;
+  display:flex;align-items:center;gap:18px;background:var(--hero-glass-bg);
+  border:var(--hero-glass-border);border-radius:var(--r-lg);padding:20px 24px;
   backdrop-filter:blur(18px);margin-bottom:24px;box-shadow:var(--shadow-md);
 }
 .countdown .big{
   font-family:var(--mono);font-size:clamp(2.6rem,10vw,3.4rem);font-weight:600;line-height:1;
   background:linear-gradient(135deg,var(--accent-magenta),var(--accent-violet));-webkit-background-clip:text;background-clip:text;color:transparent;
 }
-.countdown .txt{font-size:.92rem;color:var(--on-navy-2);font-weight:600}
-.countdown .txt b{color:var(--on-navy);display:block;font-size:1rem;font-weight:700;margin-top:2px}
+.countdown .txt{font-size:.92rem;color:var(--ink-2);font-weight:600}
+.countdown .txt b{color:var(--ink);display:block;font-size:1rem;font-weight:700;margin-top:2px}
 
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media (max-width:480px){.stat-grid{grid-template-columns:1fr 1fr}}
 .stat-card{
-  position:relative;background:var(--navy-glass-bg);border:var(--navy-glass-border);border-radius:var(--r-md);
+  position:relative;background:var(--hero-glass-bg);border:var(--hero-glass-border);border-radius:var(--r-md);
   padding:18px 14px;text-align:center;backdrop-filter:blur(14px);overflow:hidden;
 }
 .stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--stat-accent,var(--accent-magenta))}
@@ -305,8 +326,8 @@ html[data-theme="dark"] #themeToggle .theme-icon-moon{display:none}
 .stat-card:nth-child(2){--stat-accent:var(--accent-violet)}
 .stat-card:nth-child(3){--stat-accent:var(--accent-blue)}
 .stat-card:nth-child(4){--stat-accent:var(--accent-cyan)}
-.stat-card .n{font-family:var(--mono);font-size:1.7rem;font-weight:600;color:#fff}
-.stat-card .l{font-size:.78rem;color:var(--on-navy-2);margin-top:3px;font-weight:600}
+.stat-card .n{font-family:var(--mono);font-size:1.7rem;font-weight:600;color:var(--ink)}
+.stat-card .l{font-size:.78rem;color:var(--ink-2);margin-top:3px;font-weight:600}
 
 /* ---------- section shell ---------- */
 section{padding:64px 0}
