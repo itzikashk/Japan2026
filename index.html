@@ -3,12 +3,17 @@
 <head>
 <meta charset="utf-8">
 <script>
-// Runs before CSS paints, so there's no flash of the wrong theme.
-// Default (no stored preference yet) is light.
+// Runs before CSS paints, so there's no flash of the wrong theme/language.
+// Defaults (no stored preference yet): light theme, Hebrew.
 (function(){
   try{
     var t = localStorage.getItem("jp2026_theme");
     if(t === "dark"){ document.documentElement.setAttribute("data-theme","dark"); }
+    var l = localStorage.getItem("jp2026_lang");
+    if(l === "en"){
+      document.documentElement.setAttribute("lang","en");
+      document.documentElement.setAttribute("dir","ltr");
+    }
   }catch(e){}
 })();
 </script>
@@ -198,11 +203,16 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 14px)}
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important} }
+/* direction/lang toggle: html[dir] cascades direction to everything below
+   (nothing here hardcodes rtl any more); --embed-align covers the many
+   "hold this LTR snippet's own text-align to match the surrounding
+   direction" rules so they flip correctly too. */
+html[dir="rtl"]{ --embed-align:right; }
+html[dir="ltr"]{ --embed-align:left; }
 body{
   margin:0;background:var(--paper);color:var(--ink);
   font-family:var(--display);
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-  direction:rtl;
 }
 img{max-width:100%;display:block}
 button{font-family:inherit;color:inherit}
@@ -247,6 +257,7 @@ nav.primary{display:none}
 #themeToggle .theme-icon-sun{display:none}
 html[data-theme="dark"] #themeToggle .theme-icon-sun{display:block}
 html[data-theme="dark"] #themeToggle .theme-icon-moon{display:none}
+.lang-btn .lang-label{font-size:.8rem;font-weight:800;letter-spacing:.02em}
 .mobile-nav{
   position:fixed;inset:var(--header-h) 0 0 0;z-index:49;background:var(--panel-bg);backdrop-filter:blur(14px);
   transform:translateY(-8px);opacity:0;pointer-events:none;transition:.22s ease;
@@ -268,11 +279,11 @@ html[data-theme="dark"] #themeToggle .theme-icon-moon{display:none}
 .search-input-row input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:inherit;font-size:1rem;color:var(--ink)}
 .search-input-row button{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:none;border:0;color:var(--ink-3);font-size:1.05rem;cursor:pointer;line-height:1}
 .search-results{margin-top:14px;padding-bottom:36px;display:flex;flex-direction:column;gap:7px}
-.search-result{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);cursor:pointer;text-align:right;width:100%;font-family:inherit}
+.search-result{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);cursor:pointer;text-align:var(--embed-align);width:100%;font-family:inherit}
 .search-result:hover{background:var(--surface-2)}
 .search-result .ico{flex:0 0 auto;width:32px;height:32px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:1rem}
 .search-result .txt{flex:1;min-width:0}
-.search-result .lbl{font-weight:700;font-size:.92rem;direction:ltr;text-align:right;unicode-bidi:isolate;display:block}
+.search-result .lbl{font-weight:700;font-size:.92rem;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate;display:block}
 .search-result .ctx{font-size:.76rem;color:var(--ink-3);margin-top:1px}
 .search-hint,.search-empty{padding:26px 4px;text-align:center;color:var(--ink-3);font-size:.86rem}
 @keyframes searchFlash{0%{box-shadow:0 0 0 4px var(--accent-soft), 0 0 0 1px var(--accent)}100%{box-shadow:var(--shadow-sm)}}
@@ -315,7 +326,7 @@ html[data-theme="dark"] #themeToggle .theme-icon-moon{display:none}
 }
 .hero .dates{font-size:1.06rem;color:var(--ink);opacity:.92;margin:0 0 4px;font-weight:600}
 .hero .route-line{
-  font-size:.96rem;color:var(--ink-2);margin:2px 0 30px;direction:ltr;text-align:right;unicode-bidi:isolate;
+  font-size:.96rem;color:var(--ink-2);margin:2px 0 30px;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate;
   font-weight:500;
 }
 .countdown{
@@ -359,7 +370,10 @@ section{padding:64px 0}
   color:var(--ink-2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;padding:0;
 }
 .route-nav-btn svg{width:16px;height:16px}
-.route-nav-btn.prev svg{transform:scaleX(-1)}
+/* base chevron icon points left; in RTL that's already "next" (chips flow
+   right-to-left), so only "prev" needs flipping — in LTR it's reversed */
+html[dir="rtl"] .route-nav-btn.prev svg{transform:scaleX(-1)}
+html[dir="ltr"] .route-nav-btn.next svg{transform:scaleX(-1)}
 .route-nav-btn:hover:not(:disabled){background:var(--surface-2);color:var(--ink)}
 .route-nav-btn:disabled{opacity:.35;cursor:default}
 .route-scroll{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
@@ -369,7 +383,7 @@ section{padding:64px 0}
   border-radius:var(--r-md);padding:16px;box-shadow:var(--shadow-sm);
 }
 .route-chip .idx{font-family:var(--mono);font-size:.72rem;color:var(--ink-3);font-weight:600}
-.route-chip h3{margin:6px 0 4px;font-size:1.02rem;font-weight:700;direction:ltr;text-align:right;unicode-bidi:isolate}
+.route-chip h3{margin:6px 0 4px;font-size:1.02rem;font-weight:700;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate}
 .route-chip p{margin:0;font-size:.82rem;color:var(--ink-2);line-height:1.5}
 .route-arrow{align-self:center;color:var(--ink-3);font-size:1.1rem;flex:0 0 auto;padding-top:22px}
 
@@ -397,7 +411,7 @@ section{padding:64px 0}
 }
 .day-card[data-open="true"]{box-shadow:var(--shadow-md);border-color:var(--border-strong)}
 .day-head{
-  width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;background:none;border:0;cursor:pointer;text-align:right;
+  width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;background:none;border:0;cursor:pointer;text-align:var(--embed-align);
   transition:background .15s;
 }
 @media (hover:hover){ .day-head:hover, .acc-head:hover{ background:rgba(127,127,127,.08) } }
@@ -418,7 +432,7 @@ section{padding:64px 0}
 .day-head .meta{flex:1 1 auto;min-width:0}
 .day-head .meta .dt{font-size:.76rem;color:var(--ink-3);font-weight:600;margin-bottom:2px}
 .day-head .meta .ti{font-size:1.02rem;font-weight:700;letter-spacing:-.01em;margin-bottom:2px;color:var(--text-primary)}
-.day-head .meta .en{font-size:.8rem;color:var(--ink-2);direction:ltr;text-align:right;unicode-bidi:isolate}
+.day-head .meta .en{font-size:.8rem;color:var(--ink-2);direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate}
 .day-head .city{
   flex:0 0 auto;font-size:.72rem;font-weight:700;color:var(--ink-2);background:var(--surface-2);
   padding:4px 10px;border-radius:99px;direction:ltr;
@@ -441,7 +455,7 @@ section{padding:64px 0}
 .highlight-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
 .highlight-icon{font-size:1.5rem;flex:0 0 auto}
 .highlight-title{font-weight:800;font-size:1.02rem;color:var(--ink);line-height:1.35}
-.highlight-sub{font-size:.8rem;color:var(--ink-2);margin-top:2px;direction:ltr;text-align:right;unicode-bidi:isolate}
+.highlight-sub{font-size:.8rem;color:var(--ink-2);margin-top:2px;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate}
 .highlight-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .highlight-quote{
   font-size:.86rem;line-height:1.65;color:var(--ink);margin:0 0 10px;padding-inline-end:12px;
@@ -477,18 +491,18 @@ section{padding:64px 0}
 .tl-item:last-child::after{display:none}
 .tl-time{font-family:var(--mono);font-size:.72rem;font-weight:700;color:var(--ink-3);margin-bottom:5px;letter-spacing:.02em}
 .tl-title-row{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:4px}
-.tl-title{font-weight:700;font-size:.98rem;direction:ltr;text-align:right;unicode-bidi:isolate}
+.tl-title{font-weight:700;font-size:.98rem;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate}
 .tl-desc{font-size:.88rem;color:var(--ink-2);line-height:1.55;margin:0 0 8px}
-.tl-transport{display:flex;align-items:flex-start;gap:6px;font-size:.8rem;color:var(--ink-3);margin-bottom:9px;direction:ltr;text-align:right;unicode-bidi:isolate}
+.tl-transport{display:flex;align-items:flex-start;gap:6px;font-size:.8rem;color:var(--ink-3);margin-bottom:9px;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate}
 .tl-transport .ic{flex:0 0 auto;margin-top:1px}
 
 /* ---------- google maps destination block ---------- */
 .dest-block{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 14px;margin:0 0 10px}
 .dest-label{display:flex;align-items:center;gap:5px;font-size:.68rem;font-weight:800;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
 .dest-label svg{width:12px;height:12px}
-.dest-name{font-weight:700;font-size:.95rem;color:var(--text-primary);direction:ltr;text-align:right;unicode-bidi:isolate;line-height:1.4}
-.dest-address{font-size:.78rem;color:var(--text-secondary);margin-top:2px;direction:ltr;text-align:right;unicode-bidi:isolate;line-height:1.5}
-.dest-route{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px;font-size:.78rem;color:var(--text-secondary);direction:ltr;text-align:right;unicode-bidi:isolate}
+.dest-name{font-weight:700;font-size:.95rem;color:var(--text-primary);direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate;line-height:1.4}
+.dest-address{font-size:.78rem;color:var(--text-secondary);margin-top:2px;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate;line-height:1.5}
+.dest-route{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px;font-size:.78rem;color:var(--text-secondary);direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate}
 .dest-route span{display:inline-flex;align-items:center;gap:4px}
 .dest-navigate{
   margin-top:11px;width:100%;justify-content:center;font-size:.86rem;padding:12px 14px;
@@ -525,7 +539,7 @@ section{padding:64px 0}
 .rate-status .pulse{width:6px;height:6px;border-radius:50%;background:currentColor}
 .rate-status.live .pulse{animation:pulse 1.8s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.rate-big{font-family:var(--mono);font-size:clamp(1.7rem,6vw,2.1rem);font-weight:600;margin:6px 0 2px;direction:ltr;text-align:right;unicode-bidi:isolate}
+.rate-big{font-family:var(--mono);font-size:clamp(1.7rem,6vw,2.1rem);font-weight:600;margin:6px 0 2px;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate}
 .rate-updated{font-size:.78rem;color:var(--ink-2);margin-bottom:20px}
 .conv-grid{display:flex;flex-direction:column;gap:10px}
 .conv-field{background:var(--glow-glass-bg);border:1px solid var(--glow-glass-line);border-radius:var(--r-md);padding:12px 14px}
@@ -534,7 +548,7 @@ section{padding:64px 0}
 .conv-field .cur{font-family:var(--mono);font-weight:700;font-size:1.05rem;color:var(--ink-2)}
 .conv-field input{
   flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font-family:var(--mono);
-  font-size:1.35rem;font-weight:600;direction:ltr;text-align:right;
+  font-size:1.35rem;font-weight:600;direction:ltr;text-align:var(--embed-align);
 }
 .conv-swap{display:flex;justify-content:center;margin:-3px 0}
 .conv-swap span{width:32px;height:32px;border-radius:50%;background:var(--glow-glass-bg);border:1px solid var(--glow-glass-line);display:flex;align-items:center;justify-content:center;font-size:.85rem}
@@ -552,7 +566,7 @@ section{padding:64px 0}
 
 /* ---------- accordions (packing / tips) ---------- */
 .acc-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow-sm);transition:border-color .2s}
-.acc-head{width:100%;display:flex;align-items:center;gap:12px;padding:16px 18px;background:none;border:0;cursor:pointer;text-align:right;transition:background .15s}
+.acc-head{width:100%;display:flex;align-items:center;gap:12px;padding:16px 18px;background:none;border:0;cursor:pointer;text-align:var(--embed-align);transition:background .15s}
 .acc-head .ico{flex:0 0 auto;font-size:1.15rem;width:34px;height:34px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center}
 .acc-head .ti{flex:1;font-weight:700;font-size:.98rem;color:var(--text-primary)}
 .acc-head .sub{font-size:.78rem;color:var(--ink-3);font-weight:600}
@@ -581,7 +595,7 @@ section{padding:64px 0}
 .phrase-grid{display:grid;grid-template-columns:1fr;gap:10px}
 @media (min-width:600px){.phrase-grid{grid-template-columns:1fr 1fr}}
 .phrase-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:15px 16px;box-shadow:var(--shadow-sm)}
-.phrase-card .jp{font-family:var(--mono);font-weight:600;font-size:.94rem;direction:ltr;text-align:right;color:var(--accent-ink)}
+.phrase-card .jp{font-family:var(--mono);font-weight:600;font-size:.94rem;direction:ltr;text-align:var(--embed-align);color:var(--accent-ink)}
 .phrase-card .he{font-size:.86rem;color:var(--ink-2);margin-top:4px}
 
 /* ---------- apps ---------- */
@@ -677,7 +691,7 @@ footer b{color:var(--on-navy)}
 .cost-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .cost-stat{background:var(--glow-glass-bg);border:1px solid var(--glow-glass-line);border-radius:var(--r-md);padding:14px}
 .cost-stat-label{font-size:.74rem;color:var(--ink-2);font-weight:700;margin-bottom:4px}
-.cost-stat-val{font-family:var(--mono);font-size:1.3rem;font-weight:600;color:var(--ink);direction:ltr;text-align:right;unicode-bidi:isolate}
+.cost-stat-val{font-family:var(--mono);font-size:1.3rem;font-weight:600;color:var(--ink);direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate}
 .cost-per-person{font-size:.82rem;color:var(--ink-2);margin-bottom:6px;line-height:1.6}
 .cost-rate-note{font-size:.74rem;color:var(--ink-2);opacity:.85}
 
@@ -724,7 +738,7 @@ footer b{color:var(--on-navy)}
 }
 .openitem-info{flex:1;min-width:0}
 .openitem-day{font-size:.72rem;color:var(--ink-3);font-weight:700;margin-bottom:2px}
-.openitem-title{font-weight:700;font-size:.92rem;direction:ltr;text-align:right;unicode-bidi:isolate;line-height:1.4}
+.openitem-title{font-weight:700;font-size:.92rem;direction:ltr;text-align:var(--embed-align);unicode-bidi:isolate;line-height:1.4}
 .openitem-actions{display:flex;flex-wrap:wrap;gap:8px}
 .openitem-actions .btn-mini{flex:1;justify-content:center;white-space:nowrap}
 .openitems-empty{text-align:center;padding:30px 10px;color:var(--ink-3);font-size:.9rem}
@@ -758,26 +772,29 @@ footer b{color:var(--on-navy)}
   <div class="wrap">
     <div class="brand"><span class="dot"></span> Japan 2026</div>
     <nav class="primary">
-      <a href="#top">ראשי</a>
-      <a href="#openitems">לא הוזמן</a>
-      <a href="#hotels">מלונות</a>
-      <a href="#itinerary">תוכנית יומית</a>
-      <a href="#food">אוכל</a>
-      <a href="#currency">כסף</a>
-      <a href="#costs">עלויות</a>
-      <a href="#packing">ציוד</a>
-      <a href="#tips">טיפים</a>
-      <a href="#files">קבצים</a>
+      <a href="#top" data-en="Home">ראשי</a>
+      <a href="#openitems" data-en="Not booked">לא הוזמן</a>
+      <a href="#hotels" data-en="Hotels">מלונות</a>
+      <a href="#itinerary" data-en="Itinerary">תוכנית יומית</a>
+      <a href="#food" data-en="Food">אוכל</a>
+      <a href="#currency" data-en="Money">כסף</a>
+      <a href="#costs" data-en="Costs">עלויות</a>
+      <a href="#packing" data-en="Packing">ציוד</a>
+      <a href="#tips" data-en="Tips">טיפים</a>
+      <a href="#files" data-en="Files">קבצים</a>
     </nav>
     <div style="display:flex;gap:8px">
-      <button class="icon-btn" id="themeToggle" aria-label="החלפת ערכת נושא בהירה/כהה" aria-pressed="false">
+      <button class="icon-btn" id="themeToggle" aria-label="החלפת ערכת נושא בהירה/כהה" data-en-aria="Switch light/dark theme" aria-pressed="false">
         <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
         <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
       </button>
-      <button class="icon-btn" id="searchBtn" aria-label="חיפוש">
+      <button class="icon-btn lang-btn" id="langToggle" aria-label="Switch language / החלפת שפה">
+        <span class="lang-label"></span>
+      </button>
+      <button class="icon-btn" id="searchBtn" aria-label="חיפוש" data-en-aria="Search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
-      <button class="icon-btn hamburger-btn" id="menuBtn" aria-label="תפריט" aria-expanded="false">
+      <button class="icon-btn hamburger-btn" id="menuBtn" aria-label="תפריט" data-en-aria="Menu" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
       </button>
     </div>
@@ -788,8 +805,8 @@ footer b{color:var(--on-navy)}
   <div class="wrap">
     <div class="search-input-row">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="searchInput" placeholder="חיפוש — יעדים, אוכל, טיפים, ציוד..." autocomplete="off">
-      <button id="searchClose" aria-label="סגירה">✕</button>
+      <input type="text" id="searchInput" placeholder="חיפוש — יעדים, אוכל, טיפים, ציוד..." data-en-placeholder="Search — destinations, food, tips, gear..." autocomplete="off">
+      <button id="searchClose" aria-label="סגירה" data-en-aria="Close">✕</button>
     </div>
     <div class="search-results" id="searchResults"></div>
   </div>
@@ -803,66 +820,66 @@ footer b{color:var(--on-navy)}
   <div class="modal-box modal-box-sm">
     <p id="confirmText"></p>
     <div class="modal-actions">
-      <button class="btn-mini" id="confirmCancel">ביטול</button>
-      <button class="btn-mini" id="confirmOk" style="background:var(--accent);border-color:var(--accent);color:#fff">מחיקה</button>
+      <button class="btn-mini" id="confirmCancel" data-en="Cancel">ביטול</button>
+      <button class="btn-mini" id="confirmOk" style="background:var(--accent);border-color:var(--accent);color:#fff" data-en="Delete">מחיקה</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="expenseFormOverlay">
   <div class="modal-box" id="expenseFormBox">
-    <div class="modal-head"><span id="expenseFormTitle">הוספת הוצאה</span><button class="icon-mini" id="expenseFormClose" aria-label="סגירה">✕</button></div>
+    <div class="modal-head"><span id="expenseFormTitle" data-en="Add expense">הוספת הוצאה</span><button class="icon-mini" id="expenseFormClose" aria-label="סגירה" data-en-aria="Close">✕</button></div>
     <div class="modal-body">
       <form id="expenseForm" class="expense-form">
         <input type="hidden" id="expenseId">
-        <label>תיאור
-          <input type="text" id="expDescription" required placeholder="למשל: ארוחת ערב, שינקנסן...">
+        <label><span data-en="Description">תיאור</span>
+          <input type="text" id="expDescription" required placeholder="למשל: ארוחת ערב, שינקנסן..." data-en-placeholder="e.g. dinner, Shinkansen...">
         </label>
         <div class="expense-form-row">
-          <label>סכום
+          <label><span data-en="Amount">סכום</span>
             <input type="number" id="expAmount" step="0.01" min="0.01" required inputmode="decimal">
           </label>
-          <label>מטבע
+          <label><span data-en="Currency">מטבע</span>
             <select id="expCurrency"><option value="AUD">AUD</option><option value="JPY">JPY</option></select>
           </label>
         </div>
-        <label>קטגוריה
+        <label><span data-en="Category">קטגוריה</span>
           <select id="expCategory"></select>
         </label>
         <div class="expense-form-row">
-          <label>תאריך
+          <label><span data-en="Date">תאריך</span>
             <input type="date" id="expDate">
           </label>
-          <label>יום בטיול (אופציונלי)
+          <label><span data-en="Trip day (optional)">יום בטיול (אופציונלי)</span>
             <select id="expTripDay"><option value="">—</option></select>
           </label>
         </div>
         <div class="expense-form-row">
-          <label>סטטוס
+          <label><span data-en="Status">סטטוס</span>
             <select id="expStatus">
-              <option value="planned">מתוכנן</option>
-              <option value="unpaid">טרם שולם</option>
-              <option value="paid">שולם</option>
+              <option value="planned" data-en="Planned">מתוכנן</option>
+              <option value="unpaid" data-en="Not paid yet">טרם שולם</option>
+              <option value="paid" data-en="Paid">שולם</option>
             </select>
           </label>
-          <label>שולם ע״י
+          <label><span data-en="Paid by">שולם ע״י</span>
             <select id="expPaidBy">
-              <option value="Family">משפחה / משותף</option>
+              <option value="Family" data-en="Family / shared">משפחה / משותף</option>
               <option value="Isaac">Isaac</option>
               <option value="Anat">Anat</option>
               <option value="Alon">Alon</option>
-              <option value="Other">אחר</option>
+              <option value="Other" data-en="Other">אחר</option>
             </select>
           </label>
         </div>
-        <label>הערות (אופציונלי)
+        <label><span data-en="Notes (optional)">הערות (אופציונלי)</span>
           <textarea id="expNotes" rows="2"></textarea>
         </label>
-        <label>צרף קבלה (אופציונלי)
+        <label><span data-en="Attach receipt (optional)">צרף קבלה (אופציונלי)</span>
           <input type="file" id="expReceiptInput" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf">
         </label>
         <div class="upload-status" id="expReceiptStatus"></div>
-        <button type="submit" class="upload-btn" style="width:100%;justify-content:center;margin-top:6px" id="expenseSaveBtn">שמירה</button>
+        <button type="submit" class="upload-btn" style="width:100%;justify-content:center;margin-top:6px" id="expenseSaveBtn" data-en="Save">שמירה</button>
       </form>
     </div>
   </div>
@@ -870,43 +887,43 @@ footer b{color:var(--on-navy)}
 
 <div class="mobile-nav" id="mobileNav">
   <div class="wrap">
-    <a href="#top">ראשי <span class="ico">🎌</span></a>
-    <a href="#route">מסלול</a>
-    <a href="#openitems">דברים שעוד צריך לסגור <span class="ico">🎫</span></a>
-    <a href="#hotels">מלונות <span class="ico">🏨</span></a>
-    <a href="#itinerary">תוכנית יומית <span class="ico">📅</span></a>
-    <a href="#food">אוכל, שתייה וקינוחים <span class="ico">🍜</span></a>
-    <a href="#currency">כסף והמרת מטבע <span class="ico">💴</span></a>
-    <a href="#costs">עלויות ותקציב <span class="ico">📊</span></a>
-    <a href="#packing">רשימות ציוד <span class="ico">🎒</span></a>
-    <a href="#tips">טיפים חשובים <span class="ico">💡</span></a>
-    <a href="#phrases">ביטויים ביפנית <span class="ico">🗣️</span></a>
-    <a href="#apps">אפליקציות <span class="ico">📱</span></a>
-    <a href="#files">קבצים משפחתיים <span class="ico">📁</span></a>
-    <a href="#spontaneous">רגעים של יפן <span class="ico">✨</span></a>
+    <a href="#top"><span data-en="Home">ראשי</span> <span class="ico">🎌</span></a>
+    <a href="#route"><span data-en="Route">מסלול</span></a>
+    <a href="#openitems"><span data-en="Things still to close out">דברים שעוד צריך לסגור</span> <span class="ico">🎫</span></a>
+    <a href="#hotels"><span data-en="Hotels">מלונות</span> <span class="ico">🏨</span></a>
+    <a href="#itinerary"><span data-en="Itinerary">תוכנית יומית</span> <span class="ico">📅</span></a>
+    <a href="#food"><span data-en="Food, drinks & desserts">אוכל, שתייה וקינוחים</span> <span class="ico">🍜</span></a>
+    <a href="#currency"><span data-en="Money & currency exchange">כסף והמרת מטבע</span> <span class="ico">💴</span></a>
+    <a href="#costs"><span data-en="Costs & budget">עלויות ותקציב</span> <span class="ico">📊</span></a>
+    <a href="#packing"><span data-en="Packing lists">רשימות ציוד</span> <span class="ico">🎒</span></a>
+    <a href="#tips"><span data-en="Important tips">טיפים חשובים</span> <span class="ico">💡</span></a>
+    <a href="#phrases"><span data-en="Japanese phrases">ביטויים ביפנית</span> <span class="ico">🗣️</span></a>
+    <a href="#apps"><span data-en="Apps">אפליקציות</span> <span class="ico">📱</span></a>
+    <a href="#files"><span data-en="Family files">קבצים משפחתיים</span> <span class="ico">📁</span></a>
+    <a href="#spontaneous"><span data-en="Moments of Japan">רגעים של יפן</span> <span class="ico">✨</span></a>
   </div>
 </div>
 
-<nav class="bottom-nav" id="bottomNav" aria-label="ניווט ראשי">
+<nav class="bottom-nav" id="bottomNav" aria-label="ניווט ראשי" data-en-aria="Main navigation">
   <a href="#top" data-nav="top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/></svg>
-    בית
+    <span data-en="Home">בית</span>
   </a>
   <a href="#itinerary" data-nav="itinerary">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M8 3v3M16 3v3"/></svg>
-    מסלול
+    <span data-en="Route">מסלול</span>
   </a>
   <a href="#costs" data-nav="costs">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M3.5 10h17"/><path d="M7 14.2h3"/></svg>
-    עלויות
+    <span data-en="Costs">עלויות</span>
   </a>
   <a href="#files" data-nav="files">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7a1.5 1.5 0 0 1 1.5-1.5h4l2 2.2h8A1.5 1.5 0 0 1 20.5 9.2V17a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 17Z"/></svg>
-    קבצים
+    <span data-en="Files">קבצים</span>
   </a>
   <button type="button" id="bottomNavMore">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>
-    עוד
+    <span data-en="More">עוד</span>
   </button>
 </nav>
 
@@ -920,21 +937,21 @@ footer b{color:var(--on-navy)}
       </svg>
     </div>
     <div class="wrap">
-      <div class="kicker"><span class="flag">🎌</span> הטיול המשפחתי שלנו</div>
-      <h1>יפן 2026<small>Isaac · Anat · Alon</small></h1>
-      <p class="dates">14–26 באוקטובר 2026</p>
+      <div class="kicker"><span class="flag">🎌</span> <span data-en="Our Family Trip">הטיול המשפחתי שלנו</span></div>
+      <h1 data-en-html='Japan 2026<small>Isaac &middot; Anat &middot; Alon</small>'>יפן 2026<small>Isaac · Anat · Alon</small></h1>
+      <p class="dates" data-en="October 14–26, 2026">14–26 באוקטובר 2026</p>
       <p class="route-line">Tokyo · Yokohama · Hakone · Kyoto · Nara · Osaka</p>
 
       <div class="countdown">
         <div class="big num" id="countdownNum">–</div>
-        <div class="txt">ימים<b id="countdownLabel">עד שיוצאים ליפן</b></div>
+        <div class="txt"><span data-en="days">ימים</span><b id="countdownLabel">עד שיוצאים ליפן</b></div>
       </div>
 
       <div class="stat-grid">
-        <div class="stat-card"><div class="n">13</div><div class="l">ימים</div></div>
-        <div class="stat-card"><div class="n">12</div><div class="l">לילות</div></div>
-        <div class="stat-card"><div class="n">3</div><div class="l">מטיילים</div></div>
-        <div class="stat-card"><div class="n">5</div><div class="l">אזורים</div></div>
+        <div class="stat-card"><div class="n">13</div><div class="l" data-en="days">ימים</div></div>
+        <div class="stat-card"><div class="n">12</div><div class="l" data-en="nights">לילות</div></div>
+        <div class="stat-card"><div class="n">3</div><div class="l" data-en="travelers">מטיילים</div></div>
+        <div class="stat-card"><div class="n">5</div><div class="l" data-en="regions">אזורים</div></div>
       </div>
     </div>
   </section>
@@ -942,13 +959,13 @@ footer b{color:var(--on-navy)}
   <section id="route">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">מסלול הטיול</div>
-        <h2>מיוקוהמה ועד אוסקה</h2>
-        <p>חמישה אזורים, קצב נוח, בלי למהר בין ערים.</p>
+        <div class="eyebrow" data-en="Trip route">מסלול הטיול</div>
+        <h2 data-en="From Yokohama to Osaka">מיוקוהמה ועד אוסקה</h2>
+        <p data-en="Five regions, an easy pace, no rushing between cities.">חמישה אזורים, קצב נוח, בלי למהר בין ערים.</p>
       </div>
       <div class="route-nav">
-        <button class="route-nav-btn prev" id="routePrev" aria-label="היעד הקודם" disabled></button>
-        <button class="route-nav-btn next" id="routeNext" aria-label="היעד הבא"></button>
+        <button class="route-nav-btn prev" id="routePrev" aria-label="היעד הקודם" data-en-aria="Previous destination" disabled></button>
+        <button class="route-nav-btn next" id="routeNext" aria-label="היעד הבא" data-en-aria="Next destination"></button>
       </div>
       <div class="route-scroll" id="routeScroll"></div>
     </div>
@@ -957,9 +974,9 @@ footer b{color:var(--on-navy)}
   <section id="openitems">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">סטטוס הזמנות</div>
-        <h2 id="openItemsHeading">דברים שעוד צריך לסגור</h2>
-        <p>כל הפריטים בטיול שטרם הוזמנו — במקום אחד, עם קישור ישיר לכל אחד.</p>
+        <div class="eyebrow" data-en="Booking status">סטטוס הזמנות</div>
+        <h2 id="openItemsHeading" data-en="Things still to close out">דברים שעוד צריך לסגור</h2>
+        <p data-en="Every not-yet-booked item in the trip — in one place, with a direct link to each.">כל הפריטים בטיול שטרם הוזמנו — במקום אחד, עם קישור ישיר לכל אחד.</p>
       </div>
       <div id="openItemsList"></div>
     </div>
@@ -968,9 +985,9 @@ footer b{color:var(--on-navy)}
   <section id="hotels">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">איפה ישנים</div>
-        <h2>המלונות שלנו</h2>
-        <p>כל ארבעת האזורים מאושרים וסגורים.</p>
+        <div class="eyebrow" data-en="Where we're staying">איפה ישנים</div>
+        <h2 data-en="Our hotels">המלונות שלנו</h2>
+        <p data-en="All four regions confirmed and locked in.">כל ארבעת האזורים מאושרים וסגורים.</p>
       </div>
       <div id="hotelsContainer"></div>
     </div>
@@ -979,19 +996,19 @@ footer b{color:var(--on-navy)}
   <section id="itinerary">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">תוכנית יומית</div>
-        <h2>יום אחר יום</h2>
-        <p>לוחצים על כל יום כדי לפתוח את הפירוט המלא — שעות, תחבורה וקישורים.</p>
+        <div class="eyebrow" data-en="Daily itinerary">תוכנית יומית</div>
+        <h2 data-en="Day by day">יום אחר יום</h2>
+        <p data-en="Tap any day to open the full details — times, transport and links.">לוחצים על כל יום כדי לפתוח את הפירוט המלא — שעות, תחבורה וקישורים.</p>
       </div>
       <div class="legend reveal">
-        <span class="badge must">★ <b>חובה</b></span>
-        <span class="badge optional">○ <b>אופציונלי</b></span>
-        <span class="badge booked">✓ <b>הוזמן</b></span>
-        <span class="badge notbooked">! <b>טרם הוזמן</b></span>
-        <span class="badge flexible">↔ <b>גמיש</b></span>
-        <span class="badge weather">☀ <b>תלוי במזג האוויר</b></span>
-        <span class="badge priority">⭐ <b>עדיפות גבוהה</b></span>
-        <span class="badge scheduledep">🎞️ <b>תלוי בלוח הקרנות</b></span>
+        <span class="badge must">★ <b data-en="Must">חובה</b></span>
+        <span class="badge optional">○ <b data-en="Optional">אופציונלי</b></span>
+        <span class="badge booked">✓ <b data-en="Booked">הוזמן</b></span>
+        <span class="badge notbooked">! <b data-en="Not booked yet">טרם הוזמן</b></span>
+        <span class="badge flexible">↔ <b data-en="Flexible">גמיש</b></span>
+        <span class="badge weather">☀ <b data-en="Weather dependent">תלוי במזג האוויר</b></span>
+        <span class="badge priority">⭐ <b data-en="High priority">עדיפות גבוהה</b></span>
+        <span class="badge scheduledep">🎞️ <b data-en="Depends on showtimes">תלוי בלוח הקרנות</b></span>
       </div>
       <div id="daysContainer"></div>
     </div>
@@ -1000,9 +1017,9 @@ footer b{color:var(--on-navy)}
   <section id="food">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">אוכל, שתייה וקינוחים</div>
-        <h2>מה כדאי לחפש בדרך</h2>
-        <p>רעיונות לרשתות, משקאות וקינוחים ליד המסלול הקיים — לא הזמנות ולא תוספת קבועה ליום, רק דברים ששווה לחפש. תמיד לבדוק את הרכיבים בפועל בסניף.</p>
+        <div class="eyebrow" data-en="Food, drinks & desserts">אוכל, שתייה וקינוחים</div>
+        <h2 data-en="Things worth looking out for">מה כדאי לחפש בדרך</h2>
+        <p data-en="Ideas for chains, drinks and desserts near the existing route — not bookings or a fixed daily addition, just things worth looking for. Always check the actual ingredients at the branch.">רעיונות לרשתות, משקאות וקינוחים ליד המסלול הקיים — לא הזמנות ולא תוספת קבועה ליום, רק דברים ששווה לחפש. תמיד לבדוק את הרכיבים בפועל בסניף.</p>
       </div>
       <div id="foodContainer"></div>
     </div>
@@ -1011,39 +1028,39 @@ footer b{color:var(--on-navy)}
   <section id="currency">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">כסף והמרת מטבע</div>
-        <h2>ין יפני ↔ דולר אוסטרלי</h2>
-        <p>השער נשלף אוטומטית מדי טעינה ומתעדכן פעם ביום. ההמרה עצמה מתבצעת מיידית במכשיר שלכם.</p>
+        <div class="eyebrow" data-en="Money & currency exchange">כסף והמרת מטבע</div>
+        <h2 data-en="Japanese Yen ↔ Australian Dollar">ין יפני ↔ דולר אוסטרלי</h2>
+        <p data-en="The rate is fetched automatically on each load and updates once a day. The conversion itself happens instantly on your device.">השער נשלף אוטומטית מדי טעינה ומתעדכן פעם ביום. ההמרה עצמה מתבצעת מיידית במכשיר שלכם.</p>
       </div>
       <div class="currency-card reveal">
         <div class="rate-row">
-          <span class="lbl">שער עדכני</span>
-          <span class="rate-status live" id="rateStatus"><span class="pulse"></span><span id="rateStatusText">טוען…</span></span>
+          <span class="lbl" data-en="Current rate">שער עדכני</span>
+          <span class="rate-status live" id="rateStatus"><span class="pulse"></span><span id="rateStatusText" data-en="Loading…">טוען…</span></span>
         </div>
         <div class="rate-big" id="rateBig">A$1 = ¥…</div>
-        <div class="rate-updated" id="rateUpdated">מאתרים שער עדכני…</div>
+        <div class="rate-updated" id="rateUpdated" data-en="Finding the current rate…">מאתרים שער עדכני…</div>
 
         <div class="conv-grid">
           <div class="conv-field">
-            <label for="jpyInput">ין יפני · JPY</label>
+            <label for="jpyInput" data-en="Japanese Yen · JPY">ין יפני · JPY</label>
             <div class="in-row"><span class="cur">¥</span><input type="text" inputmode="decimal" id="jpyInput" value="10,000"></div>
           </div>
           <div class="conv-swap"><span>⇅</span></div>
           <div class="conv-field">
-            <label for="audInput">דולר אוסטרלי · AUD</label>
+            <label for="audInput" data-en="Australian Dollar · AUD">דולר אוסטרלי · AUD</label>
             <div class="in-row"><span class="cur">A$</span><input type="text" inputmode="decimal" id="audInput" value="0.00"></div>
           </div>
         </div>
 
         <div class="rate-foot">
-          <p class="rate-disclaimer">שער משוער — שער כרטיס האשראי או הבנק עשוי להיות שונה, וייתכנו עמלות המרה נוספות.</p>
+          <p class="rate-disclaimer" data-en="An estimated rate — your card or bank's rate may differ, and additional conversion fees may apply.">שער משוער — שער כרטיס האשראי או הבנק עשוי להיות שונה, וייתכנו עמלות המרה נוספות.</p>
           <button class="refresh-btn" id="refreshRate">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.3-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.3 6.4L3 16"/><path d="M3 21v-5h5"/></svg>
-            רענון שער
+            <span data-en="Refresh rate">רענון שער</span>
           </button>
         </div>
         <div class="manual-row" id="manualRow" style="display:none">
-          <span>שער ידני לצורך הערכה בלבד (JPY ל-1 AUD):</span>
+          <span data-en="Manual rate for estimation only (JPY per 1 AUD):">שער ידני לצורך הערכה בלבד (JPY ל-1 AUD):</span>
           <input type="text" inputmode="decimal" id="manualRateInput" placeholder="95.00">
         </div>
       </div>
@@ -1053,20 +1070,20 @@ footer b{color:var(--on-navy)}
   <section id="packing">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">ציוד ואריזה</div>
-        <h2>מה לוקחים</h2>
-        <p>שתי רשימות מעשיות — הסימונים נשמרים אוטומטית במכשיר שלכם.</p>
+        <div class="eyebrow" data-en="Gear & packing">ציוד ואריזה</div>
+        <h2 data-en="What to bring">מה לוקחים</h2>
+        <p data-en="Two practical checklists — your checks are saved automatically on your device.">שתי רשימות מעשיות — הסימונים נשמרים אוטומטית במכשיר שלכם.</p>
       </div>
 
       <div class="acc-card reveal" data-open="false" id="pack-hakone">
         <button class="acc-head" id="packHakoneHead">
           <span class="ico">🎒</span>
-          <span class="ti">תיק ללילה בהאקונה<br><span class="sub">רק ל-18 באוקטובר</span></span>
+          <span class="ti" data-en-html='Overnight bag for Hakone<br><span class="sub">October 18 only</span>'>תיק ללילה בהאקונה<br><span class="sub">רק ל-18 באוקטובר</span></span>
           <span class="progress-pill" id="progHakone">0/13</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="acc-body-outer" id="packHakoneBodyOuter"><div class="acc-body">
-          <p>ב-18 באוקטובר שולחים את המזוודות הגדולות (Takkyubin) ישירות מהמלון ביוקוהמה למלון בקיוטו. להאקונה יוצאים עם תיק לילה קטן בלבד.</p>
+          <p data-en="On October 18 the big suitcases go straight from the Yokohama hotel to the Kyoto hotel by Takkyubin courier. We head to Hakone with just a small overnight bag.">ב-18 באוקטובר שולחים את המזוודות הגדולות (Takkyubin) ישירות מהמלון ביוקוהמה למלון בקיוטו. להאקונה יוצאים עם תיק לילה קטן בלבד.</p>
           <div class="check-list" id="listHakone"></div>
         </div></div>
       </div>
@@ -1074,7 +1091,7 @@ footer b{color:var(--on-navy)}
       <div class="acc-card reveal" data-open="false" id="pack-japan">
         <button class="acc-head" id="packJapanHead">
           <span class="ico">🧳</span>
-          <span class="ti">מה לא לשכוח ליפן<br><span class="sub">רשימה כללית לכל הטיול</span></span>
+          <span class="ti" data-en-html='What not to forget for Japan<br><span class="sub">General list for the whole trip</span>'>מה לא לשכוח ליפן<br><span class="sub">רשימה כללית לכל הטיול</span></span>
           <span class="progress-pill" id="progJapan">0/15</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
@@ -1088,9 +1105,9 @@ footer b{color:var(--on-navy)}
   <section id="tips">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">טיפים חשובים ליפן</div>
-        <h2>איך נעים ביפן</h2>
-        <p>כמה כללי התנהגות ותחבורה שעוזרים להתמצא בקלות.</p>
+        <div class="eyebrow" data-en="Essential tips for Japan">טיפים חשובים ליפן</div>
+        <h2 data-en="How to feel at ease in Japan">איך נעים ביפן</h2>
+        <p data-en="A few etiquette and transport rules that help you find your way easily.">כמה כללי התנהגות ותחבורה שעוזרים להתמצא בקלות.</p>
       </div>
       <div id="tipsContainer"></div>
     </div>
@@ -1099,15 +1116,15 @@ footer b{color:var(--on-navy)}
   <section id="phrases">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">שפה</div>
-        <h2>כמה ביטויים שימושיים</h2>
-        <p>לא חייבים לדעת יפנית — אבל כמה מילים עוזרות מאוד.</p>
+        <div class="eyebrow" data-en="Language">שפה</div>
+        <h2 data-en="A few useful phrases">כמה ביטויים שימושיים</h2>
+        <p data-en="You don't need to know Japanese — but a few words help a lot.">לא חייבים לדעת יפנית — אבל כמה מילים עוזרות מאוד.</p>
       </div>
       <div class="phrase-grid reveal">
-        <div class="phrase-card"><div class="jp">Sumimasen</div><div class="he">סליחה / excuse me</div></div>
-        <div class="phrase-card"><div class="jp">Arigatou gozaimasu</div><div class="he">תודה רבה</div></div>
-        <div class="phrase-card"><div class="jp">Kore o kudasai</div><div class="he">את זה בבקשה</div></div>
-        <div class="phrase-card"><div class="jp">Eigo wa hanasemasu ka?</div><div class="he">האם אתה/את מדבר/ת אנגלית?</div></div>
+        <div class="phrase-card"><div class="jp">Sumimasen</div><div class="he" data-en="Excuse me">סליחה / excuse me</div></div>
+        <div class="phrase-card"><div class="jp">Arigatou gozaimasu</div><div class="he" data-en="Thank you very much">תודה רבה</div></div>
+        <div class="phrase-card"><div class="jp">Kore o kudasai</div><div class="he" data-en="This one, please">את זה בבקשה</div></div>
+        <div class="phrase-card"><div class="jp">Eigo wa hanasemasu ka?</div><div class="he" data-en="Do you speak English?">האם אתה/את מדבר/ת אנגלית?</div></div>
       </div>
     </div>
   </section>
@@ -1115,8 +1132,8 @@ footer b{color:var(--on-navy)}
   <section id="apps">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">לפני הטיסה</div>
-        <h2>אפליקציות שכדאי להכין</h2>
+        <div class="eyebrow" data-en="Before the flight">לפני הטיסה</div>
+        <h2 data-en="Apps worth setting up">אפליקציות שכדאי להכין</h2>
       </div>
       <div class="app-grid reveal" id="appsGrid"></div>
     </div>
@@ -1125,31 +1142,31 @@ footer b{color:var(--on-navy)}
   <section id="files">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">קבצים משפחתיים</div>
-        <h2>Japan 2026 — כל הקבצים במקום אחד</h2>
-        <p>כרטיסים, שוברים, מסמכים ותמונות מכל הטיול — מעלים דרך היום הרלוונטי בתוכנית, ומוצאים כאן לפי יום, קטגוריה או חיפוש חופשי.</p>
+        <div class="eyebrow" data-en="Family files">קבצים משפחתיים</div>
+        <h2 data-en="Japan 2026 — all the files in one place">Japan 2026 — כל הקבצים במקום אחד</h2>
+        <p data-en="Tickets, vouchers, documents and photos from the whole trip — upload through the relevant day in the itinerary, and find them here by day, category, or free search.">כרטיסים, שוברים, מסמכים ותמונות מכל הטיול — מעלים דרך היום הרלוונטי בתוכנית, ומוצאים כאן לפי יום, קטגוריה או חיפוש חופשי.</p>
       </div>
 
       <div id="todayFilesBanner" class="today-banner" hidden></div>
 
       <div id="importantFilesRow" class="important-row" hidden>
-        <div class="important-row-head">⭐ מסמכים חשובים</div>
+        <div class="important-row-head" data-en="⭐ Important documents">⭐ מסמכים חשובים</div>
         <div class="file-grid" id="importantFilesList"></div>
       </div>
 
       <div class="files-toolbar">
-        <input type="text" id="filesSearchInput" placeholder="🔍 חיפוש בקבצים...">
-        <select id="filesDayFilter"><option value="">כל הימים</option></select>
-        <select id="filesCategoryFilter"><option value="">כל הקטגוריות</option></select>
+        <input type="text" id="filesSearchInput" placeholder="🔍 חיפוש בקבצים..." data-en-placeholder="🔍 Search files...">
+        <select id="filesDayFilter"><option value="" data-en="All days">כל הימים</option></select>
+        <select id="filesCategoryFilter"><option value="" data-en="All categories">כל הקטגוריות</option></select>
       </div>
 
       <div class="file-grid" id="globalFilesList"></div>
-      <div class="files-empty" id="filesEmptyMsg" hidden>עדיין לא הועלו קבצים. אפשר להעלות דרך "קבצים ליום הזה" בכל יום בתוכנית.</div>
+      <div class="files-empty" id="filesEmptyMsg" hidden data-en='No files uploaded yet. You can upload via "Files for this day" on any day in the itinerary.'>עדיין לא הועלו קבצים. אפשר להעלות דרך "קבצים ליום הזה" בכל יום בתוכנית.</div>
 
       <div class="gallery-block" id="galleryBlock" hidden>
         <div class="section-head reveal">
-          <div class="eyebrow">גלריה</div>
-          <h2>תמונות מהטיול</h2>
+          <div class="eyebrow" data-en="Gallery">גלריה</div>
+          <h2 data-en="Photos from the trip">תמונות מהטיול</h2>
         </div>
         <div class="gallery-grid" id="photoGallery"></div>
       </div>
@@ -1159,56 +1176,56 @@ footer b{color:var(--on-navy)}
   <section id="costs">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">עלויות ותקציב</div>
-        <h2>איפה אנחנו עומדים כלכלית</h2>
-        <p>עלויות מאושרות משולבות עם הוצאות שמוסיפים תוך כדי — סכומים ב-JPY מומרים ל-AUD לפי השער החי.</p>
+        <div class="eyebrow" data-en="Costs & budget">עלויות ותקציב</div>
+        <h2 data-en="Where we stand financially">איפה אנחנו עומדים כלכלית</h2>
+        <p data-en="Confirmed costs combined with expenses added along the way — JPY amounts converted to AUD at the live rate.">עלויות מאושרות משולבות עם הוצאות שמוסיפים תוך כדי — סכומים ב-JPY מומרים ל-AUD לפי השער החי.</p>
       </div>
 
       <div class="cost-summary-card reveal">
         <div class="cost-summary-grid">
-          <div class="cost-stat"><div class="cost-stat-label">עלות כוללת</div><div class="cost-stat-val" id="costTotalVal">—</div></div>
-          <div class="cost-stat"><div class="cost-stat-label">שולם</div><div class="cost-stat-val" id="costPaidVal">—</div></div>
-          <div class="cost-stat"><div class="cost-stat-label">נותר לתשלום</div><div class="cost-stat-val" id="costRemainingVal">—</div></div>
-          <div class="cost-stat"><div class="cost-stat-label">מתוכנן</div><div class="cost-stat-val" id="costPlannedVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label" data-en="Total cost">עלות כוללת</div><div class="cost-stat-val" id="costTotalVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label" data-en="Paid">שולם</div><div class="cost-stat-val" id="costPaidVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label" data-en="Remaining to pay">נותר לתשלום</div><div class="cost-stat-val" id="costRemainingVal">—</div></div>
+          <div class="cost-stat"><div class="cost-stat-label" data-en="Planned">מתוכנן</div><div class="cost-stat-val" id="costPlannedVal">—</div></div>
         </div>
         <div class="cost-per-person" id="costPerPerson"></div>
-        <div class="cost-rate-note" id="costRateNote">טוענים שער המרה עדכני…</div>
+        <div class="cost-rate-note" id="costRateNote" data-en="Loading the current exchange rate…">טוענים שער המרה עדכני…</div>
       </div>
 
       <div class="section-head reveal" style="margin-top:32px">
-        <div class="eyebrow">לפי קטגוריה</div>
-        <h2>התפלגות הוצאות</h2>
+        <div class="eyebrow" data-en="By category">לפי קטגוריה</div>
+        <h2 data-en="Expense breakdown">התפלגות הוצאות</h2>
       </div>
       <div class="cost-breakdown" id="costBreakdown"></div>
 
       <div class="section-head reveal" style="margin-top:32px">
-        <div class="eyebrow">כל ההוצאות</div>
-        <h2>רשימה מלאה</h2>
+        <div class="eyebrow" data-en="All expenses">כל ההוצאות</div>
+        <h2 data-en="Full list">רשימה מלאה</h2>
       </div>
       <div class="files-toolbar">
-        <input type="text" id="costSearchInput" placeholder="🔍 חיפוש בהוצאות...">
-        <select id="costCategoryFilter"><option value="">כל הקטגוריות</option></select>
+        <input type="text" id="costSearchInput" placeholder="🔍 חיפוש בהוצאות..." data-en-placeholder="🔍 Search expenses...">
+        <select id="costCategoryFilter"><option value="" data-en="All categories">כל הקטגוריות</option></select>
         <select id="costStatusFilter">
-          <option value="">כל הסטטוסים</option>
-          <option value="paid">שולם</option>
-          <option value="unpaid">טרם שולם</option>
-          <option value="planned">מתוכנן</option>
+          <option value="" data-en="All statuses">כל הסטטוסים</option>
+          <option value="paid" data-en="Paid">שולם</option>
+          <option value="unpaid" data-en="Not paid yet">טרם שולם</option>
+          <option value="planned" data-en="Planned">מתוכנן</option>
         </select>
-        <select id="costDayFilter"><option value="">כל הימים</option></select>
+        <select id="costDayFilter"><option value="" data-en="All days">כל הימים</option></select>
       </div>
       <div class="cost-list file-grid" id="costList"></div>
       <div class="files-empty" id="costEmptyMsg" hidden></div>
 
-      <button class="upload-btn cost-add-btn" id="addExpenseBtn">＋ הוספת הוצאה</button>
+      <button class="upload-btn cost-add-btn" id="addExpenseBtn" data-en="＋ Add expense">＋ הוספת הוצאה</button>
     </div>
   </section>
 
   <section id="spontaneous">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="eyebrow">בלי תכנון מראש</div>
-        <h2>רגעים של יפן</h2>
-        <p>משאירים מקום ליפן הספונטנית — הרגעים הקטנים שלא מתכננים מראש, אלא פשוט קורים תוך כדי הטיול. אלה לא אטרקציות מתוזמנות, רק דברים ששווה לשים לב אליהם בדרך.</p>
+        <div class="eyebrow" data-en="No planning ahead">בלי תכנון מראש</div>
+        <h2 data-en="Moments of Japan">רגעים של יפן</h2>
+        <p data-en="Leaving room for spontaneous Japan — the small moments that aren't planned ahead, but just happen along the way. These aren't scheduled attractions, just things worth noticing as you go.">משאירים מקום ליפן הספונטנית — הרגעים הקטנים שלא מתכננים מראש, אלא פשוט קורים תוך כדי הטיול. אלה לא אטרקציות מתוזמנות, רק דברים ששווה לשים לב אליהם בדרך.</p>
       </div>
       <div class="chip-cloud reveal" id="spontChips"></div>
     </div>
@@ -1218,14 +1235,43 @@ footer b{color:var(--on-navy)}
 
 <footer>
   <div class="wrap">
-    <div><b>יפן 2026</b> — Isaac · Anat · Alon</div>
-    <div>אתר פרטי למשפחה, מוגן בסיסמה. לא מיועד להפצה ציבורית. <a href="#" id="logoutLink" style="color:inherit;text-decoration:underline">התנתקות</a></div>
+    <div><b data-en="Japan 2026">יפן 2026</b> — Isaac · Anat · Alon</div>
+    <div data-en-html='Private family site, password protected. Not for public distribution. <a href="#" id="logoutLink" style="color:inherit;text-decoration:underline">Log out</a>'>אתר פרטי למשפחה, מוגן בסיסמה. לא מיועד להפצה ציבורית. <a href="#" id="logoutLink" style="color:inherit;text-decoration:underline">התנתקות</a></div>
   </div>
 </footer>
 
 <script>
 (function(){
 "use strict";
+
+/* ===================== language ===================== */
+var LANG = (function(){
+  try{ return localStorage.getItem("jp2026_lang") === "en" ? "en" : "he"; }catch(e){ return "he"; }
+})();
+// Every *_EN array below is a full parallel version of its Hebrew source
+// array (same order, same non-text fields — day numbers, dates, badges,
+// Google Maps destinations) with just the display text translated. Each
+// render pass picks whichever array matches the current LANG once, up
+// front, so the rendering logic itself never has to know which language
+// it's building.
+function pick(he, en){ return LANG === "en" ? en : he; }
+// Static markup carries its own English text right on the element via
+// data-en/data-en-html, so a translation lives next to the Hebrew it
+// replaces instead of in a separate lookup table. Runs once, immediately
+// (the elements it targets are already in the DOM — this script tag
+// comes after them) rather than waiting for the rest of this IIFE.
+function applyStaticI18n(){
+  if(LANG !== "en") return;
+  document.title = "Japan 2026 — Isaac · Anat · Alon";
+  var metaDesc = document.querySelector('meta[name="description"]');
+  if(metaDesc) metaDesc.setAttribute("content", "Our family trip to Japan, October 14–26, 2026. Daily itinerary, transport, money and tips — all in one place.");
+  document.querySelectorAll("[data-en]").forEach(function(el){ el.textContent = el.getAttribute("data-en"); });
+  document.querySelectorAll("[data-en-html]").forEach(function(el){ el.innerHTML = el.getAttribute("data-en-html"); });
+  document.querySelectorAll("[data-en-placeholder]").forEach(function(el){ el.setAttribute("placeholder", el.getAttribute("data-en-placeholder")); });
+  document.querySelectorAll("[data-en-aria]").forEach(function(el){ el.setAttribute("aria-label", el.getAttribute("data-en-aria")); });
+  document.querySelectorAll("[data-en-title]").forEach(function(el){ el.setAttribute("title", el.getAttribute("data-en-title")); });
+}
+applyStaticI18n();
 
 /* ===================== data ===================== */
 
@@ -1465,6 +1511,242 @@ var DAYS = [
    ]}
 ];
 
+var DAYS_EN = [
+  {day:1, dateISO:"2026-10-14", weekday:"Wednesday", dateHe:"October 14", city:"Yokohama",
+   title:"Flight & Arrival in Japan", subtitle:"Flight & Arrival",
+   note:"Landing at Haneda isn't until 20:10 in the evening — today stays a travel-only day, no sightseeing. After the hotel, just rest.",
+   items:[
+     {time:"12:15", badges:["must","booked"], title:"Flight Sydney → Tokyo Haneda", desc:"Qantas QF059. Ticket issued. Estimated landing 20:10 (local time).", transport:"Sydney (SYD) → Tokyo Haneda (HND)",
+      dest:{name:"Tokyo Haneda Airport — Terminal 3 (International)", address:"2-6-5 Haneda, Ota City, Tokyo 144-0041, Japan", query:"Tokyo Haneda Airport Terminal 3"}},
+     {time:"20:10", badges:["must"], title:"Landing at Haneda, immigration and baggage", desc:"Passport control, baggage claim, and exit the airport.", transport:"Tokyo Haneda (HND)",
+      dest:{name:"Tokyo Haneda Airport — Terminal 3 (International)", address:"2-6-5 Haneda, Ota City, Tokyo 144-0041, Japan", query:"Tokyo Haneda Airport Terminal 3"}},
+     {time:"Evening", badges:["must"], title:"Transfer to Yokohama", desc:"Ride from Haneda to the Minatomirai area.", transport:"Haneda ← Yokohama / Minatomirai",
+      dest:{name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", address:"3-3-3 Minatomirai, Nishi Ward, Yokohama, Kanagawa 220-0012, Japan", query:"Mitsui Garden Hotel Yokohama Minatomirai Premier"},
+      route:{time:"approx. 45–60 min door to door", transfers:"approx. 1 transfer (usually in Yokohama)"}},
+     {time:"Late evening", badges:["must"], title:"Mitsui Garden Hotel Yokohama Minatomirai Premier", desc:"Check-in and sleep. A convenience store nearby if you need something small — no sightseeing planned tonight.", transport:"",
+      dest:{name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", address:"3-3-3 Minatomirai, Nishi Ward, Yokohama, Kanagawa 220-0012, Japan", query:"Mitsui Garden Hotel Yokohama Minatomirai Premier"}}
+   ]},
+  {day:2, dateISO:"2026-10-15", weekday:"Thursday", dateHe:"October 15", city:"Tokyo",
+   title:"Classic Tokyo · Ginza · Odaiba", subtitle:"Classic Tokyo · Ginza · Odaiba",
+   items:[
+     {time:"Morning", badges:["must"], title:"Asakusa & Senso-ji", desc:"Senso-ji Temple and the Nakamise shopping street.", transport:"Minatomirai ← Yokohama ← Tokyo / Asakusa",
+      dest:{name:"Senso-ji", address:"2-3-1 Asakusa, Taito City, Tokyo 111-0032, Japan", query:"Senso-ji, Asakusa, Tokyo"},
+      route:{time:"approx. 60–75 min door to door", transfers:"approx. 1–2 transfers"}},
+     {time:"Noon", badges:["must"], title:"Ginza", desc:"A walk through the shopping and architecture district.", transport:"Asakusa ← Ginza: Ginza metro line",
+      dest:{name:"Ginza 4-chome Crossing", address:"4-chome Ginza, Chuo City, Tokyo, Japan", query:"Ginza 4-chome Crossing, Tokyo"},
+      route:{time:"approx. 20–25 min", transfers:"direct, Ginza line"}},
+     {time:"Early afternoon", badges:["optional"], title:"UNIQLO Ginza", desc:"UNIQLO Ginza — a quick stop to check out the big Japanese flagship store. No shopping trip planned. About 20–30 minutes.", transport:"Walking in the Ginza area",
+      dest:{name:"UNIQLO TOKYO (Ginza flagship)", address:"Ginza Komatsu East Wing, 6-9-5 Ginza, Chuo City, Tokyo 104-0061, Japan", query:"UNIQLO Ginza flagship store, Tokyo"}},
+     {time:"Afternoon", badges:["must"], title:"Odaiba · DiverCity · Gundam", desc:"Full-size Gundam statue at DiverCity. Note: per recent info, the Unicorn Gundam statue exhibit ended in late August 2026 — worth checking again before this day in case there's a replacement/new statue.", transport:"Ginza/Shimbashi ← Daiba: Yurikamome",
+      dest:{name:"DiverCity Tokyo Plaza", address:"1-1-10 Aomi, Koto City, Tokyo 135-0064, Japan", query:"DiverCity Tokyo Plaza, Odaiba"},
+      route:{time:"approx. 25–35 min", transfers:"approx. 1 transfer (Yurikamome)"}}
+   ]},
+  {day:3, dateISO:"2026-10-16", weekday:"Friday", dateHe:"October 16", city:"Tokyo",
+   title:"Digital Art & Electric City", subtitle:"Digital Art & Electric City",
+   items:[
+     {time:"10:30", badges:["must","booked"], title:"teamLab Borderless · Azabudai Hills", desc:"Tickets already booked. Recommended to arrive 20–30 minutes early.", transport:"Yokohama ← Tokyo ← Kamiyacho / Roppongi-itchome",
+      dest:{name:"teamLab Borderless (Azabudai Hills)", address:"Azabudai Hills Garden Plaza B, B1F, 1-2-4 Azabudai, Minato City, Tokyo, Japan", query:"teamLab Borderless, Azabudai Hills, Tokyo"},
+      route:{time:"approx. 50–65 min door to door", transfers:"approx. 1–2 transfers"}},
+     {time:"Afternoon", badges:["must"], title:"Akihabara", desc:"Alon's gaming/anime day — Radio Kaikan, Super Potato, GiGO.", transport:"Azabudai ← Akihabara: metro/JR",
+      dest:[
+        {name:"Akihabara Radio Kaikan", address:"1-15-16 Sotokanda, Chiyoda City, Tokyo 101-0021, Japan", query:"Akihabara Radio Kaikan, Tokyo"},
+        {name:"Super Potato Akihabara", address:"1-11-2 Sotokanda, Chiyoda City, Tokyo 101-0021, Japan (floors 3–5)", query:"Super Potato Akihabara, Tokyo"},
+        {name:"GiGO Akihabara Building 3", address:"1-11-11 Sotokanda, Chiyoda City, Tokyo 101-0021, Japan", query:"GiGO Akihabara Building 3, Tokyo"}
+      ],
+      route:{time:"approx. 15–20 min", transfers:"approx. 1 transfer"}},
+     {time:"Evening", badges:["must"], title:"Tokyo Tower / Roppongi", desc:"Evening viewpoint and the Roppongi area.", transport:"Akihabara ← Roppongi area",
+      dest:{name:"Tokyo Tower", address:"4-2-8 Shiba-koen, Minato City, Tokyo 105-0011, Japan", query:"Tokyo Tower"},
+      route:{time:"approx. 25–35 min", transfers:"approx. 1 transfer"}}
+   ]},
+  {day:4, dateISO:"2026-10-17", weekday:"Saturday", dateHe:"October 17", city:"Tokyo",
+   title:"Meiji · Harajuku · Shibuya", subtitle:"Meiji · Harajuku · Shibuya",
+   items:[
+     {time:"Morning", badges:["must"], title:"Meiji Jingu & Yoyogi", desc:"A green, quiet start before the crowded areas.", transport:"Yokohama ← Harajuku / Meiji-jingumae",
+      dest:[
+        {name:"Meiji Jingu", address:"1-1 Yoyogikamizonocho, Shibuya City, Tokyo 151-8557, Japan", query:"Meiji Jingu, Tokyo"},
+        {name:"Yoyogi Park", address:"2-1 Yoyogikamizonocho, Shibuya City, Tokyo 151-0052, Japan", query:"Yoyogi Park, Tokyo"}
+      ],
+      route:{time:"approx. 60–70 min door to door", transfers:"approx. 1–2 transfers"}},
+     {time:"Noon", badges:["must"], title:"Harajuku & Omotesando", desc:"Fashion, design and architecture — as time allows.", transport:"Walking",
+      dest:[
+        {name:"Takeshita Street (Harajuku)", address:"Jingumae, Shibuya City, Tokyo, Japan", query:"Takeshita Street, Harajuku, Tokyo"},
+        {name:"Omotesando Hills", address:"4-12-10 Jingumae, Shibuya City, Tokyo 150-0001, Japan", query:"Omotesando Hills, Tokyo"}
+      ]},
+     {time:"Afternoon", badges:["must"], title:"Shibuya Parco", desc:"Nintendo Tokyo + Pokémon Center on floor 6.", transport:"Omotesando ← Shibuya",
+      dest:{name:"Shibuya PARCO", address:"15-1 Udagawacho, Shibuya City, Tokyo 150-0042, Japan", query:"Shibuya PARCO"},
+      route:{time:"approx. 10–15 min", transfers:"walk or one stop"}},
+     {time:"Sunset", badges:["must","weather"], title:"Shibuya Crossing & Shibuya Sky", desc:"Keep a window open for sunset when tickets open — weather dependent.", transport:"Walking",
+      dest:[
+        {name:"Shibuya Scramble Crossing", address:"Dogenzaka, Shibuya City, Tokyo, Japan (near Hachiko exit)", query:"Shibuya Scramble Crossing, Tokyo"},
+        {name:"Shibuya Sky", address:"Shibuya Scramble Square, 2-24-12 Shibuya, Shibuya City, Tokyo 150-0002, Japan", query:"Shibuya Sky, Tokyo"}
+      ]}
+   ]},
+  {day:5, dateISO:"2026-10-18", weekday:"Sunday", dateHe:"October 18", city:"Hakone",
+   title:"Transfer to Hakone", subtitle:"Transfer to Hakone",
+   note:"Today the big suitcases go straight from the Yokohama hotel to the Kyoto hotel by Takkyubin courier. We head to Hakone with just a small overnight bag — see the packing list below. Grandberry Park has two nice options (Snoopy Museum and ULTRA 4DX) — both optional and not yet booked, and the order between them isn't set yet (see below). If we do one or both, we won't also plan Yokohama's Sky Pool that same morning. Hakone — check-in, onsen and a relaxed evening — stays the top priority, and we won't push a too-late arrival there.",
+   highlight:{
+     icon:"🎬",
+     title:"ULTRA 4DX — a special cinema experience",
+     subtitle:"109 Cinemas Grandberry Park",
+     badges:["priority","notbooked","scheduledep"],
+     quote:"The experience we want to try in Japan: 4DX combined with SCREENX — comfortable seats, physical effects (wind, vibration, water and more), and screens that wrap around the viewer up to about 270°.",
+     note:"It's in the same Grandberry Park as the Snoopy Museum, so we'll try to combine both experiences in the same morning/afternoon before heading to Hakone — without deciding right now which comes first.",
+     warning:"⚠️ We'll only fit this in if there's an early morning/afternoon screening that doesn't affect arrival in Hakone. If the available screening would make us arrive in Gora too late, we won't squeeze it into this day.",
+     plan:[
+       {ic:"🐶", text:"Snoopy Museum Tokyo"},
+       {ic:"🎬", text:"ULTRA 4DX"},
+       {ic:"🍴", text:"Lunch / light coffee — flexible"},
+       {ic:"🛍️", text:"A short wander around Grandberry Park if time allows — not required"}
+     ],
+     tag:"Especially suited to Alon",
+     officialUrl:"https://109cinemas.net/grandberrypark/",
+     ticketLabel:"🎟️ Tickets & showtimes"
+   },
+   items:[
+     {time:"09:15", badges:["must"], title:"Leave the hotel + suitcase forwarding · Takkyubin", desc:"Breakfast and check-out. The big suitcases go straight to the Kyoto hotel — we take only a small overnight bag.", transport:"Yokohama hotel ← Kyoto hotel (forwarding) / Yokohama ← Minami-machida",
+      dest:{name:"Minami-machida Grandberry Park", address:"3-4-1 Tsuruma, Machida, Tokyo 194-0004, Japan", query:"Minami-machida Grandberry Park, Tokyo"},
+      route:{time:"approx. 60–80 min door to door", transfers:"approx. 1–2 transfers"}},
+     {time:"Morning", badges:["optional","notbooked"], title:"Snoopy Museum Tokyo", desc:"Optional stop at Minami-machida Grandberry Park — Snoopy Museum and Brown's Store, and maybe a quick look at the park. About 1.5–2 hours. The order against ULTRA 4DX (which first) will be set once the Oct 18 showtimes are published.", transport:"Yokohama ← Minami-machida Grandberry Park", official:"https://snoopymuseum.tokyo/",
+      dest:{name:"Snoopy Museum Tokyo", address:"3-1-4 Tsuruma, Machida, Tokyo 194-0004, Japan", query:"Snoopy Museum Tokyo, Machida"}},
+     {time:"Morning/noon", badges:["optional","notbooked","priority"], title:"ULTRA 4DX · 109 Cinemas Grandberry Park", desc:"4DX+SCREENX screening — only if there's an early morning/afternoon showtime that doesn't affect arrival in Hakone. Film and time not yet chosen.", transport:"Minami-machida Grandberry Park", official:"https://109cinemas.net/grandberrypark/",
+      dest:{name:"109 Cinemas Grandberry Park", address:"3-4-1 Tsuruma, Machida, Tokyo 194-0004, Japan (Grandberry Park 2F)", query:"109 Cinemas Grandberry Park, Machida"}},
+     {time:"Flexible", badges:["optional"], title:"Light lunch", desc:"Only if there's time left after Snoopy and/or ULTRA 4DX — won't delay departure for Hakone.", transport:""},
+     {time:"Afternoon", badges:["must"], title:"On to Hakone / Gora", desc:"Ride toward Hakone-Yumoto and then Gora. Exact time depends on what happens at Grandberry Park in the morning.", transport:"Minami-machida ← Odawara ← Hakone Tozan Railway ← Gora",
+      dest:{name:"Laforet Hakone Gora Yunosumika", address:"1320 Gora, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan", query:"Laforet Hakone Gora Yunosumika"},
+      route:{time:"approx. 2–2.5 hours door to door", transfers:"approx. 2–3 transfers (Odawara, Hakone-Yumoto)"}},
+     {time:"Evening", badges:["must"], title:"Laforet Hakone Gora Yunosumika", desc:"Check-in, onsen and dinner.", transport:"Gora ← hotel shuttle / local access",
+      dest:{name:"Laforet Hakone Gora Yunosumika", address:"1320 Gora, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan", query:"Laforet Hakone Gora Yunosumika"}}
+   ]},
+  {day:6, dateISO:"2026-10-19", weekday:"Monday", dateHe:"October 19", city:"Hakone → Kyoto",
+   title:"Hakone Loop · Mt Fuji · Shinkansen", subtitle:"Hakone Loop · Mt Fuji · Shinkansen",
+   items:[
+     {time:"09:00", badges:["must"], title:"Hakone Open-Air Museum", desc:"The open-air sculpture museum — good to start early.", transport:"Gora ← Chokoku-no-Mori: Hakone Tozan Railway",
+      dest:{name:"Hakone Open-Air Museum", address:"1121 Ninotaira, Hakone, Ashigarashimo District, Kanagawa 250-0493, Japan", query:"Hakone Open-Air Museum"},
+      route:{time:"approx. 10 min", transfers:"direct, Hakone Tozan Railway"}},
+     {time:"Late morning", badges:["must","weather"], title:"Gora ← Sounzan ← Owakudani", desc:"Cable car, then ropeway. The Fuji view depends on the weather.", transport:"Gora ← Cable Car ← Sounzan ← Ropeway ← Owakudani",
+      dest:{name:"Owakudani", address:"Owakudani, Hakone, Ashigarashimo District, Kanagawa, Japan", query:"Owakudani Ropeway Station, Hakone"},
+      route:{time:"approx. 25–30 min", transfers:"1 transfer (Sounzan: Cable Car → Ropeway)"}},
+     {time:"Noon", badges:["must"], title:"Togendai & Lake Ashi cruise", desc:"Continue by ropeway to Togendai, then a cruise on Lake Ashi.", transport:"Owakudani ← Togendai ← boat cruise",
+      dest:{name:"Togendai Port (Lake Ashi)", address:"164-17 Motohakone, Hakone, Ashigarashimo District, Kanagawa 250-0522, Japan", query:"Togendai Ropeway Station, Hakone"},
+      route:{time:"approx. 15–20 min", transfers:"direct, Ropeway"}},
+     {time:"Late afternoon", badges:["must"], title:"Hakone ← Mishima ← Kyoto", desc:"On to Mishima and onto the Tokaido Shinkansen to Kyoto.", transport:"Hakone area ← Mishima ← Tokaido Shinkansen ← Kyoto",
+      dest:[
+        {name:"Mishima Station", address:"16-1 Ichibancho, Mishima, Shizuoka 411-0036, Japan", query:"Mishima Station, Shizuoka"},
+        {name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", address:"339 Nushiyacho, Karasuma-dori Oike-sagaru, Nakagyo Ward, Kyoto, 604-0843, Japan", query:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike"}
+      ],
+      route:{time:"approx. 2.5–3 hours to the Kyoto hotel", transfers:"approx. 2 transfers (Togendai↔Mishima by bus, then Shinkansen)"}}
+   ]},
+  {day:7, dateISO:"2026-10-20", weekday:"Tuesday", dateHe:"October 20", city:"Kyoto",
+   title:"Arashiyama · Kinkaku-ji · Design", subtitle:"Arashiyama · Kinkaku-ji · Design",
+   items:[
+     {time:"Early", badges:["must"], title:"Arashiyama Bamboo Grove", desc:"Best to arrive as early as possible, before the crowds.", transport:"Karasuma Oike ← Arashiyama: metro + JR/Hankyu",
+      dest:{name:"Arashiyama Bamboo Grove", address:"Sagano, Ukyo Ward, Kyoto, Japan", query:"Arashiyama Bamboo Grove, Kyoto"},
+      route:{time:"approx. 30–40 min", transfers:"approx. 1 transfer"}},
+     {time:"Morning", badges:["must"], title:"Tenryu-ji", desc:"A temple and garden next to the bamboo grove.", transport:"Walking",
+      dest:{name:"Tenryu-ji", address:"68 Susukinobaba-cho, Saga Tenryuji, Ukyo Ward, Kyoto 616-8385, Japan", query:"Tenryu-ji, Arashiyama, Kyoto"}},
+     {time:"Noon", badges:["must"], title:"Kinkaku-ji", desc:"The Golden Pavilion.", transport:"Arashiyama ← Kinkaku-ji: bus/taxi",
+      dest:{name:"Kinkaku-ji", address:"1 Kinkakujicho, Kita Ward, Kyoto 603-8361, Japan", query:"Kinkaku-ji, Kyoto"},
+      route:{time:"approx. 25–35 min", transfers:"direct bus or taxi"}},
+     {time:"Afternoon", badges:["optional"], title:"Ace Hotel / ShinPuhKan", desc:"Coffee and a break near the hotel.", transport:"Back to Karasuma Oike",
+      dest:[
+        {name:"Ace Hotel Kyoto", address:"245-2 Kurumayacho, Nakagyo Ward, Kyoto, 604-8185, Japan", query:"Ace Hotel Kyoto"},
+        {name:"ShinPuhKan", address:"Karasuma-dori, Nakagyo Ward, Kyoto (above Karasuma Oike Station), Japan", query:"Shinpuhkan, Kyoto"}
+      ],
+      route:{time:"approx. 15–20 min", transfers:"direct, close to the hotel"}}
+   ]},
+  {day:8, dateISO:"2026-10-21", weekday:"Wednesday", dateHe:"October 21", city:"Kyoto",
+   title:"Fushimi Inari · Kiyomizu · Gion", subtitle:"Fushimi Inari · Kiyomizu · Gion",
+   items:[
+     {time:"Early", badges:["must"], title:"Fushimi Inari", desc:"Leave early to beat the crowds at the torii gates.", transport:"Karasuma Oike ← Kyoto/Keihan/JR ← Fushimi Inari",
+      dest:{name:"Fushimi Inari Taisha", address:"68 Fukakusa Yabunouchicho, Fushimi Ward, Kyoto 612-0882, Japan", query:"Fushimi Inari Taisha, Kyoto"},
+      route:{time:"approx. 20–25 min", transfers:"direct, JR Nara line"}},
+     {time:"Noon", badges:["must"], title:"Kiyomizu-dera", desc:"A temple with an open view over the city.", transport:"Fushimi ← Kiyomizu-Gojo: bus",
+      dest:{name:"Kiyomizu-dera", address:"1-294 Kiyomizu, Higashiyama Ward, Kyoto 605-0862, Japan", query:"Kiyomizu-dera, Kyoto"},
+      route:{time:"approx. 25–30 min", transfers:"approx. 1 transfer"}},
+     {time:"Afternoon", badges:["must"], title:"Ninenzaka · Sannenzaka · Gion", desc:"An easy walk from the historic district toward Gion.", transport:"Walking",
+      dest:[
+        {name:"Sannenzaka Slope", address:"Kiyomizu, Higashiyama Ward, Kyoto, Japan", query:"Sannenzaka, Kyoto"},
+        {name:"Gion (Hanamikoji Street)", address:"Gion, Higashiyama Ward, Kyoto, Japan", query:"Hanamikoji Street, Gion, Kyoto"}
+      ]}
+   ]},
+  {day:9, dateISO:"2026-10-22", weekday:"Thursday", dateHe:"October 22", city:"Kyoto",
+   title:"Nijo Castle · Philosopher's Path", subtitle:"Nijo Castle · Philosopher's Path",
+   note:"Option for today: shorten part of the Philosopher's Path in the afternoon to make time for a cat-café stop.",
+   items:[
+     {time:"Morning", badges:["must"], title:"Nijo Castle", desc:"Relatively close to the hotel — an efficient start to the day.", transport:"Karasuma Oike ← Nijojo-mae: Tozai line",
+      dest:{name:"Nijo Castle", address:"541 Nijojocho, Horikawa-nishiiru, Nijo-dori, Nakagyo Ward, Kyoto, Japan", query:"Nijo Castle, Kyoto"},
+      route:{time:"approx. 10 min", transfers:"direct, Tozai line"}},
+     {time:"Afternoon", badges:["must"], title:"Ginkaku-ji & the Philosopher's Path", desc:"The Silver Pavilion and a walk along the Philosopher's Path.", transport:"Nijo area ← eastern Kyoto: metro/bus",
+      dest:[
+        {name:"Ginkaku-ji", address:"2 Ginkakujicho, Sakyo Ward, Kyoto 606-8402, Japan", query:"Ginkaku-ji, Kyoto"},
+        {name:"Philosopher's Path", address:"Sakyo Ward, Kyoto, Japan", query:"Philosopher's Path, Kyoto"}
+      ],
+      route:{time:"approx. 25–35 min", transfers:"approx. 1 transfer"}},
+     {time:"Late afternoon", badges:["optional"], title:"Cat Café MOCHA Kyoto Kawaramachi", desc:"A pleasant family stop with cats — only if we shorten part of the Philosopher's Path. Follow the café's rules and let the cats approach on their own terms, without chasing or waking them.", transport:"Central Kyoto, Kawaramachi", official:"https://catmocha.jp/en/shoplist/",
+      dest:{name:"Cat Café MOCHA Kyoto Kawaramachi", address:"mina 4F, 58 Kawaramachi-dori Sanjo-sagaru Daikokucho, Nakagyo Ward, Kyoto 604-8031, Japan", query:"Cat Cafe MOCHA Kyoto Kawaramachi"}}
+   ]},
+  {day:10, dateISO:"2026-10-23", weekday:"Friday", dateHe:"October 23", city:"Nara",
+   title:"Day Trip to Nara", subtitle:"Day Trip to Nara",
+   items:[
+     {time:"Morning", badges:["must"], title:"Kyoto ← Nara", desc:"The Kintetsu Nara train is very convenient and arrives close to the center of Nara Park.", transport:"Kyoto ← Kintetsu Nara / JR Nara",
+      dest:{name:"Nara Park", address:"Nara Park, Nara, Nara Prefecture, Japan", query:"Nara Park"},
+      route:{time:"approx. 45–50 min", transfers:"direct, Kintetsu Nara line"}},
+     {time:"Day", badges:["must"], title:"Nara Park & Todai-ji", desc:"The free-roaming deer, the Great Buddha, and Nara Park.", transport:"Walking",
+      dest:[
+        {name:"Nara Park", address:"Nara Park, Nara, Nara Prefecture, Japan", query:"Nara Park"},
+        {name:"Todai-ji", address:"1 Zoshicho, Nara, Nara Prefecture, Japan", query:"Todai-ji, Nara"}
+      ]},
+     {time:"Evening", badges:["must"], title:"Back to Kyoto", desc:"Back for dinner in Kyoto.", transport:"Nara ← Kyoto",
+      dest:{name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", address:"339 Nushiyacho, Karasuma-dori Oike-sagaru, Nakagyo Ward, Kyoto, 604-0843, Japan", query:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike"},
+      route:{time:"approx. 45–50 min", transfers:"direct, Kintetsu line"}}
+   ]},
+  {day:11, dateISO:"2026-10-24", weekday:"Saturday", dateHe:"October 24", city:"Osaka",
+   title:"Kyoto → Osaka · Gaming & Neon", subtitle:"Kyoto → Osaka · Gaming & Neon",
+   items:[
+     {time:"Morning", badges:["must"], title:"Check-out and train to Osaka", desc:"Travel to Osaka, toward The Peak Namba West.", transport:"Kyoto ← Osaka/Namba: approx. 30–60 min depending on the train",
+      dest:{name:"The Peak Namba West", address:"5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka, 556-0012, Japan", query:"The Peak Namba West, Osaka"},
+      route:{time:"approx. 30–60 min", transfers:"depends on the train — direct to 1 transfer"}},
+     {time:"Afternoon", badges:["must","booked"], title:"The Peak Namba West — check-in", desc:"A rental apartment for up to 4 guests — 2 double beds, about 32 m², private bathroom and shower, Wi-Fi. Check-in from 15:00.", transport:"Namba area",
+      dest:{name:"The Peak Namba West", address:"5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka, 556-0012, Japan", query:"The Peak Namba West, Osaka"}},
+     {time:"Afternoon", badges:["must"], title:"Den Den Town", desc:"Electronics, anime, gaming and retro.", transport:"Namba ← Nipponbashi: walk/metro",
+      dest:{name:"Nipponbashi Den Den Town", address:"4-9 Nipponbashi, Naniwa Ward, Osaka 556-0005, Japan", query:"Den Den Town, Nipponbashi, Osaka"},
+      route:{time:"approx. 10–15 min", transfers:"walking"}},
+     {time:"Evening", badges:["must"], title:"Dotonbori", desc:"Neon lights, the canal, and Osaka's atmosphere.", transport:"Walking",
+      dest:{name:"Dotonbori (Glico Sign)", address:"Dotonbori, Chuo Ward, Osaka, Japan", query:"Glico Sign, Dotonbori, Osaka"}}
+   ]},
+  {day:12, dateISO:"2026-10-25", weekday:"Sunday", dateHe:"October 25", city:"Osaka",
+   title:"Osaka — Kaiyukan Day", subtitle:"Osaka — Kaiyukan Day",
+   note:"Route decision: this year Osaka Aquarium Kaiyukan replaces Osaka Castle as the day's main attraction. No additional visit to the castle is planned.",
+   items:[
+     {time:"Morning", badges:["optional"], title:"Relaxed breakfast", desc:"At the apartment or around Namba, no rush.", transport:""},
+     {time:"Late morning", badges:["must"], title:"Osaka Aquarium Kaiyukan", desc:"Today's main attraction. Recommended to spend about 2–3 hours inside the aquarium.", transport:"Namba ← Osakako: metro", official:"https://www.kaiyukan.com/language/eng/",
+      dest:{name:"Osaka Aquarium Kaiyukan", address:"1-1-10 Kaigandori, Minato Ward, Osaka 552-0022, Japan", query:"Osaka Aquarium Kaiyukan"},
+      route:{time:"approx. 20–25 min", transfers:"direct, Chuo line"}},
+     {time:"Noon", badges:["must"], title:"Tempozan Marketplace", desc:"Lunch, shops, desserts and a rest. With the aquarium this fills about a full half-day — no rush.", transport:"Walking from the aquarium",
+      dest:{name:"Tempozan Marketplace", address:"1-1-10 Kaigandori, Minato Ward, Osaka 552-0022, Japan", query:"Tempozan Marketplace, Osaka"}},
+     {time:"Afternoon / evening", badges:["optional"], title:"Umeda Sky Building", desc:"Only if there's still energy and the aquarium didn't run long — not required.", transport:"Osakako ← Umeda",
+      dest:{name:"Umeda Sky Building", address:"1-1-88 Oyodonaka, Kita Ward, Osaka 531-6023, Japan", query:"Umeda Sky Building, Osaka"},
+      route:{time:"approx. 25–35 min", transfers:"approx. 1 transfer"}},
+     {time:"Evening", badges:["flexible"], title:"Farewell dinner in Osaka", desc:"A pleasant last evening in Osaka, no rushing between attractions.", transport:""}
+   ]},
+  {day:13, dateISO:"2026-10-26", weekday:"Monday", dateHe:"October 26", city:"Osaka",
+   title:"Last Day in Osaka → Dubai → Tel Aviv", subtitle:"Osaka → Kansai → Dubai → Tel Aviv",
+   note:"The flight out of Osaka doesn't leave until 23:10, so October 26 stays a fully usable day in Osaka — without automatically adding another big attraction. The flight returns via Dubai, landing in Tel Aviv on the morning of October 27.",
+   items:[
+     {time:"Morning", badges:["must"], title:"The Peak Namba West — check-out", desc:"Check-out by 11:00. Collect all luggage and gear; suitcases can be left at a suitable storage counter for the rest of the day.", transport:"",
+      dest:{name:"The Peak Namba West", address:"5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka, 556-0012, Japan", query:"The Peak Namba West, Osaka"}},
+     {time:"Late morning / afternoon", badges:["optional"], title:"A relaxed last day in Osaka", desc:"Last-minute shopping, lunch and free time — no additional big attraction.", transport:""},
+     {time:"Late afternoon", badges:["must"], title:"Collect luggage and head to the airport", desc:"Pick up the stored luggage and continue toward Kansai.", transport:"",
+      dest:{name:"Kansai International Airport — Terminal 1", address:"1 Senshukukokita, Izumisano, Osaka 549-0001, Japan", query:"Kansai International Airport Terminal 1"},
+      route:{time:"approx. 45–60 min from Namba", transfers:"direct (Nankai Rapi:t / JR Haruka)"}},
+     {time:"Afternoon/evening", badges:["must","notbooked"], title:"Ride to Kansai International Airport (KIX)", desc:"The recommended departure time from Osaka will be worked out later based on the chosen way to the airport — no specific train booking set for now.", transport:"Namba ← KIX: Nankai Rapi:t or JR Kansai Airport Line / Haruka",
+      dest:{name:"Kansai International Airport — Terminal 1", address:"1 Senshukukokita, Izumisano, Osaka 549-0001, Japan", query:"Kansai International Airport Terminal 1"},
+      route:{time:"approx. 45–60 min from Namba", transfers:"direct (Nankai Rapi:t / JR Haruka)"}},
+     {time:"23:10", badges:["must","booked"], title:"Flight Osaka Kansai → Dubai", desc:"Emirates EK317. Landing in Dubai 05:25 on October 27 (local time).", transport:"Osaka Kansai (KIX) → Dubai (DXB)"},
+     {time:"10/27 · 07:15", badges:["must","booked"], title:"Connecting flight Dubai → Tel Aviv", desc:"EK2369, operated in practice as FZ1549. Landing in Tel Aviv 09:10.", transport:"Dubai (DXB) → Tel Aviv (TLV)"}
+   ]}
+];
+
 var ROUTE = [
   {name:"Yokohama / Tokyo", days:"ימים 1–4", desc:"נחיתה, טוקיו הקלאסית וטוקיו הדיגיטלית."},
   {name:"Hakone", days:"ימים 5–6", desc:"אונסן, מוזיאון פיסול ותצפית לפוג׳י."},
@@ -1584,6 +1866,143 @@ var APPS = [
 
 var SPONT = ["מינימרקט","סופרמרקט","מכונה אוטומטית","גשאפון","ארקייד","קניון יפני","בית קפה","קינוח","משקה מוזר","טלוויזיה יפנית במלון","לשבת ולצפות בחיי היומיום"];
 
+var ROUTE_EN = [
+  {name:"Yokohama / Tokyo", days:"Days 1–4", desc:"Landing, classic Tokyo, and digital Tokyo."},
+  {name:"Hakone", days:"Days 5–6", desc:"Onsen, a sculpture museum, and a Fuji viewpoint."},
+  {name:"Kyoto", days:"Days 7–9", desc:"Temples, bamboo, and historic districts."},
+  {name:"Nara", days:"Day 10", desc:"Day trip — deer and Nara Park."},
+  {name:"Osaka", days:"Days 11–13", desc:"Neon, the aquarium, and the flight home."}
+];
+
+var HOTELS_EN = [
+  {region:"Yokohama / Tokyo", dates:"October 14–18 · 4 nights", name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", status:"paid",
+   details:["One room for three adults.", "Sky Pool in the morning before departure — only if we're not doing the Snoopy Museum and/or ULTRA 4DX that day (see Day 5)."],
+   dest:{name:"Mitsui Garden Hotel Yokohama Minatomirai Premier", address:"3-3-3 Minatomirai, Nishi Ward, Yokohama, Kanagawa 220-0012, Japan", query:"Mitsui Garden Hotel Yokohama Minatomirai Premier"}},
+  {region:"Hakone", dates:"October 18–19 · one night", name:"Laforet Hakone Gora Yunosumika", status:"booked",
+   details:["A Japanese-Western room for three.", "Onsen and dinner at the hotel."],
+   dest:{name:"Laforet Hakone Gora Yunosumika", address:"1320 Gora, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan", query:"Laforet Hakone Gora Yunosumika"}},
+  {region:"Kyoto", dates:"October 19–24 · 5 nights", name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", status:"paid",
+   details:["Two twin rooms — parents and Alon separately."],
+   dest:{name:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike", address:"339 Nushiyacho, Karasuma-dori Oike-sagaru, Nakagyo Ward, Kyoto, 604-0843, Japan", query:"Shizutetsu Hotel Prezio Kyoto Karasuma Oike"}},
+  {region:"Osaka", dates:"October 24–26 · 2 nights", name:"The Peak Namba West", status:"paid",
+   details:[
+     "Address: 5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka City, Osaka Prefecture 556-0012, Japan",
+     "Check-in: October 24, from 15:00 · Check-out: October 26, by 11:00",
+     "A rental apartment for up to 4 guests — 2 double beds, about 32 m²",
+     "Private bathroom and shower, Wi-Fi. No meals.",
+     "Amount paid: A$322.84 — confirmed and paid in full",
+     "Free cancellation until 23:59 local hotel time on October 17, 2026. After that — no refund."
+   ],
+   dest:{name:"The Peak Namba West", address:"5-6 Shikitsu Higashi 1-chome, Naniwa Ward, Osaka, 556-0012, Japan", query:"The Peak Namba West, Osaka"}}
+];
+var HOTEL_STATUS_LABEL_EN = {booked:"✓ Booked", paid:"✓ Booked and paid"};
+
+var LEGEND_LABEL_EN = {must:"★ Must", optional:"○ Optional", booked:"✓ Booked", notbooked:"! Not booked yet", flexible:"↔ Flexible", weather:"☀ Weather dependent", priority:"⭐ High priority", scheduledep:"🎞️ Depends on showtimes"};
+
+var PACK_HAKONE_EN = ["Passports","Wallet / credit cards","Phones","Chargers","Power bank","Medications","Glasses / contacts if needed","Change of clothes","Underwear and socks","Basic toiletries","Personal items","Tickets / important confirmations","Valuables not sent in the suitcase"];
+var PACK_JAPAN_EN = ["Passports","Travel insurance","Flight confirmations","Hotel confirmations","teamLab QR / ticket","Attraction tickets","eSIM / internet connection","Visit Japan Web","Medications and related documents if needed","Chargers","Power banks","Japan-compatible power adapter","Comfortable walking shoes","A light layer / umbrella per forecast","Offline copies of important documents"];
+
+var TIPS_EN = [
+  {ico:"🚆", title:"Transport", body:["Google Maps is very useful for navigating between stations and routes.","The Japan Travel by NAVITIME app helps with train planning.","IC cards like Suica / PASMO / ICOCA are handy for everyday transport.","An IC card isn't automatically a Shinkansen ticket — you need a separate ticket.","We don't list exact platform numbers here in advance, since they can change."]},
+  {ico:"🚃", title:"Riding trains", body:["Line up in the marked areas on the platform.","Let passengers get off first, before boarding.","Keep quiet and speak in a low voice.","Avoid phone calls in suburban train cars.","Keep bags close to you and don't block the aisle.","Eating is generally fine on intercity trains like the Shinkansen; on regular suburban trains it's better to avoid eating."]},
+  {ico:"🏪", title:"Convenience stores", body:["Worth experiencing: 7-Eleven, FamilyMart, Lawson.","Handy for breakfast, drinks, snacks, onigiri, desserts and emergency supplies."]},
+  {ico:"🥤", title:"Vending machines", body:["A natural, fun part of everyday life in Japan — not an attraction in itself, but a small experience worth embracing along the way."]},
+  {ico:"♨️", title:"Onsen", body:["Shower and wash thoroughly before entering the water.","No swimsuits in traditional baths.","Towels generally don't go into the water.","Worth checking the specific hotel's tattoo policy in advance.","Keep a quiet, relaxed atmosphere."]},
+  {ico:"⛩️", title:"Temples and Shinto shrines", body:["Behave respectfully — low voices, no shouting or running.","Don't photograph in places marked as off-limits for photography.","Keep distance and quiet near prayer areas."]},
+  {ico:"💴", title:"Tipping", body:["Tipping generally isn't customary in Japan — no need to leave a tip."]},
+  {ico:"🗑️", title:"Trash", body:["Public trash cans are limited in Japan.","Worth carrying a small trash bag with you until you find a bin."]},
+  {ico:"🌸", title:"Perfume and scent", body:["In small restaurants and shared spaces it's better to wear light perfume or none at all — a courteous gesture, not a strict rule."]},
+  {ico:"🪜", title:"Escalators", body:["Stand safely on escalators; no need to adopt any particular local habit of standing on one side."]},
+  {ico:"👟", title:"Shoes and tatami floors", body:["Take off shoes when asked, and don't step on tatami with shoes or slippers.","Bathroom slippers stay in the bathroom area only."]},
+  {ico:"🥢", title:"Chopsticks", body:["Don't stick chopsticks upright in rice.","Don't pass food directly from chopsticks to chopsticks.","In pay areas with a tray — leave money on the tray, not in hand."]},
+  {ico:"👘", title:"Geisha, maiko and geiko", body:["Don't chase, touch or block maiko/geiko in the street.","Respect private alleys and entrances and no-photography signs."]},
+  {ico:"📺", title:"Japanese hotel TV", body:["Doraemon and Pokémon air on different channels between the Tokyo area and the Kansai area — worth checking the specific hotel's channel guide.","The NHK WORLD-JAPAN app gives news coverage and English content when it's hard to follow locally.","Useful words on the remote: 番組表 = programme guide, 字幕 = subtitles (usually in Japanese).","Air times vary and aren't guaranteed — a nice option for a relaxed hotel evening, not a reason to rush back."]}
+];
+
+var FOOD_EN = [
+  {ico:"🍔", title:"Familiar chains — mainly for Alon", sub:"Always check the ingredients at the branch",
+   intro:"Familiar fast-food chains that are easy to find at almost any station.",
+   body:[
+     {name:"MOS Burger", note:"Japanese-style burgers — worth checking the teriyaki option.", url:"https://www.mos.jp/inbound/en/"},
+     {name:"Sukiya / Yoshinoya / Matsuya", note:"Quick beef-rice bowls (gyudon). Matsuya also has curry and grilled dishes."},
+     {name:"Marugame Seimen", note:"Quick udon, tempura and toppings — check the broth and tempura ingredients.", url:"https://jp.marugame.com/en/menu/"},
+     {name:"Pepper Lunch", note:"Meat and rice on a hot plate, cooked to the instructions on the plate."},
+     {name:"CoCo Ichibanya", note:"Build-your-own Japanese curry — check spice level and ingredients, don't assume the base is meat-free.", url:"https://www.ichibanya.co.jp/"},
+     {name:"Nakau", note:"Oyakodon (chicken and egg over rice) could suit Alon."},
+     {name:"Kura Sushi / Sushiro / Hama Sushi", note:"Conveyor-belt sushi — pick tuna, cooked fish, egg or vegetables to taste."},
+     {name:"A familiar Western fallback", note:"McDonald's, KFC, Burger King, Subway and the like — available almost everywhere."}
+   ]},
+  {ico:"🐟", title:"Options that also work for the parents", sub:"Fish, vegetables, egg and cheese — no meat and no seafood",
+   intro:"Anat and Itzik eat fish, vegetables, eggs and cheese — no meat and no seafood. A soup, sauce or coating on a fish/vegetable/noodle dish might contain something else — don't assume the name alone settles it.",
+   body:[
+     {name:"Obon de Gohan (MARK IS Minatomirai)", note:"Set meals with separate fish and meat options — worth checking.", url:"https://www.mec-markis.jp/mm/shop/detail/?act=7984"},
+     {name:"Yayoiken", note:"Another set-meal chain — check fish options for the parents and chicken/beef for Alon.", url:"https://www.yayoiken.com/en/"},
+     {name:"Pizza", note:"All three love pizza — a handy fallback when it's hard to find something that suits everyone."}
+   ]},
+  {ico:"🥤", title:"Drinks and mocktails", sub:"No alcohol by default",
+   intro:"Alon enjoys fizzy, fruity drinks — peach, mango, pineapple and lychee/lemonade — plus iced coffee, milk tea, hot chocolate and sweet matcha.",
+   body:[
+     {name:"C.C. Lemon", note:"A sweet, light lemon drink — also available from vending machines.", url:"https://www.suntory.co.jp/softdrink/cclemon/"},
+     {name:"Mitsuya Cider", note:"Japanese carbonated soda (the name \"cider\" doesn't mean alcohol!) — includes fruit versions.", url:"https://www.asahiinryo.co.jp/products/mitsuya/"},
+     {name:"Calpis Soda", note:"A sweet, tangy, milky drink — peach and pineapple versions available.", url:"https://www.asahiinryo.co.jp/products/calpis/"},
+     {name:"Fruit mocktail at a hotel café/bar", note:"Ask for peach, pineapple, mango, lychee, lemon or yuzu with soda — and specifically say no alcohol."},
+     {name:"Melon soda / cream soda", note:"A sweet drink-dessert to share at a café."}
+   ],
+   noteBelow:"If you're checking a packaged drink that looks like a mocktail — check the alcohol percentage on the label. Only an explicit 0.00% guarantees alcohol-free; \"Zero\" alone can refer only to sugar or calories."},
+  {ico:"🍡", title:"Desserts and cafés to stop at", sub:"Including dango and mochi — the flavor Alon liked",
+   body:[
+     {name:"Purin", note:"Classic Japanese caramel pudding — a small, easy dessert stop."},
+     {name:"Japanese cheesecake / basque cheesecake", note:"A fluffy, soft version, or a richer version."},
+     {name:"Dango and mochi / daifuku", note:"Chewy rice sweets — Alon mentioned he likes the texture."},
+     {name:"Taiyaki", note:"A fish-shaped cake filled with cream/chocolate/matcha — check the actual filling, the shape doesn't mean fish."},
+     {name:"Soft serve", note:"Flavors to look out for: Hokkaido milk, matcha-vanilla, hojicha, black sesame, kinako."},
+     {name:"Fruit parfait / strawberry cake", note:"A nice café dessert to share."},
+     {name:"Komeda Coffee — Shiro-Noir", note:"A warm Danish-style croissant with soft serve, the chain's signature dessert.", url:"https://www.komeda.co.jp/menu/detail.html?cat=1-3&item=10213"},
+     {name:"Mister Donut", note:"A simple, convenient donut and drink stop.", url:"https://www.misterdonut.jp/m_menu/"},
+     {name:"nana's green tea", note:"Matcha drinks and desserts.", url:"https://www.nanasgreentea.com/"},
+     {name:"Stumptown at Ace Hotel Kyoto", note:"Already built into the coffee stop on October 20.", url:"https://acehotel.com/kyoto/eat-drink/"}
+   ]},
+  {ico:"🛍️", title:"More shopping and arcade ideas", sub:"Browse along the way — not fixed additions",
+   body:[
+     {name:"MARK IS Minatomirai", note:"Close to the Yokohama hotel — CAPCOM STORE, gashapon and a food court.", url:"https://www.mec-markis.jp/mm/floor/floor_4.html"},
+     {name:"Kyoto Takashimaya", note:"Food and shopping if you're around in Kyoto.", url:"https://www.takashimaya.co.jp/kyoto/departmentstore/"},
+     {name:"Namba Parks", note:"Close to the Osaka base — shops, food and rooftop gardens.", url:"https://nambaparks.com/"}
+   ]}
+];
+
+var APPS_EN = [
+  {ico:"🗺️", name:"Google Maps"},
+  {ico:"🌐", name:"Google Translate"},
+  {ico:"🚄", name:"Japan Travel by NAVITIME"},
+  {ico:"💳", name:"Apple Wallet / IC card"},
+  {ico:"🛂", name:"Visit Japan Web"},
+  {ico:"🛡️", name:"Safety Tips"},
+  {ico:"📶", name:"Airalo / eSIM provider"},
+  {ico:"☁️", name:"Google Drive"},
+  {ico:"📷", name:"Google Photos"}
+];
+
+var SPONT_EN = ["Convenience store","Supermarket","Vending machine","Gashapon","Arcade","Japanese mall","Café","Dessert","A strange drink","Japanese hotel TV","Sitting and watching everyday life"];
+
+// Everything below this point consumes DAYS/ROUTE/HOTELS/etc by name —
+// swapping what those names point to here, once, means none of that
+// downstream rendering, search-index-building or day-lookup code needs
+// to know a second language exists.
+if(LANG === "en"){
+  DAYS = DAYS_EN;
+  ROUTE = ROUTE_EN;
+  HOTELS = HOTELS_EN;
+  HOTEL_STATUS_LABEL = HOTEL_STATUS_LABEL_EN;
+  LEGEND_LABEL = LEGEND_LABEL_EN;
+  PACK_HAKONE = PACK_HAKONE_EN;
+  PACK_JAPAN = PACK_JAPAN_EN;
+  TIPS = TIPS_EN;
+  FOOD = FOOD_EN;
+  APPS = APPS_EN;
+  SPONT = SPONT_EN;
+}
+
+
 /* ===================== helpers ===================== */
 function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
 function fmtInt(n){ return Math.round(n).toLocaleString("he-IL"); }
@@ -1624,6 +2043,26 @@ if(themeToggleBtn){
   themeToggleBtn.addEventListener("click", function(){
     var current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
     applyTheme(current === "dark" ? "light" : "dark");
+  });
+}
+
+/* ===================== language toggle ===================== */
+// Language switches by saving the choice and reloading, rather than
+// re-rendering the page live: nearly every section on this page is
+// built once from DAYS/HOTELS/TIPS/etc, so a live re-render would mean
+// re-running every one of those builders in place (losing scroll
+// position, open accordions, in-progress form state) for no real
+// benefit — a reload is instant on a static page like this one.
+var LANG_KEY = "jp2026_lang";
+var langToggleBtn = document.getElementById("langToggle");
+if(langToggleBtn){
+  var langLabel = langToggleBtn.querySelector(".lang-label");
+  if(langLabel) langLabel.textContent = LANG === "en" ? "עב" : "EN";
+  langToggleBtn.setAttribute("aria-pressed", LANG === "en" ? "true" : "false");
+  langToggleBtn.addEventListener("click", function(){
+    var next = LANG === "en" ? "he" : "en";
+    try{ localStorage.setItem(LANG_KEY, next); }catch(e){}
+    location.reload();
   });
 }
 
@@ -1679,11 +2118,11 @@ function updateCountdown(){
   var el2 = document.getElementById("countdownLabel");
   if(diff <= 0){
     el1.textContent = "✈";
-    el2.textContent = "אנחנו ביפן!";
+    el2.textContent = pick("אנחנו ביפן!","We're in Japan!");
   } else {
     var days = Math.ceil(diff / 86400000);
     el1.textContent = days;
-    el2.textContent = "עד שיוצאים ליפן";
+    el2.textContent = pick("עד שיוצאים ליפן","until we leave for Japan");
   }
 }
 updateCountdown();
@@ -1701,7 +2140,7 @@ setInterval(updateCountdown, 60000);
     // RTL layout: chips flow right-to-left, so the "next" direction is
     // leftward — the separator arrow has to point that way too, or it
     // reads as pointing backward through the itinerary.
-    if(i < ROUTE.length-1){ wrap.appendChild(el("div","route-arrow","←")); }
+    if(i < ROUTE.length-1){ wrap.appendChild(el("div","route-arrow",pick("←","→"))); }
   });
 
   var prevBtn = document.getElementById("routePrev");
@@ -1710,18 +2149,27 @@ setInterval(updateCountdown, 60000);
   nextBtn.innerHTML = ICON.chevron;
   // Reading scroll position/boundaries (rather than tracking a "current
   // chip index") sidesteps RTL scrollLeft-convention quirks entirely —
-  // modern browsers agree scrollLeft runs 0 (start) to -(max) (end) in
-  // RTL, so this only has to compare against that.
+  // modern browsers agree scrollLeft runs 0 (start) to -(max) in RTL and
+  // 0 to +(max) in LTR. Either way "start" (first chip) is 0; only which
+  // sign reaches "end" (last chip) depends on direction.
+  var isRTL = document.documentElement.getAttribute("dir") === "rtl";
   function updateNavState(){
     var max = wrap.scrollWidth - wrap.clientWidth;
-    prevBtn.disabled = wrap.scrollLeft >= -2;
-    nextBtn.disabled = wrap.scrollLeft <= -(max - 2);
+    if(isRTL){
+      prevBtn.disabled = wrap.scrollLeft >= -2;
+      nextBtn.disabled = wrap.scrollLeft <= -(max - 2);
+    } else {
+      prevBtn.disabled = wrap.scrollLeft <= 2;
+      nextBtn.disabled = wrap.scrollLeft >= max - 2;
+    }
   }
-  function page(dir){
+  function page(towardEnd){
+    var sign = isRTL ? -1 : 1;
+    var dir = towardEnd ? sign : -sign;
     wrap.scrollBy({left: dir * wrap.clientWidth * 0.85, behavior:"smooth"});
   }
-  prevBtn.addEventListener("click", function(){ page(1); });
-  nextBtn.addEventListener("click", function(){ page(-1); });
+  prevBtn.addEventListener("click", function(){ page(false); });
+  nextBtn.addEventListener("click", function(){ page(true); });
   var scrollTimer;
   wrap.addEventListener("scroll", function(){
     clearTimeout(scrollTimer);
@@ -1754,7 +2202,7 @@ setInterval(updateCountdown, 60000);
     } else {
       body.appendChild((function(){
         var actions = el("div","tl-actions");
-        actions.innerHTML = '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(h.name+" "+h.region+" Japan")+'">'+ICON.pin+' פתיחה במפות</a>';
+        actions.innerHTML = '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(h.name+" "+h.region+" Japan")+'">'+ICON.pin+' '+pick('פתיחה במפות','Open in Maps')+'</a>';
         return actions;
       })());
     }
@@ -1808,14 +2256,14 @@ function buildDestBlock(dest, route){
       (route.transfers ? '<span>🔄 '+esc(route.transfers)+'</span>' : '')+
     '</div>';
   }
-  var navLabel = list.length>1 ? function(d){ return "🗺️ ניווט ל-"+esc(d.name); } : function(){ return "🗺️ ניווט"; };
+  var navLabel = list.length>1 ? function(d){ return pick("🗺️ ניווט ל-","🗺️ Navigate to ")+esc(d.name); } : function(){ return pick("🗺️ ניווט","🗺️ Navigate"); };
   var entriesHtml = list.map(function(d){
     return '<div class="dest-name">'+esc(d.name)+'</div>'+
       (d.address ? '<div class="dest-address">'+esc(d.address)+'</div>' : '')+
       '<a class="btn-mini solid dest-navigate" target="_blank" rel="noopener" href="'+directionsUrl(d.query||d.name)+'">'+navLabel(d)+'</a>';
   }).join('<div style="height:10px"></div>');
   return '<div class="dest-block">'+
-    '<div class="dest-label">'+ICON.pin+' '+(list.length>1?"יעדים ב":"יעד ב")+'-Google Maps</div>'+
+    '<div class="dest-label">'+ICON.pin+' '+pick((list.length>1?"יעדים ב":"יעד ב")+'-Google Maps', (list.length>1?"Destinations on":"Destination on")+' Google Maps')+'</div>'+
     entriesHtml+
     routeHtml+
   '</div>';
@@ -1836,7 +2284,7 @@ function buildHighlightCard(h){
     (planHtml ? '<div class="highlight-plan">'+planHtml+'</div>' : '') +
     '<div class="highlight-foot">'+
       (h.tag ? '<span class="highlight-tag">'+h.tag+'</span>' : '<span></span>') +
-      (h.officialUrl ? '<a class="btn-mini" target="_blank" rel="noopener" href="'+h.officialUrl+'">'+(h.ticketLabel||"אתר רשמי")+'</a>' : '') +
+      (h.officialUrl ? '<a class="btn-mini" target="_blank" rel="noopener" href="'+h.officialUrl+'">'+(h.ticketLabel||pick("אתר רשמי","Official site"))+'</a>' : '') +
     '</div>';
   return card;
 }
@@ -1877,12 +2325,12 @@ function buildHighlightCard(h){
       if(!it.dest){
         // fallback for the handful of items with no single fixed destination
         // (free time, an unspecified meal) — same behavior as before.
-        actions += '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(it.title)+'">'+ICON.pin+' פתיחה במפות</a>';
+        actions += '<a class="btn-mini" target="_blank" rel="noopener" href="'+mapsUrl(it.title)+'">'+ICON.pin+' '+pick('פתיחה במפות','Open in Maps')+'</a>';
       }
       if(it.official){
-        actions += '<a class="btn-mini'+(it.dest?" solid":"")+'" target="_blank" rel="noopener" href="'+it.official+'">'+ICON.link+' אתר רשמי</a>';
+        actions += '<a class="btn-mini'+(it.dest?" solid":"")+'" target="_blank" rel="noopener" href="'+it.official+'">'+ICON.link+' '+pick('אתר רשמי','Official site')+'</a>';
       } else if(!it.dest){
-        actions += '<a class="btn-mini" target="_blank" rel="noopener" href="'+searchUrl(it.title+" official site")+'">'+ICON.info+' מידע נוסף</a>';
+        actions += '<a class="btn-mini" target="_blank" rel="noopener" href="'+searchUrl(it.title+" official site")+'">'+ICON.info+' '+pick('מידע נוסף','More info')+'</a>';
       }
       actions += '</div>';
 
@@ -1917,7 +2365,7 @@ function renderOpenItems(){
       if(it.badges && it.badges.indexOf("notbooked") !== -1){
         openList.push({
           day: d.day,
-          dayLabel: "יום "+d.day+" · "+d.dateHe,
+          dayLabel: pick("יום","Day")+" "+d.day+" · "+d.dateHe,
           title: it.title,
           official: it.official,
           cardId: "day-"+d.day,
@@ -1928,18 +2376,18 @@ function renderOpenItems(){
   });
   container.innerHTML = "";
   if(!openList.length){
-    heading.textContent = "הכל סגור ומוזמן ✓";
-    container.innerHTML = '<div class="openitems-empty"><span class="big">✓</span>לכל הפריטים בטיול יש הזמנה או שהם לא דורשים הזמנה.</div>';
+    heading.textContent = pick("הכל סגור ומוזמן ✓","Everything is booked and locked in ✓");
+    container.innerHTML = '<div class="openitems-empty"><span class="big">✓</span>'+pick("לכל הפריטים בטיול יש הזמנה או שהם לא דורשים הזמנה.","Every item in the trip is booked, or doesn't need booking.")+'</div>';
     return;
   }
-  heading.textContent = "דברים שעוד צריך לסגור";
-  var countPill = el("div","openitems-count", "! "+openList.length+" פריטים טרם הוזמנו");
+  heading.textContent = pick("דברים שעוד צריך לסגור","Things still to close out");
+  var countPill = el("div","openitems-count", "! "+openList.length+" "+pick("פריטים טרם הוזמנו","items not yet booked"));
   container.appendChild(countPill);
   openList.forEach(function(o){
     var row = el("div","openitem-card");
-    var actionsHtml = '<a class="btn-mini" data-jump="1">'+ICON.pin+' ליום '+o.day+'</a>';
+    var actionsHtml = '<a class="btn-mini" data-jump="1">'+ICON.pin+' '+pick("ליום","to Day")+' '+o.day+'</a>';
     if(o.official){
-      actionsHtml += '<a class="btn-mini solid" target="_blank" rel="noopener" href="'+o.official+'">'+ICON.link+' אתר</a>';
+      actionsHtml += '<a class="btn-mini solid" target="_blank" rel="noopener" href="'+o.official+'">'+ICON.link+' '+pick('אתר','Site')+'</a>';
     }
     row.innerHTML =
       '<div class="openitem-head"><div class="openitem-icon">'+ICON.ticket+'</div>'+
@@ -2039,13 +2487,13 @@ function buildSearchIndex(){
     idx.push({icon:"🏨", label:h.name, ctx:h.region+" · "+h.dates, cardId:"hotel-"+hi, targetId:"hotel-"+hi, text:normalizeSearch(h.name+" "+h.region+" "+h.details.join(" "))});
   });
   DAYS.forEach(function(d){
-    idx.push({icon:"📅", label:d.title, ctx:"יום "+d.day+" · "+d.weekday+" "+d.dateHe, cardId:"day-"+d.day, targetId:"day-"+d.day, text:normalizeSearch(d.title+" "+d.subtitle+" "+d.city)});
+    idx.push({icon:"📅", label:d.title, ctx:pick("יום","Day")+" "+d.day+" · "+d.weekday+" "+d.dateHe, cardId:"day-"+d.day, targetId:"day-"+d.day, text:normalizeSearch(d.title+" "+d.subtitle+" "+d.city)});
     d.items.forEach(function(it, idx2){
-      idx.push({icon:"📍", label:it.title, ctx:"יום "+d.day+" · "+it.time, cardId:"day-"+d.day, targetId:"day-"+d.day+"-item-"+idx2, text:normalizeSearch(it.title+" "+(it.desc||"")+" "+(it.transport||""))});
+      idx.push({icon:"📍", label:it.title, ctx:pick("יום","Day")+" "+d.day+" · "+it.time, cardId:"day-"+d.day, targetId:"day-"+d.day+"-item-"+idx2, text:normalizeSearch(it.title+" "+(it.desc||"")+" "+(it.transport||""))});
     });
   });
   FOOD.forEach(function(cat, ci){
-    idx.push({icon:cat.ico, label:cat.title, ctx:"אוכל, שתייה וקינוחים", cardId:"food-"+ci, targetId:"food-"+ci, text:normalizeSearch(cat.title+" "+(cat.intro||""))});
+    idx.push({icon:cat.ico, label:cat.title, ctx:pick("אוכל, שתייה וקינוחים","Food, drinks & desserts"), cardId:"food-"+ci, targetId:"food-"+ci, text:normalizeSearch(cat.title+" "+(cat.intro||""))});
     cat.body.forEach(function(li){
       var name = typeof li === "string" ? li : li.name;
       var note = typeof li === "string" ? "" : (li.note||"");
@@ -2053,17 +2501,17 @@ function buildSearchIndex(){
     });
   });
   TIPS.forEach(function(cat, ti){
-    idx.push({icon:cat.ico, label:cat.title, ctx:"טיפים חשובים ליפן", cardId:"tip-"+ti, targetId:"tip-"+ti, text:normalizeSearch(cat.title+" "+cat.body.join(" "))});
+    idx.push({icon:cat.ico, label:cat.title, ctx:pick("טיפים חשובים ליפן","Essential tips for Japan"), cardId:"tip-"+ti, targetId:"tip-"+ti, text:normalizeSearch(cat.title+" "+cat.body.join(" "))});
   });
-  idx.push({icon:"🎒", label:"תיק ללילה בהאקונה", ctx:"ציוד ואריזה", cardId:"pack-hakone", targetId:"pack-hakone", text:normalizeSearch("תיק לילה האקונה "+PACK_HAKONE.join(" "))});
-  idx.push({icon:"🧳", label:"מה לא לשכוח ליפן", ctx:"ציוד ואריזה", cardId:"pack-japan", targetId:"pack-japan", text:normalizeSearch("ציוד רשימה יפן "+PACK_JAPAN.join(" "))});
+  idx.push({icon:"🎒", label:pick("תיק ללילה בהאקונה","Overnight bag for Hakone"), ctx:pick("ציוד ואריזה","Gear & packing"), cardId:"pack-hakone", targetId:"pack-hakone", text:normalizeSearch(pick("תיק לילה האקונה","overnight bag hakone")+" "+PACK_HAKONE.join(" "))});
+  idx.push({icon:"🧳", label:pick("מה לא לשכוח ליפן","What not to forget for Japan"), ctx:pick("ציוד ואריזה","Gear & packing"), cardId:"pack-japan", targetId:"pack-japan", text:normalizeSearch(pick("ציוד רשימה יפן","packing list japan")+" "+PACK_JAPAN.join(" "))});
   APPS.forEach(function(a){
-    idx.push({icon:a.ico, label:a.name, ctx:"אפליקציות", cardId:null, targetId:"apps", text:normalizeSearch(a.name)});
+    idx.push({icon:a.ico, label:a.name, ctx:pick("אפליקציות","Apps"), cardId:null, targetId:"apps", text:normalizeSearch(a.name)});
   });
-  idx.push({icon:"💴", label:"כסף והמרת מטבע — JPY ↔ AUD", ctx:"כסף", cardId:null, targetId:"currency", text:"כסף מטבע שער ין דולר aud jpy currency"});
-  idx.push({icon:"📁", label:"קבצים משפחתיים", ctx:"Google Drive", cardId:null, targetId:"files", text:"קבצים משפחתיים דרייב drive files"});
-  idx.push({icon:"🗣️", label:"ביטויים שימושיים ביפנית", ctx:"שפה", cardId:null, targetId:"phrases", text:"שפה ביטויים יפנית sumimasen arigatou"});
-  idx.push({icon:"✨", label:"רגעים של יפן", ctx:"בלי תכנון מראש", cardId:null, targetId:"spontaneous", text:"ספונטני רגעים גשאפון ארקייד וונדינג"});
+  idx.push({icon:"💴", label:pick("כסף והמרת מטבע — JPY ↔ AUD","Money & currency exchange — JPY ↔ AUD"), ctx:pick("כסף","Money"), cardId:null, targetId:"currency", text:"כסף מטבע שער ין דולר aud jpy currency money exchange rate"});
+  idx.push({icon:"📁", label:pick("קבצים משפחתיים","Family files"), ctx:"Google Drive", cardId:null, targetId:"files", text:"קבצים משפחתיים דרייב drive files family"});
+  idx.push({icon:"🗣️", label:pick("ביטויים שימושיים ביפנית","Useful Japanese phrases"), ctx:pick("שפה","Language"), cardId:null, targetId:"phrases", text:"שפה ביטויים יפנית sumimasen arigatou language phrases"});
+  idx.push({icon:"✨", label:pick("רגעים של יפן","Moments of Japan"), ctx:pick("בלי תכנון מראש","No planning ahead"), cardId:null, targetId:"spontaneous", text:"ספונטני רגעים גשאפון ארקייד וונדינג spontaneous moments gashapon arcade vending"});
   return idx;
 }
 var SEARCH_INDEX = buildSearchIndex();
@@ -2073,7 +2521,7 @@ var searchOverlay = document.getElementById("searchOverlay");
 var searchInput = document.getElementById("searchInput");
 var searchClose = document.getElementById("searchClose");
 var searchResults = document.getElementById("searchResults");
-var SEARCH_HINT = '<div class="search-hint">הקלידו כדי לחפש בכל האתר — ימים, אטרקציות, אוכל, טיפים וציוד.</div>';
+var SEARCH_HINT = '<div class="search-hint">'+pick("הקלידו כדי לחפש בכל האתר — ימים, אטרקציות, אוכל, טיפים וציוד.","Type to search the whole site — days, attractions, food, tips and gear.")+'</div>';
 
 function openSearch(){
   mobileNav.classList.remove("open");
@@ -2099,7 +2547,7 @@ function runSearch(rawQ){
   searchResults.innerHTML = "";
   if(!matches.length){
     var empty = el("div","search-empty");
-    empty.textContent = 'לא נמצאו תוצאות עבור "'+rawQ.trim()+'".';
+    empty.textContent = pick('לא נמצאו תוצאות עבור "'+rawQ.trim()+'".', 'No results found for "'+rawQ.trim()+'".');
     searchResults.appendChild(empty);
     return;
   }
@@ -2153,16 +2601,16 @@ function setStatus(kind, text){
 function applyRate(rate, source, updatedDate){
   state.rate = rate; state.source = source; state.updated = updatedDate;
   document.getElementById("rateBig").textContent = "A$1 = ¥" + fmt2(rate);
-  var when = updatedDate ? updatedDate.toLocaleString("he-IL", {dateStyle:"medium", timeStyle:"short"}) : "";
+  var when = updatedDate ? updatedDate.toLocaleString(pick("he-IL","en-AU"), {dateStyle:"medium", timeStyle:"short"}) : "";
   if(source === "live"){
-    setStatus("live", "שער חי");
-    document.getElementById("rateUpdated").textContent = "עודכן: " + when;
+    setStatus("live", pick("שער חי","Live rate"));
+    document.getElementById("rateUpdated").textContent = pick("עודכן: ","Updated: ") + when;
   } else if(source === "cached"){
-    setStatus("cached", "השער האחרון שנשמר");
-    document.getElementById("rateUpdated").textContent = "עודכן: " + when + " (לא ניתן היה לרענן כרגע)";
+    setStatus("cached", pick("השער האחרון שנשמר","Last saved rate"));
+    document.getElementById("rateUpdated").textContent = pick("עודכן: ","Updated: ") + when + pick(" (לא ניתן היה לרענן כרגע)"," (couldn't refresh right now)");
   } else if(source === "manual"){
-    setStatus("manual", "שער ידני");
-    document.getElementById("rateUpdated").textContent = "שער ידני לצורך הערכה בלבד — לא שער אמיתי בזמן אמת.";
+    setStatus("manual", pick("שער ידני","Manual rate"));
+    document.getElementById("rateUpdated").textContent = pick("שער ידני לצורך הערכה בלבד — לא שער אמיתי בזמן אמת.","Manual rate for estimation only — not a real-time rate.");
   }
   recompute("jpy");
   if(typeof renderAllCostSections === "function") renderAllCostSections();
@@ -2194,7 +2642,7 @@ function refreshRate(){
   state.updating = true;
   var btn = document.getElementById("refreshRate");
   btn.classList.add("loading");
-  setStatus("live","מרעננים שער…");
+  setStatus("live",pick("מרעננים שער…","Refreshing rate…"));
 
   fetchFrankfurter().catch(function(){ return fetchErApi(); }).then(function(res){
     applyRate(res.rate, "live", res.date);
@@ -2206,8 +2654,8 @@ function refreshRate(){
       applyRate(cached.rate, "cached", new Date(cached.updated));
       document.getElementById("manualRow").style.display = "none";
     } else {
-      setStatus("manual", "אין שער זמין");
-      document.getElementById("rateUpdated").textContent = "לא הצלחנו לאתר שער חי או שמור. אפשר להזין שער ידני להערכה זמנית.";
+      setStatus("manual", pick("אין שער זמין","No rate available"));
+      document.getElementById("rateUpdated").textContent = pick("לא הצלחנו לאתר שער חי או שמור. אפשר להזין שער ידני להערכה זמנית.","We couldn't find a live or saved rate. You can enter a manual rate for a temporary estimate.");
       document.getElementById("manualRow").style.display = "flex";
     }
   }).finally(function(){
@@ -2255,6 +2703,14 @@ document.getElementById("manualRateInput").addEventListener("input", function(e)
 /* ===================== family files ===================== */
 var CATEGORIES = ["כרטיסים","מלון","תחבורה","מסעדה","מפה","קבלה","תמונה","מסמך","אחר"];
 var CATEGORY_ICON = {"כרטיסים":"🎫","מלון":"🏨","תחבורה":"🚆","מסעדה":"🍽️","מפה":"🗺️","קבלה":"🧾","תמונה":"🖼️","מסמך":"📄","אחר":"📎"};
+// CATEGORIES/EXPENSE_CATEGORIES stay Hebrew-valued even in English mode:
+// they're stored as the literal `category` field on saved files/expenses
+// (including ones a user already saved before this feature existed), and
+// used as CATEGORY_ICON/EXPENSE_CATEGORY_ICON lookup keys and filter
+// values — translating the values themselves would silently stop
+// matching that existing data. Only the label shown to the user changes.
+var CATEGORY_LABEL_EN = {"כרטיסים":"Tickets","מלון":"Hotel","תחבורה":"Transport","מסעדה":"Restaurant","מפה":"Map","קבלה":"Receipt","תמונה":"Photo","מסמך":"Document","אחר":"Other"};
+function categoryLabel(c){ return LANG === "en" ? (CATEGORY_LABEL_EN[c] || c) : c; }
 var FILES_STATE = { all: [] };
 var filesFilter = { q:"", day:"", category:"" };
 var pendingDelete = null; // {type:"file"|"expense", id, label}
@@ -2277,9 +2733,9 @@ function filesForDay(day){
 function buildDayFilesBlock(dayNum){
   var wrap = el("div","day-files");
   wrap.innerHTML =
-    '<div class="day-files-head">📎 קבצים ליום הזה</div>'+
+    '<div class="day-files-head">📎 '+pick("קבצים ליום הזה","Files for this day")+'</div>'+
     '<div class="file-grid" id="day-files-list-'+dayNum+'"></div>'+
-    '<label class="upload-btn">＋ העלאת קובץ'+
+    '<label class="upload-btn">＋ '+pick("העלאת קובץ","Upload file")+
       '<input type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,application/pdf" data-day="'+dayNum+'" class="file-input-hidden">'+
     '</label>'+
     '<div class="upload-status" id="upload-status-'+dayNum+'"></div>';
@@ -2293,10 +2749,10 @@ function renderFileCard(f){
   var thumb = isImage
     ? '<img class="file-thumb-img" src="'+f.storageURL+'" alt="" loading="lazy">'
     : '<div class="file-thumb-icon">'+ICON.doc+'</div>';
-  var typeLabel = f.mimeType === "application/pdf" ? "PDF" : (isImage ? "תמונה" : "קובץ");
-  var dayLabel = f.tripDay ? (" · יום "+f.tripDay) : "";
+  var typeLabel = f.mimeType === "application/pdf" ? "PDF" : (isImage ? pick("תמונה","Photo") : pick("קובץ","File"));
+  var dayLabel = f.tripDay ? (" · "+pick("יום","Day")+" "+f.tripDay) : "";
   var catOptions = CATEGORIES.map(function(c){
-    return '<option value="'+c+'"'+(c===f.category ? " selected" : "")+'>'+CATEGORY_ICON[c]+" "+c+"</option>";
+    return '<option value="'+c+'"'+(c===f.category ? " selected" : "")+'>'+CATEGORY_ICON[c]+" "+categoryLabel(c)+"</option>";
   }).join("");
   card.innerHTML =
     '<div class="file-thumb" data-action="preview">'+thumb+'</div>'+
@@ -2306,9 +2762,9 @@ function renderFileCard(f){
       '<select class="file-cat-select" data-action="category">'+catOptions+'</select>'+
     '</div>'+
     '<div class="file-actions">'+
-      '<button class="icon-mini'+(f.important?" is-active":"")+'" data-action="star" title="חשוב" aria-label="סמן כחשוב">'+(f.important ? ICON.starFilled : ICON.star)+'</button>'+
-      '<button class="icon-mini" data-action="rename" title="שינוי שם" aria-label="שינוי שם">'+ICON.edit+'</button>'+
-      '<button class="icon-mini" data-action="delete" title="מחיקה" aria-label="מחיקה">'+ICON.trash+'</button>'+
+      '<button class="icon-mini'+(f.important?" is-active":"")+'" data-action="star" title="'+pick("חשוב","Important")+'" aria-label="'+pick("סמן כחשוב","Mark as important")+'">'+(f.important ? ICON.starFilled : ICON.star)+'</button>'+
+      '<button class="icon-mini" data-action="rename" title="'+pick("שינוי שם","Rename")+'" aria-label="'+pick("שינוי שם","Rename")+'">'+ICON.edit+'</button>'+
+      '<button class="icon-mini" data-action="delete" title="'+pick("מחיקה","Delete")+'" aria-label="'+pick("מחיקה","Delete")+'">'+ICON.trash+'</button>'+
     '</div>';
   return card;
 }
@@ -2333,8 +2789,8 @@ function renderTodayBanner(){
   var files = filesForDay(day.day);
   banner.hidden = false;
   banner.innerHTML =
-    '<div class="today-banner-head">📍 היום — יום '+day.day+' · '+day.city+'</div>'+
-    (files.length ? '<div class="file-grid" id="todayFilesList"></div>' : '<p class="today-banner-empty">עדיין אין קבצים ליום הזה.</p>');
+    '<div class="today-banner-head">📍 '+pick("היום — יום","Today — Day")+' '+day.day+' · '+day.city+'</div>'+
+    (files.length ? '<div class="file-grid" id="todayFilesList"></div>' : '<p class="today-banner-empty">'+pick("עדיין אין קבצים ליום הזה.","No files for today yet.")+'</p>');
   if(files.length){
     var list = document.getElementById("todayFilesList");
     files.forEach(function(f){ list.appendChild(renderFileCard(f)); });
@@ -2361,8 +2817,8 @@ function renderGlobalFiles(){
     emptyMsg.hidden = list.length > 0;
     if(list.length === 0){
       emptyMsg.textContent = FILES_STATE.all.length === 0
-        ? 'עדיין לא הועלו קבצים. אפשר להעלות דרך "קבצים ליום הזה" בכל יום בתוכנית.'
-        : "אין קבצים שתואמים את הסינון הנוכחי.";
+        ? pick('עדיין לא הועלו קבצים. אפשר להעלות דרך "קבצים ליום הזה" בכל יום בתוכנית.', 'No files uploaded yet. You can upload via "Files for this day" on any day in the itinerary.')
+        : pick("אין קבצים שתואמים את הסינון הנוכחי.","No files match the current filter.");
     }
   }
 
@@ -2411,11 +2867,11 @@ function openPreview(file){
     ? '<img class="preview-img" src="'+file.storageURL+'" alt="">'
     : '<iframe class="preview-pdf" src="'+file.storageURL+'"></iframe>';
   box.innerHTML =
-    '<div class="modal-head"><span>'+esc(file.displayName)+'</span><button class="icon-mini" id="previewClose" aria-label="סגירה">✕</button></div>'+
+    '<div class="modal-head"><span>'+esc(file.displayName)+'</span><button class="icon-mini" id="previewClose" aria-label="'+pick("סגירה","Close")+'">✕</button></div>'+
     '<div class="modal-body">'+content+'</div>'+
     '<div class="modal-foot">'+
-      '<a class="btn-mini solid" href="'+file.storageURL+'" target="_blank" rel="noopener">'+ICON.download+' הורדה</a>'+
-      '<button class="btn-mini" id="previewBack">חזרה ליום</button>'+
+      '<a class="btn-mini solid" href="'+file.storageURL+'" target="_blank" rel="noopener">'+ICON.download+' '+pick('הורדה','Download')+'</a>'+
+      '<button class="btn-mini" id="previewBack">'+pick('חזרה ליום','Back to day')+'</button>'+
     '</div>';
   document.getElementById("previewOverlay").classList.add("open");
   document.getElementById("previewClose").addEventListener("click", closePreview);
@@ -2428,7 +2884,7 @@ function closePreview(){
 
 function confirmDeleteGeneric(type, id, label){
   pendingDelete = {type:type, id:id};
-  document.getElementById("confirmText").textContent = 'למחוק את "'+label+'"?';
+  document.getElementById("confirmText").textContent = pick('למחוק את "'+label+'"?', 'Delete "'+label+'"?');
   document.getElementById("confirmOverlay").classList.add("open");
 }
 function confirmDelete(file){
@@ -2445,23 +2901,23 @@ function toggleImportant(file){
   fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, important:newVal})})
     .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
     .then(function(){ file.important = newVal; renderAllFileSections(); })
-    .catch(function(){ alert("העדכון נכשל. נסו שוב."); });
+    .catch(function(){ alert(pick("העדכון נכשל. נסו שוב.","Update failed. Please try again.")); });
 }
 function renameFile(file){
-  var name = prompt("שם חדש לקובץ:", file.displayName);
+  var name = prompt(pick("שם חדש לקובץ:","New file name:"), file.displayName);
   if(name === null) return;
   name = name.trim();
   if(!name) return;
   fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, displayName:name})})
     .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
     .then(function(){ file.displayName = name; renderAllFileSections(); })
-    .catch(function(){ alert("שינוי השם נכשל. נסו שוב."); });
+    .catch(function(){ alert(pick("שינוי השם נכשל. נסו שוב.","Rename failed. Please try again.")); });
 }
 function updateFileCategory(file, newCat){
   fetch("/api/files", {method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:file.id, category:newCat})})
     .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
     .then(function(){ file.category = newCat; renderAllFileSections(); })
-    .catch(function(){ alert("עדכון הקטגוריה נכשל. נסו שוב."); });
+    .catch(function(){ alert(pick("עדכון הקטגוריה נכשל. נסו שוב.","Category update failed. Please try again.")); });
 }
 
 document.addEventListener("click", function(e){
@@ -2528,7 +2984,7 @@ document.getElementById("confirmOk").addEventListener("click", function(){
         renderAllCostSections();
       }
     })
-    .catch(function(){ alert("המחיקה נכשלה. נסו שוב."); })
+    .catch(function(){ alert(pick("המחיקה נכשלה. נסו שוב.","Delete failed. Please try again.")); })
     .finally(function(){ closeConfirm(); });
 });
 
@@ -2546,14 +3002,14 @@ if(logoutLink){
   DAYS.forEach(function(d){
     var opt = document.createElement("option");
     opt.value = String(d.day);
-    opt.textContent = "יום "+d.day+" · "+d.dateHe;
+    opt.textContent = pick("יום","Day")+" "+d.day+" · "+d.dateHe;
     daySel.appendChild(opt);
   });
   var catSel = document.getElementById("filesCategoryFilter");
   CATEGORIES.forEach(function(c){
     var opt = document.createElement("option");
     opt.value = c;
-    opt.textContent = CATEGORY_ICON[c]+" "+c;
+    opt.textContent = CATEGORY_ICON[c]+" "+categoryLabel(c);
     catSel.appendChild(opt);
   });
   document.getElementById("filesSearchInput").addEventListener("input", function(e){ filesFilter.q = e.target.value; renderGlobalFiles(); });
@@ -2569,20 +3025,20 @@ function handleFileSelected(inputEl){
   if(!file) return;
   var statusEl = document.getElementById("upload-status-"+day);
   function setStatus(text, cls){ if(statusEl){ statusEl.textContent = text; statusEl.className = "upload-status"+(cls?" "+cls:""); } }
-  setStatus("מעלה…", "busy");
+  setStatus(pick("מעלה…","Uploading…"), "busy");
 
   prepareFileForUpload(file).then(function(prepared){
     if(prepared.size > UPLOAD_HARD_LIMIT){
-      throw new Error("הקובץ גדול מדי להעלאה (עד כ-4MB). נסו תמונה קטנה יותר או צילום מסך.");
+      throw new Error(pick("הקובץ גדול מדי להעלאה (עד כ-4MB). נסו תמונה קטנה יותר או צילום מסך.","The file is too large to upload (up to about 4MB). Try a smaller image or screenshot."));
     }
-    return uploadFileXhr(prepared, day, function(pct){ setStatus("מעלה… "+pct+"%", "busy"); });
+    return uploadFileXhr(prepared, day, function(pct){ setStatus(pick("מעלה… ","Uploading… ")+pct+"%", "busy"); });
   }).then(function(record){
     FILES_STATE.all.unshift(record);
     renderAllFileSections();
-    setStatus("✓ הועלה בהצלחה", "ok");
+    setStatus(pick("✓ הועלה בהצלחה","✓ Uploaded successfully"), "ok");
     setTimeout(function(){ setStatus(""); }, 2500);
   }).catch(function(err){
-    setStatus((err && err.message) || "ההעלאה נכשלה", "err");
+    setStatus((err && err.message) || pick("ההעלאה נכשלה","Upload failed"), "err");
   });
 }
 
@@ -2640,9 +3096,9 @@ function uploadFileXhr(file, day, onProgress){
       var data = null;
       try{ data = JSON.parse(xhr.responseText); }catch(e){}
       if(xhr.status >= 200 && xhr.status < 300 && data && data.file){ resolve(data.file); }
-      else { reject(new Error((data && data.error) || "ההעלאה נכשלה")); }
+      else { reject(new Error((data && data.error) || pick("ההעלאה נכשלה","Upload failed"))); }
     };
-    xhr.onerror = function(){ reject(new Error("בעיית רשת. נסו שוב.")); };
+    xhr.onerror = function(){ reject(new Error(pick("בעיית רשת. נסו שוב.","Network problem. Please try again."))); };
     xhr.send(fd);
   });
 }
@@ -2657,6 +3113,11 @@ var EXPENSE_CATEGORY_ICON = {
 };
 var STATUS_LABEL = {paid:"✓ שולם", unpaid:"! טרם שולם", planned:"↔ מתוכנן"};
 var STATUS_CLASS = {paid:"booked", unpaid:"notbooked", planned:"flexible"};
+var STATUS_LABEL_EN = {paid:"✓ Paid", unpaid:"! Not paid yet", planned:"↔ Planned"};
+if(LANG === "en"){ STATUS_LABEL = STATUS_LABEL_EN; }
+
+var EXPENSE_CATEGORY_LABEL_EN = {"טיסות":"Flights","מלונות":"Hotels","רכבות בין-עירוניות":"Intercity trains","תחבורה מקומית":"Local transport","אטרקציות":"Attractions","אוכל":"Food","קניות":"Shopping","כרטיסים":"Tickets","מזוודות / משלוח מזוודות":"Luggage / forwarding","SIM / אינטרנט":"SIM / internet","ביטוח":"Insurance","מוניות":"Taxis","אחר":"Other"};
+function expenseCategoryLabel(c){ return LANG === "en" ? (EXPENSE_CATEGORY_LABEL_EN[c] || c) : c; }
 
 // Confirmed costs: static, like the rest of the site's confirmed
 // bookings — not stored via the API, not editable/deletable in the UI,
@@ -2669,6 +3130,15 @@ var CONFIRMED_EXPENSES = [
   {id:"c-kyoto-2", confirmed:true, description:"Shizutetsu Hotel Prezio Kyoto — חדר 2", amount:1023.08, currency:"AUD", category:"מלונות", date:"2026-10-19", tripDay:7, status:"paid", paidBy:"Family", notes:"19–24 באוקטובר · 5 לילות · טווין"},
   {id:"c-osaka", confirmed:true, description:"The Peak Namba West", amount:322.84, currency:"AUD", category:"מלונות", date:"2026-10-24", tripDay:11, status:"paid", paidBy:"Family", notes:"24–26 באוקטובר · 2 לילות · דירת נופש ל-4"}
 ];
+var CONFIRMED_EXPENSES_EN = [
+  {id:"c-flights", confirmed:true, description:"Flights — Sydney ⇄ Tokyo / Osaka ⇄ Dubai ⇄ Tel Aviv", amount:7118.67, currency:"AUD", category:"טיסות", date:"2026-10-14", tripDay:1, status:"paid", paidBy:"Family", notes:"Trip.com — ticket issued"},
+  {id:"c-yokohama", confirmed:true, description:"Mitsui Garden Hotel Yokohama Minatomirai Premier", amount:1231.00, currency:"AUD", category:"מלונות", date:"2026-10-14", tripDay:1, status:"paid", paidBy:"Family", notes:"October 14–18 · 4 nights · Deluxe, 3 beds"},
+  {id:"c-hakone", confirmed:true, description:"Laforet Hakone Gora Yunosumika", amount:60016, currency:"JPY", category:"מלונות", date:"2026-10-18", tripDay:5, status:"unpaid", paidBy:"Family", notes:"Pay at property. Room ¥49,228 + tax ¥10,338 + city tax ¥450."},
+  {id:"c-kyoto-1", confirmed:true, description:"Shizutetsu Hotel Prezio Kyoto — Room 1", amount:920.84, currency:"AUD", category:"מלונות", date:"2026-10-19", tripDay:7, status:"paid", paidBy:"Family", notes:"October 19–24 · 5 nights · Twin"},
+  {id:"c-kyoto-2", confirmed:true, description:"Shizutetsu Hotel Prezio Kyoto — Room 2", amount:1023.08, currency:"AUD", category:"מלונות", date:"2026-10-19", tripDay:7, status:"paid", paidBy:"Family", notes:"October 19–24 · 5 nights · Twin"},
+  {id:"c-osaka", confirmed:true, description:"The Peak Namba West", amount:322.84, currency:"AUD", category:"מלונות", date:"2026-10-24", tripDay:11, status:"paid", paidBy:"Family", notes:"October 24–26 · 2 nights · rental apartment for 4"}
+];
+if(LANG === "en"){ CONFIRMED_EXPENSES = CONFIRMED_EXPENSES_EN; }
 
 var EXPENSES_STATE = { manual: [] };
 var costFilter = { q:"", category:"", status:"", day:"" };
@@ -2719,12 +3189,12 @@ function renderCostSummary(){
   document.getElementById("costPlannedVal").textContent = "A$"+fmt2(s.plannedAUD);
   var perPerson = s.totalAUD / 3;
   document.getElementById("costPerPerson").textContent =
-    "עלות משפחתית כוללת: A$"+fmt2(s.totalAUD)+" · ממוצע לאדם (חלוקה שווה בלבד, לא בהכרח מי ששילם בפועל): A$"+fmt2(perPerson);
+    pick("עלות משפחתית כוללת: ","Total family cost: ")+"A$"+fmt2(s.totalAUD)+pick(" · ממוצע לאדם (חלוקה שווה בלבד, לא בהכרח מי ששילם בפועל): "," · average per person (equal split only, not necessarily who actually paid): ")+"A$"+fmt2(perPerson);
   var rateNote = document.getElementById("costRateNote");
   var txt = state.rate
-    ? ("שער המרה בשימוש: A$1 = ¥"+fmt2(state.rate)+(state.updated ? (" · עודכן: "+state.updated.toLocaleString("he-IL",{dateStyle:"medium",timeStyle:"short"})) : ""))
-    : "טוענים שער המרה עדכני…";
-  if(s.anyUnknownRate) txt += " · חלק מהסכומים ב-JPY עדיין ממתינים לשער";
+    ? (pick("שער המרה בשימוש: ","Exchange rate in use: ")+"A$1 = ¥"+fmt2(state.rate)+(state.updated ? (pick(" · עודכן: "," · Updated: ")+state.updated.toLocaleString(pick("he-IL","en-AU"),{dateStyle:"medium",timeStyle:"short"})) : ""))
+    : pick("טוענים שער המרה עדכני…","Loading the current exchange rate…");
+  if(s.anyUnknownRate) txt += pick(" · חלק מהסכומים ב-JPY עדיין ממתינים לשער"," · some JPY amounts are still waiting for a rate");
   rateNote.textContent = txt;
 }
 
@@ -2735,12 +3205,12 @@ function renderBreakdown(){
   try{ rows = computeCategoryBreakdown(); }
   catch(e){
     console.error("computeCategoryBreakdown failed:", e);
-    container.innerHTML = '<div class="files-empty">לא ניתן להציג כרגע את פירוט ההוצאות. נסו לרענן את הדף.</div>';
+    container.innerHTML = '<div class="files-empty">'+pick("לא ניתן להציג כרגע את פירוט ההוצאות. נסו לרענן את הדף.","Can't show the expense breakdown right now. Try refreshing the page.")+'</div>';
     return;
   }
   container.innerHTML = "";
   if(!rows.length){
-    container.innerHTML = '<div class="files-empty">אין עדיין הוצאות להצגה.</div>';
+    container.innerHTML = '<div class="files-empty">'+pick("אין עדיין הוצאות להצגה.","No expenses to show yet.")+'</div>';
     return;
   }
   var CHART_ACCENTS = ["var(--accent-magenta)","var(--accent-violet)","var(--accent-blue)","var(--accent-cyan)"];
@@ -2748,7 +3218,7 @@ function renderBreakdown(){
     var row = el("div","cost-bar-row");
     var c1 = CHART_ACCENTS[i % CHART_ACCENTS.length], c2 = CHART_ACCENTS[(i+1) % CHART_ACCENTS.length];
     row.innerHTML =
-      '<div class="cost-bar-head"><span>'+(EXPENSE_CATEGORY_ICON[r.category]||"📎")+" "+esc(r.category)+'</span>'+
+      '<div class="cost-bar-head"><span>'+(EXPENSE_CATEGORY_ICON[r.category]||"📎")+" "+esc(expenseCategoryLabel(r.category))+'</span>'+
       '<span class="cost-bar-amt">A$'+fmt2(r.amount)+' · '+r.pct.toFixed(0)+'%</span></div>'+
       '<div class="cost-bar-track"><div class="cost-bar-fill" style="width:'+r.pct.toFixed(1)+'%;background:linear-gradient(90deg,'+c1+','+c2+')"></div></div>';
     container.appendChild(row);
@@ -2761,18 +3231,18 @@ function renderExpenseRow(e){
   var aud = expenseAmountAUD(e);
   var amountHtml = e.currency === "AUD"
     ? '<span class="num">A$'+fmt2(e.amount)+'</span>'
-    : '<span class="num">¥'+fmtInt(e.amount)+'</span>'+(aud!==null ? ' <span class="cost-aud-equiv">≈ A$'+fmt2(aud)+'</span>' : ' <span class="cost-aud-equiv">(ממתין לשער)</span>');
-  var dayLabel = e.tripDay ? (" · יום "+e.tripDay) : "";
+    : '<span class="num">¥'+fmtInt(e.amount)+'</span>'+(aud!==null ? ' <span class="cost-aud-equiv">≈ A$'+fmt2(aud)+'</span>' : ' <span class="cost-aud-equiv">'+pick("(ממתין לשער)","(awaiting rate)")+'</span>');
+  var dayLabel = e.tripDay ? (" · "+pick("יום","Day")+" "+e.tripDay) : "";
   var actionsHtml = e.confirmed
-    ? '<span class="badge booked">✓ מאושר</span>'
-    : '<button class="icon-mini" data-action="edit" title="עריכה" aria-label="עריכה">'+ICON.edit+'</button>'+
-      '<button class="icon-mini" data-action="duplicate" title="שכפול" aria-label="שכפול">'+ICON.duplicate+'</button>'+
-      '<button class="icon-mini" data-action="delete" title="מחיקה" aria-label="מחיקה">'+ICON.trash+'</button>';
+    ? '<span class="badge booked">✓ '+pick("מאושר","Confirmed")+'</span>'
+    : '<button class="icon-mini" data-action="edit" title="'+pick("עריכה","Edit")+'" aria-label="'+pick("עריכה","Edit")+'">'+ICON.edit+'</button>'+
+      '<button class="icon-mini" data-action="duplicate" title="'+pick("שכפול","Duplicate")+'" aria-label="'+pick("שכפול","Duplicate")+'">'+ICON.duplicate+'</button>'+
+      '<button class="icon-mini" data-action="delete" title="'+pick("מחיקה","Delete")+'" aria-label="'+pick("מחיקה","Delete")+'">'+ICON.trash+'</button>';
   row.innerHTML =
     '<div class="file-thumb-icon" style="width:52px;height:52px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex:0 0 auto">'+(EXPENSE_CATEGORY_ICON[e.category]||"📎")+'</div>'+
     '<div class="file-info" style="cursor:default">'+
       '<div class="file-name">'+esc(e.description)+'</div>'+
-      '<div class="file-meta">'+esc(e.category)+dayLabel+(e.date ? (" · "+e.date) : "")+(e.paidBy && e.paidBy!=="Family" ? (" · "+esc(e.paidBy)) : "")+'</div>'+
+      '<div class="file-meta">'+esc(expenseCategoryLabel(e.category))+dayLabel+(e.date ? (" · "+e.date) : "")+(e.paidBy && e.paidBy!=="Family" ? (" · "+esc(e.paidBy)) : "")+'</div>'+
       '<div class="cost-row-amount">'+amountHtml+' <span class="badge '+STATUS_CLASS[e.status]+'">'+STATUS_LABEL[e.status]+'</span></div>'+
     '</div>'+
     '<div class="file-actions">'+actionsHtml+'</div>';
@@ -2799,7 +3269,7 @@ function renderCostList(){
   if(emptyMsg){
     emptyMsg.hidden = list.length > 0;
     if(list.length === 0){
-      emptyMsg.textContent = allExpenses().length === 0 ? "עדיין אין הוצאות." : "אין הוצאות שתואמות את הסינון הנוכחי.";
+      emptyMsg.textContent = allExpenses().length === 0 ? pick("עדיין אין הוצאות.","No expenses yet.") : pick("אין הוצאות שתואמות את הסינון הנוכחי.","No expenses match the current filter.");
     }
   }
 }
@@ -2813,7 +3283,7 @@ function renderDayCostTotals(){
     var total = 0, unknown = false;
     dayExpenses.forEach(function(e){ var a = expenseAmountAUD(e); if(a===null){ unknown=true; } else { total += a; } });
     container.hidden = false;
-    container.innerHTML = '<button class="day-cost-btn" data-day="'+d.day+'">💰 הוצאות היום: A$'+fmt2(total)+(unknown?" +":"")+' <span class="day-cost-arrow">←</span></button>';
+    container.innerHTML = '<button class="day-cost-btn" data-day="'+d.day+'">💰 '+pick("הוצאות היום: ","Today's expenses: ")+'A$'+fmt2(total)+(unknown?" +":"")+' <span class="day-cost-arrow">'+pick("←","→")+'</span></button>';
   });
 }
 
@@ -2854,7 +3324,7 @@ function duplicateExpense(expense){
   fetch("/api/expenses", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(copy)})
     .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
     .then(function(data){ EXPENSES_STATE.manual.unshift(data.expense); renderAllCostSections(); })
-    .catch(function(){ alert("השכפול נכשל. נסו שוב."); });
+    .catch(function(){ alert(pick("השכפול נכשל. נסו שוב.","Duplication failed. Please try again.")); });
 }
 
 function todayDetectedDate(){ return new Date().toISOString().slice(0,10); }
@@ -2864,7 +3334,7 @@ function detectTodayTripDay(){
 }
 
 function openExpenseForm(expense){
-  document.getElementById("expenseFormTitle").textContent = expense ? "עריכת הוצאה" : "הוספת הוצאה";
+  document.getElementById("expenseFormTitle").textContent = expense ? pick("עריכת הוצאה","Edit expense") : pick("הוספת הוצאה","Add expense");
   document.getElementById("expenseId").value = expense ? expense.id : "";
   document.getElementById("expDescription").value = expense ? expense.description : "";
   document.getElementById("expAmount").value = expense ? expense.amount : "";
@@ -2889,12 +3359,12 @@ function closeExpenseForm(){
   var daySel = document.getElementById("costDayFilter");
   var formDaySel = document.getElementById("expTripDay");
   EXPENSE_CATEGORIES.forEach(function(c){
-    var label = (EXPENSE_CATEGORY_ICON[c]||"")+" "+c;
+    var label = (EXPENSE_CATEGORY_ICON[c]||"")+" "+expenseCategoryLabel(c);
     var o1 = document.createElement("option"); o1.value = c; o1.textContent = label; catSel.appendChild(o1);
     var o2 = document.createElement("option"); o2.value = c; o2.textContent = label; formCatSel.appendChild(o2);
   });
   DAYS.forEach(function(d){
-    var label = "יום "+d.day+" · "+d.dateHe;
+    var label = pick("יום","Day")+" "+d.day+" · "+d.dateHe;
     var o1 = document.createElement("option"); o1.value = String(d.day); o1.textContent = label; daySel.appendChild(o1);
     var o2 = document.createElement("option"); o2.value = String(d.day); o2.textContent = label; formDaySel.appendChild(o2);
   });
@@ -2919,26 +3389,26 @@ document.getElementById("expenseForm").addEventListener("submit", function(ev){
     notes: document.getElementById("expNotes").value
   };
   var saveBtn = document.getElementById("expenseSaveBtn");
-  saveBtn.disabled = true; saveBtn.textContent = "שומר…";
+  saveBtn.disabled = true; saveBtn.textContent = pick("שומר…","Saving…");
 
   var receiptFile = document.getElementById("expReceiptInput").files[0];
   var receiptStatus = document.getElementById("expReceiptStatus");
   var uploadPromise = Promise.resolve(null);
 
   if(receiptFile){
-    receiptStatus.textContent = "מעלה קבלה…";
+    receiptStatus.textContent = pick("מעלה קבלה…","Uploading receipt…");
     uploadPromise = prepareFileForUpload(receiptFile).then(function(prepared){
       if(prepared.size > UPLOAD_HARD_LIMIT){
-        throw new Error("קובץ הקבלה גדול מדי (עד כ-4MB). נסו תמונה קטנה יותר.");
+        throw new Error(pick("קובץ הקבלה גדול מדי (עד כ-4MB). נסו תמונה קטנה יותר.","The receipt file is too large (up to about 4MB). Try a smaller image."));
       }
-      return uploadFileXhr(prepared, payload.tripDay || "", function(pct){ receiptStatus.textContent = "מעלה קבלה… "+pct+"%"; });
+      return uploadFileXhr(prepared, payload.tripDay || "", function(pct){ receiptStatus.textContent = pick("מעלה קבלה… ","Uploading receipt… ")+pct+"%"; });
     }).then(function(record){
       return fetch("/api/files", {
         method:"PATCH", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({id:record.id, category:"קבלה", displayName: payload.description ? ("קבלה — "+payload.description) : record.displayName})
-      }).then(function(){ receiptStatus.textContent = "✓ קבלה הועלתה"; return record.id; });
+        body: JSON.stringify({id:record.id, category:"קבלה", displayName: payload.description ? (pick("קבלה — ","Receipt — ")+payload.description) : record.displayName})
+      }).then(function(){ receiptStatus.textContent = pick("✓ קבלה הועלתה","✓ Receipt uploaded"); return record.id; });
     }).catch(function(err){
-      receiptStatus.textContent = ((err && err.message) || "העלאת הקבלה נכשלה") + " — ההוצאה תישמר בלעדיה.";
+      receiptStatus.textContent = ((err && err.message) || pick("העלאת הקבלה נכשלה","Receipt upload failed")) + pick(" — ההוצאה תישמר בלעדיה."," — the expense will be saved without it.");
       return null;
     });
   }
@@ -2952,7 +3422,7 @@ document.getElementById("expenseForm").addEventListener("submit", function(ev){
       body: JSON.stringify(payload)
     });
   }).then(function(r){
-    if(!r.ok) return r.json().then(function(d){ throw new Error((d && d.error) || "שגיאה בשמירה"); });
+    if(!r.ok) return r.json().then(function(d){ throw new Error((d && d.error) || pick("שגיאה בשמירה","Save error")); });
     return r.json();
   }).then(function(data){
     if(id){
@@ -2964,9 +3434,9 @@ document.getElementById("expenseForm").addEventListener("submit", function(ev){
     renderAllCostSections();
     closeExpenseForm();
   }).catch(function(err){
-    alert(err.message || "שמירת ההוצאה נכשלה.");
+    alert(err.message || pick("שמירת ההוצאה נכשלה.","Saving the expense failed."));
   }).finally(function(){
-    saveBtn.disabled = false; saveBtn.textContent = "שמירה";
+    saveBtn.disabled = false; saveBtn.textContent = pick("שמירה","Save");
   });
 });
 
