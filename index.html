@@ -346,12 +346,22 @@ html[data-theme="dark"] #themeToggle .theme-icon-moon{display:none}
 
 /* ---------- section shell ---------- */
 section{padding:64px 0}
+@media (max-width:600px){section{padding:40px 0}}
 .section-head{margin-bottom:24px}
 .eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent-soft);padding:5px 12px;border-radius:99px;margin-bottom:10px}
 .section-head h2{font-size:clamp(1.5rem,5vw,1.9rem);font-weight:800;letter-spacing:-.01em;margin:0 0 6px}
 .section-head p{color:var(--ink-2);font-size:.95rem;margin:0;max-width:56ch}
 
 /* ---------- route overview ---------- */
+.route-nav{display:flex;gap:8px;justify-content:flex-end;margin:-6px 0 10px}
+.route-nav-btn{
+  width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);
+  color:var(--ink-2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;padding:0;
+}
+.route-nav-btn svg{width:16px;height:16px}
+.route-nav-btn.prev svg{transform:scaleX(-1)}
+.route-nav-btn:hover:not(:disabled){background:var(--surface-2);color:var(--ink)}
+.route-nav-btn:disabled{opacity:.35;cursor:default}
 .route-scroll{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .route-scroll::-webkit-scrollbar{height:0}
 .route-chip{
@@ -935,6 +945,10 @@ footer b{color:var(--on-navy)}
         <div class="eyebrow">מסלול הטיול</div>
         <h2>מיוקוהמה ועד אוסקה</h2>
         <p>חמישה אזורים, קצב נוח, בלי למהר בין ערים.</p>
+      </div>
+      <div class="route-nav">
+        <button class="route-nav-btn prev" id="routePrev" aria-label="היעד הקודם" disabled></button>
+        <button class="route-nav-btn next" id="routeNext" aria-label="היעד הבא"></button>
       </div>
       <div class="route-scroll" id="routeScroll"></div>
     </div>
@@ -1590,7 +1604,8 @@ var ICON = {
   ticket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9.5a2 2 0 0 0 0 5V17a1.5 1.5 0 0 0 1.5 1.5h14A1.5 1.5 0 0 0 20.5 17v-2a2 2 0 0 1 0-5V7A1.5 1.5 0 0 0 19 5.5H5A1.5 1.5 0 0 0 3.5 7Z"/><path d="M9 5.5v13"/></svg>',
   duplicate:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V5.5A1.5 1.5 0 0 0 14 4H5.5A1.5 1.5 0 0 0 4 5.5V14a1.5 1.5 0 0 0 1.5 1.5H8.5"/></svg>',
   clip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.5 9.5 17a3 3 0 0 1-4.2-4.2l9-9a2 2 0 0 1 2.8 2.8l-8.5 8.5a1 1 0 0 1-1.4-1.4L15 6"/></svg>',
-  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg>'
+  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg>',
+  chevron:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5 7.5 12l7 7"/></svg>'
 };
 
 /* ===================== theme toggle ===================== */
@@ -1677,12 +1692,42 @@ setInterval(updateCountdown, 60000);
 /* ===================== route overview ===================== */
 (function(){
   var wrap = document.getElementById("routeScroll");
+  var chips = [];
   ROUTE.forEach(function(r, i){
     var chip = el("div","route-chip",
       '<div class="idx">'+r.days+'</div><h3>'+r.name+'</h3><p>'+r.desc+'</p>');
     wrap.appendChild(chip);
-    if(i < ROUTE.length-1){ wrap.appendChild(el("div","route-arrow","→")); }
+    chips.push(chip);
+    // RTL layout: chips flow right-to-left, so the "next" direction is
+    // leftward — the separator arrow has to point that way too, or it
+    // reads as pointing backward through the itinerary.
+    if(i < ROUTE.length-1){ wrap.appendChild(el("div","route-arrow","←")); }
   });
+
+  var prevBtn = document.getElementById("routePrev");
+  var nextBtn = document.getElementById("routeNext");
+  prevBtn.innerHTML = ICON.chevron;
+  nextBtn.innerHTML = ICON.chevron;
+  // Reading scroll position/boundaries (rather than tracking a "current
+  // chip index") sidesteps RTL scrollLeft-convention quirks entirely —
+  // modern browsers agree scrollLeft runs 0 (start) to -(max) (end) in
+  // RTL, so this only has to compare against that.
+  function updateNavState(){
+    var max = wrap.scrollWidth - wrap.clientWidth;
+    prevBtn.disabled = wrap.scrollLeft >= -2;
+    nextBtn.disabled = wrap.scrollLeft <= -(max - 2);
+  }
+  function page(dir){
+    wrap.scrollBy({left: dir * wrap.clientWidth * 0.85, behavior:"smooth"});
+  }
+  prevBtn.addEventListener("click", function(){ page(1); });
+  nextBtn.addEventListener("click", function(){ page(-1); });
+  var scrollTimer;
+  wrap.addEventListener("scroll", function(){
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(updateNavState, 100);
+  }, {passive:true});
+  updateNavState();
 })();
 
 /* ===================== hotels ===================== */
